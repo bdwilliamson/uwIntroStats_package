@@ -1,0 +1,125 @@
+\documentclass[landscape]{article}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{fullpage}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage[percent]{overpic}
+\usepackage{mathrsfs}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{lscape}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{listings}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[left=2cm,right=2cm,top=2.5cm,bottom=2.5cm, headsep = 0.9cm]{geometry}
+\usepackage{verbdef}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.0in}
+\usepackage{setspace}
+\definecolor{gray}{RGB}{90,90,90}
+\usepackage[colorlinks=true, linktoc=all, linkcolor=blue]{hyperref}
+\usepackage{fancyvrb}
+\usepackage{Sweave}
+\usepackage{indentfirst}
+\DefineVerbatimEnvironment{Sinput}{Verbatim} {xleftmargin=2em}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=2em}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{xleftmargin=2em}
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+\pagestyle{plain}
+\setlength\parindent{1cm}
+
+\begin{document}
+\input{test_cases-concordance}
+\centerline{\large{\textbf{Using \texttt{uwIntroStats}}}}
+\centerline{\textbf{Authors: Brian D. Williamson and Scott S. Emerson, M.D., Ph.D.}}
+\centerline{\textbf{University of Washington Department of Biostatistics}}
+\tableofcontents
+\newpage
+\section{Introduction}
+
+\section{Preparing \texttt{uwIntroStats}}
+
+
+\indent Before we can dive in and run any analyses, we first need to install the package. This is done via
+\begin{Schunk}
+\begin{Sinput}
+> install.packages("uwIntroStats")
+\end{Sinput}
+\end{Schunk}
+
+
+Regardless of the graphical user interface (GUI) that you are using, R will prompt you to select a CRAN mirror. It is essentially asking you where you want to download the package files from. Select the mirror closest to you - for us at the University of Washington it is \texttt{WA(1)} or the Fred Hutchinson Cancer Research Center (FHCRC) - and the package will download and say that it has installed. Now each time we open a new R session (whether that is at the command line, a new RGui window, or a new RStudio window) we need to load the package for use. 
+
+The \texttt{uwIntroStats} package relies on five other packages. These other packages provide key functions that the \texttt{uwIntroStats} package uses or adds functionality to. We must load (and install like above if we have not installed previously) these packages, and then load \texttt{uwIntroStats}:
+\begin{Schunk}
+\begin{Sinput}
+> library(Exact)
+> library(geepack)
+> library(plyr)
+> library(sandwich)
+> library(survival)
+> library(uwIntroStats)
+\end{Sinput}
+\end{Schunk}
+
+Last, we load the data, \texttt{mri} that we will be using throughout this document. Information about the dataset can be found at \path{http://www.emersonstatistics.com/datasets/mri.pdf}. Since the data is part of the package, we can load it via
+\begin{Schunk}
+\begin{Sinput}
+> data(mri)
+\end{Sinput}
+\end{Schunk}
+
+Now we are ready to run through some analyses, which we leave to the following sections.
+
+\section{Analyses}
+First, a disclaimer. All of the following analyses are for teaching. This is not the way that the authors recommend performing an analysis. We do emphasize heavily the need to prespecify all analyses in any setting, in order to have correct reproduceability and error rates. The two functions we will use in these analyses are \texttt{regress} and \texttt{lincom}. To learn more about either of these functions, type
+\begin{Schunk}
+\begin{Sinput}
+> ?regress
+> ?lincom
+\end{Sinput}
+\end{Schunk}
+
+From these help files, we learn that the minimum we need to enter into \texttt{regress} is a functional, a formula, and a dataset. A functional takes an object and returns a value; for instance, the mean is a functional because it takes a distribution and returns the mean. The allowed functionals for \texttt{regress} are:
+\begin{displaymath}
+\begin{tabular}{c|c}
+Functional & Type of Regression\\
+\hline
+\texttt{"mean"} & Linear Regression\\
+\texttt{"geometric mean"} & Linear Regression on logarithmically transformed Y\\
+\texttt{"odds"} & 
+\end{tabular}
+\end{displaymath}
+\subsection{Analysis 1}
+A natural question is, ``Do males have lower cerebral atrophy score than females''? To answer this question, we run a linear regression of atrophy on the variable male:
+\begin{Schunk}
+\begin{Sinput}
+> regress("mean", atrophy~age, data=mri)
+\end{Sinput}
+\begin{Soutput}
+Call:
+regress(fnctl = "mean", formula = atrophy ~ age, data = mri)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-36.870  -8.589  -0.870   7.666  51.203 
+
+Coefficients:
+                 Estimate  Naive SE  Robust SE    95%L      95%H         F stat    df Pr(>F)   
+[1] Intercept     -16.06     6.256     6.701       -29.22    -2.907           5.75 1    0.0168 
+[2] age            0.6980   0.08368   0.09002       0.5213    0.8747         60.12 1  < 0.00005
+
+Residual standard error: 12.36 on 733 degrees of freedom
+Multiple R-squared:  0.08669,	Adjusted R-squared:  0.08545 
+F-statistic: 60.12 on 1 and 733 DF,  p-value: 2.988e-14
+\end{Soutput}
+\end{Schunk}
+
+\end{document}

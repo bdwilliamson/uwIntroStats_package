@@ -1,0 +1,83 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Project Management}{}% 2
+\BOOKMARK [1][-]{section.2.1}{The Workspace}{chapter.2}% 3
+\BOOKMARK [1][-]{section.2.2}{Scripts}{chapter.2}% 4
+\BOOKMARK [1][-]{section.2.3}{Comments}{chapter.2}% 5
+\BOOKMARK [0][-]{chapter.3}{Data}{}% 6
+\BOOKMARK [1][-]{section.3.1}{Data Types \(`storage.mode'\)}{chapter.3}% 7
+\BOOKMARK [2][-]{subsection.3.1.1}{Numeric}{section.3.1}% 8
+\BOOKMARK [2][-]{subsection.3.1.2}{Character}{section.3.1}% 9
+\BOOKMARK [2][-]{subsection.3.1.3}{Logical}{section.3.1}% 10
+\BOOKMARK [2][-]{subsection.3.1.4}{NA, NULL, Inf, and NaN}{section.3.1}% 11
+\BOOKMARK [2][-]{subsection.3.1.5}{Factor}{section.3.1}% 12
+\BOOKMARK [1][-]{section.3.2}{Data Structures}{chapter.3}% 13
+\BOOKMARK [2][-]{subsection.3.2.1}{Vectors}{section.3.2}% 14
+\BOOKMARK [2][-]{subsection.3.2.2}{Matrices}{section.3.2}% 15
+\BOOKMARK [2][-]{subsection.3.2.3}{Arrays}{section.3.2}% 16
+\BOOKMARK [2][-]{subsection.3.2.4}{Data frame}{section.3.2}% 17
+\BOOKMARK [2][-]{subsection.3.2.5}{List}{section.3.2}% 18
+\BOOKMARK [1][-]{section.3.3}{Assigning a Value to a Variable}{chapter.3}% 19
+\BOOKMARK [1][-]{section.3.4}{Returning a Value from a Data Structure}{chapter.3}% 20
+\BOOKMARK [2][-]{subsection.3.4.1}{The ``[ ]'' Operator}{section.3.4}% 21
+\BOOKMARK [2][-]{subsection.3.4.2}{The ``\044'' Operator}{section.3.4}% 22
+\BOOKMARK [1][-]{section.3.5}{Indexing Values in a Data Structure}{chapter.3}% 23
+\BOOKMARK [2][-]{subsection.3.5.1}{The ``[ ]'' operator}{section.3.5}% 24
+\BOOKMARK [2][-]{subsection.3.5.2}{Special Issues for Indexing a Matrix}{section.3.5}% 25
+\BOOKMARK [2][-]{subsection.3.5.3}{The ``\044'' Operator}{section.3.5}% 26
+\BOOKMARK [2][-]{subsection.3.5.4}{The ``[[ ]]'' Operator}{section.3.5}% 27
+\BOOKMARK [1][-]{section.3.6}{Advanced Indexing}{chapter.3}% 28
+\BOOKMARK [2][-]{subsection.3.6.1}{Indexing with a Vector}{section.3.6}% 29
+\BOOKMARK [2][-]{subsection.3.6.2}{Indexing with a Negative Number}{section.3.6}% 30
+\BOOKMARK [2][-]{subsection.3.6.3}{Indexing using Logicals}{section.3.6}% 31
+\BOOKMARK [2][-]{subsection.3.6.4}{Indexing with a Matrix}{section.3.6}% 32
+\BOOKMARK [0][-]{chapter.4}{Data Input}{}% 33
+\BOOKMARK [1][-]{section.4.1}{Entering from the Keyboard}{chapter.4}% 34
+\BOOKMARK [1][-]{section.4.2}{Reading in Data from a File}{chapter.4}% 35
+\BOOKMARK [0][-]{chapter.5}{Manipulating Your Data}{}% 36
+\BOOKMARK [1][-]{section.5.1}{Element by element Evaluation}{chapter.5}% 37
+\BOOKMARK [1][-]{section.5.2}{Overall Evaluation}{chapter.5}% 38
+\BOOKMARK [2][-]{subsection.5.2.1}{The apply\(\) function}{section.5.2}% 39
+\BOOKMARK [1][-]{section.5.3}{Mean, standard deviation, exponentiation, square root, log, \136}{chapter.5}% 40
+\BOOKMARK [1][-]{section.5.4}{Missing Data, Special Values, and Evaluation}{chapter.5}% 41
+\BOOKMARK [1][-]{section.5.5}{Manipulating Data in the Workspace}{chapter.5}% 42
+\BOOKMARK [2][-]{subsection.5.5.1}{Adding Variables}{section.5.5}% 43
+\BOOKMARK [2][-]{subsection.5.5.2}{Changing Variable Names}{section.5.5}% 44
+\BOOKMARK [2][-]{subsection.5.5.3}{Changing Data Types}{section.5.5}% 45
+\BOOKMARK [1][-]{section.5.6}{Manipulating Data in a Data Frame \(or Matrix\)}{chapter.5}% 46
+\BOOKMARK [2][-]{subsection.5.6.1}{Adding Variables}{section.5.6}% 47
+\BOOKMARK [2][-]{subsection.5.6.2}{Changing Variable Names}{section.5.6}% 48
+\BOOKMARK [2][-]{subsection.5.6.3}{Changing Data Types}{section.5.6}% 49
+\BOOKMARK [2][-]{subsection.5.6.4}{Attaching a Data Set \(Data Frame\)}{section.5.6}% 50
+\BOOKMARK [2][-]{subsection.5.6.5}{Attaching with the Same Name}{section.5.6}% 51
+\BOOKMARK [2][-]{subsection.5.6.6}{Missing Data}{section.5.6}% 52
+\BOOKMARK [0][-]{chapter.6}{Packages}{}% 53
+\BOOKMARK [1][-]{section.6.1}{Function Help}{chapter.6}% 54
+\BOOKMARK [0][-]{chapter.7}{Descriptive Statistics}{}% 55
+\BOOKMARK [1][-]{section.7.1}{Simple Descriptives}{chapter.7}% 56
+\BOOKMARK [1][-]{section.7.2}{Other Descriptives and the uwIntroStats package}{chapter.7}% 57
+\BOOKMARK [1][-]{section.7.3}{Summarize vs descrip\(\)}{chapter.7}% 58
+\BOOKMARK [0][-]{chapter.8}{Chi-square Test}{}% 59
+\BOOKMARK [0][-]{chapter.9}{Plots}{}% 60
+\BOOKMARK [1][-]{section.9.1}{Boxplots}{chapter.9}% 61
+\BOOKMARK [1][-]{section.9.2}{Histograms}{chapter.9}% 62
+\BOOKMARK [1][-]{section.9.3}{Scatterplots}{chapter.9}% 63
+\BOOKMARK [0][-]{chapter.10}{Correlations}{}% 64
+\BOOKMARK [1][-]{section.10.1}{Pairwise Correlations}{chapter.10}% 65
+\BOOKMARK [0][-]{chapter.11}{Cumulative Distribution Functions}{}% 66
+\BOOKMARK [0][-]{chapter.12}{One-Sample Inference}{}% 67
+\BOOKMARK [1][-]{section.12.1}{The one-sample t-test}{chapter.12}% 68
+\BOOKMARK [0][-]{chapter.13}{Two-Sample Inference}{}% 69
+\BOOKMARK [1][-]{section.13.1}{The two-sample t-test}{chapter.13}% 70
+\BOOKMARK [0][-]{chapter.14}{Linear Regression}{}% 71
+\BOOKMARK [0][-]{chapter.15}{Regression on Functionals other than the Mean}{}% 72
+\BOOKMARK [0][-]{chapter.16}{Graphical User Interfaces}{}% 73
+\BOOKMARK [1][-]{section.16.1}{The Basic R GUI}{chapter.16}% 74
+\BOOKMARK [1][-]{section.16.2}{RStudio}{chapter.16}% 75
+\BOOKMARK [0][-]{chapter.17}{Examples from Lectures}{}% 76
+\BOOKMARK [1][-]{section.17.1}{BIOST 511 \(Taught by David Yanez, Autumn 2013\)}{chapter.17}% 77
+\BOOKMARK [2][-]{subsection.17.1.1}{Variance and Standard Deviation - Slide 51}{section.17.1}% 78
+\BOOKMARK [2][-]{subsection.17.1.2}{Calculating Quantiles and Percentiles - Slide 53}{section.17.1}% 79
+\BOOKMARK [2][-]{subsection.17.1.3}{2x2 Table - Slide 110}{section.17.1}% 80
+\BOOKMARK [2][-]{subsection.17.1.4}{Next Example}{section.17.1}% 81
+\BOOKMARK [1][-]{section.17.2}{BIOST 514/517 \(Taught by Katie Kerr, Autumn 2013\)}{chapter.17}% 82
+\BOOKMARK [1][-]{section.17.3}{Autumn 2014}{chapter.17}% 83

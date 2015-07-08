@@ -1,0 +1,9 @@
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
+\contentsline {section}{\numberline {2}Building the Package for the First Time}{1}{section.2}
+\contentsline {subsection}{\numberline {2.1}package.skeleton()}{1}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}The \texttt {DESCRIPTION} file}{2}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}The \texttt {NAMESPACE} file}{3}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}The \texttt {Read-and-delete-me} file}{3}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}The \texttt {man} files}{4}{subsection.2.5}
+\contentsline {section}{\numberline {3}Building the Package}{4}{section.3}
+\contentsline {section}{\numberline {4}Updating the Package}{5}{section.4}

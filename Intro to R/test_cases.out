@@ -1,0 +1,6 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [0][-]{chapter.2}{The regress Function}{}% 2
+\BOOKMARK [1][-]{section.2.1}{Syntax for regress}{chapter.2}% 3
+\BOOKMARK [1][-]{section.2.2}{Examples using the mri Data}{chapter.2}% 4
+\BOOKMARK [2][-]{subsection.2.2.1}{Example 1: atrophy on age}{section.2.2}% 5
+\BOOKMARK [2][-]{subsection.2.2.2}{Example 2: atrophy on age and male}{section.2.2}% 6

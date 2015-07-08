@@ -1,0 +1,49 @@
+\documentclass[pdf]{beamer}
+\mode<presentation>{}
+\usepackage{wrapfig}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb, amsthm}
+\usepackage{subfig}
+\usepackage{framed}
+\usepackage{enumerate}
+\usepackage{pdfsync}
+\usepackage{bbm}
+\usepackage{float}
+\usepackage{dsfont}
+\usetheme{Copenhagen}
+
+\title{R Examples from BIOST 514/517}
+\subtitle{Taught by Katie Kerr, Ph.D.}
+\author{Brian D. Williamson}
+\institute{University of Washington \\ Department of Biostatistics}
+\date{\today}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Lecture 18}
+\begin{frame}[fragile]
+\frametitle{Sign Test}\
+\framesubtitle{Shoulder Pain Data}
+Use the \texttt{wilcoxon()} function from \texttt{uwIntrostats}, specifying that \texttt{paired=T}.
+\begin{verbatim}
+wilcoxon(pain1, pain6, paired=TRUE)
+\end{verbatim} 
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Mann-Whitney U Test/Rank-sum test}
+\framesubtitle{PBC Data}
+Use the \texttt{wilcoxon()} function from \texttt{uwIntroStats}. In the bilirubin example, need to break up by edema first
+\begin{verbatim}
+edema0 <- pbc[pbc$edema==0,"bilirubin"]
+edema1 <- pbc[pbc$edema==1,"bilirubin"]
+wilcoxon(edema0)
+wilcoxon(edema1)
+\end{verbatim}
+\end{frame}
+
+\end{document}

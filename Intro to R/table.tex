@@ -1,0 +1,70 @@
+\documentclass[11pt,letterpaper,fleqn]{report}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{fullpage}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage[percent]{overpic}
+\usepackage{mathrsfs}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{lscape}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{listings}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm, headsep = 0.9cm]{geometry}
+\usepackage{verbdef}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.0in}
+\usepackage{setspace}
+\definecolor{gray}{RGB}{90,90,90}
+\usepackage[colorlinks=true, linktoc=all, linkcolor=blue]{hyperref}
+\newcommand\hwnum{8}
+\newcommand\yourname{\large Andrew J. Spieker}
+\newenvironment{answer}[1]{
+  \subsubsection*{\large Problem #1.}
+}
+
+\pagestyle{plain}
+
+\begin{document}
+\centerline{\textbf{\Large{Table of Useful STATA commands and R functions}}}
+$$$$
+A more in-depth presentation of all of these functions is located in the document titled ``An Introduction to R'' on emersonstatistics.com.
+$$$$
+\begin{centering}
+\begin{tabular}{cccc}
+\hline
+Desired output & STATA & R (base) & R (\texttt{uwIntroStats})\\
+\hline
+read in data (.txt file) & \texttt{infile} & \texttt{read.table()} & \\
+read in data (.csv file) & \texttt{infile} & \texttt{read.csv()} & \\
+mean & \texttt{summarize} & \texttt{summary()} & \texttt{descrip()}\\
+ & & \texttt{mean()} & \\
+std dev &\texttt{summarize} & \texttt{summary()} & \texttt{descrip()}\\
+ & & \texttt{sd()} & \\
+variance & \texttt{summarize} & \texttt{var()} & \texttt{descrip()}\\
+chi-square & \texttt{tabulate} & \texttt{chisq.test()} & \texttt{tabulate()}\\
+ & \texttt{cc} & & \\
+ & \texttt{cs} & & \\
+ & \texttt{cci} & & \\
+ & \texttt{csi} & & \\
+boxplot & \texttt{graph box} & \texttt{boxplot()} & \texttt{bplot()}\\
+histogram & \texttt{histogram} & \texttt{hist()} & \\
+density curve & \texttt{kdensity} & \texttt{plot(density())} & \\
+scatter plot & \texttt{scatter} & \texttt{plot()} & \texttt{scatter()}\\
+correlation & \texttt{correlate} & \texttt{cor()} - correlation & \texttt{correlate()}\\
+& & \texttt{cov()} - covariance & \\
+probability & \texttt{display normprob(1)} & \texttt{1-pnorm(1)} & \\
+(normal, z-score 1) & & & \\
+t-test & \texttt{ttest} & \texttt{t.test()} & \texttt{ttest()}\\
+linear regression & \texttt{regress} & \texttt{lm()} & \texttt{regress()}\\
+
+\end{tabular}
+\end{centering}
+
+\end{document}
