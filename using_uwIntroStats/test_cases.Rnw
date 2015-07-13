@@ -58,7 +58,7 @@ install.packages("uwIntroStats")
 
 Regardless of the graphical user interface (GUI) that you are using, R will prompt you to select a CRAN mirror. It is essentially asking you where you want to download the package files from. Select the mirror closest to you - for us at the University of Washington it is \texttt{WA(1)} or the Fred Hutchinson Cancer Research Center (FHCRC) - and the package will download and say that it has installed. Now each time we open a new R session (whether that is at the command line, a new RGui window, or a new RStudio window) we need to load the package for use. 
 
-The \texttt{uwIntroStats} package relies on five other packages. These other packages provide key functions that the \texttt{uwIntroStats} package uses or adds functionality to. We must load (and install like above if we have not installed previously) these packages, and then load \texttt{uwIntroStats}:
+The \texttt{uwIntroStats} package relies on five other packages. These other packages provide key functions that the \texttt{uwIntroStats} package uses or adds functionality to. We must install these packages like we did above if we have not installed them previously, and then load \texttt{uwIntroStats}. While these packages do not need to be loaded every time (in fact, some are only used for specific functions) it is good practice to load them for the R session where you need to use \texttt{uwIntroStats}.
 <<>>=
 library(Exact)
 library(geepack)
@@ -68,13 +68,14 @@ library(survival)
 library(uwIntroStats)
 @
 
-Last, we load the data, \texttt{mri} that we will be using throughout this document. Information about the dataset can be found at \path{http://www.emersonstatistics.com/datasets/mri.pdf}. Since the data is part of the package, we can load it via
+Last, we load the data, \texttt{mri} that we will be using throughout this document. Information about the dataset can be found at \url{http://www.emersonstatistics.com/datasets/mri.pdf}. Since the data is part of the package, we can load it via
 <<>>=
 data(mri)
 @
 
-Now we are ready to run through some analyses, which we leave to the following sections.
+The \texttt{uwIntroStats} package should be used for descriptive statistics, basic plotting (like scatterplots and boxplots), and regression analyses. The following sections will go through examples of these tasks, in addition to pointing out how our package differs from base R and other existing packages. We will assume familiarity with basic data manipulation and statistical tasks (for a refresher, see \url{http://www.emersonstatistics.com/GeneralMaterials/R/IntroToR.pdf}).
 
+\section{Descriptive Statistics}
 \section{Analyses}
 First, a disclaimer. All of the following analyses are for teaching. This is not the way that the authors recommend performing an analysis. We do emphasize heavily the need to prespecify all analyses in any setting, in order to have correct reproduceability and error rates. The two functions we will use in these analyses are \texttt{regress} and \texttt{lincom}. To learn more about either of these functions, type
 <<eval=FALSE>>=
@@ -89,7 +90,9 @@ Functional & Type of Regression\\
 \hline
 \texttt{"mean"} & Linear Regression\\
 \texttt{"geometric mean"} & Linear Regression on logarithmically transformed Y\\
-\texttt{"odds"} & 
+\texttt{"odds"} & Logistic Regression\\
+\texttt{"rate"} & Poisson Regression \\
+\texttt{"hazard"} & Proportional Hazards Regression
 \end{tabular}
 \end{displaymath}
 \subsection{Analysis 1}
