@@ -76,6 +76,63 @@ data(mri)
 The \texttt{uwIntroStats} package should be used for descriptive statistics, basic plotting (like scatterplots and boxplots), and regression analyses. The following sections will go through examples of these tasks, in addition to pointing out how our package differs from base R and other existing packages. We will assume familiarity with basic data manipulation and statistical tasks (for a refresher, see \url{http://www.emersonstatistics.com/GeneralMaterials/R/IntroToR.pdf}).
 
 \section{Descriptive Statistics}
+Descriptive statistics are an important part of any analysis. Often, they are just as important for the statistician or data analysist as they are for the scientific collaborators on a project. For example, descriptive statistics can help identify errors in the data, like observations that are particularly unusual (usually far out of the expected or observed range). They can also help to identify patterns of missing data, examine the study population, and identify aspects of the data that might lead to statistical issues. Descriptive statistics can also unearth relationships that had not previously been considered for analysis, thereby generating new studies. More information on this, and an outline of an approach to analysing a dataset, was written by Scott Emerson and can be found at \url{http://www.emersonstatistics.com/GeneralMaterials/analysis.pdf}. 
+
+\subsection{The basics: \texttt{descrip()}}
+The \texttt{uwIntroStats} package was designed with descriptive statistics in mind. The basic function for descriptive statistics is \texttt{descrip()}. This function takes in an arbitrary number of variables, and by default calculates the number of observations, the number of missing values, the mean, standard deviation, mininum value, maximum value, and the 25th, 50th, and 75th percentiles of each variable. For instance, if we wanted a quick glance at the \texttt{mri} data, we could type
+<<>>=
+descrip(mri)
+@
+
+This call gives us a quick look at the distribution of each variable in the sample, and can be easily exported to a word processing software. This is important, because displaying raw R output in a publication is not usually ideal, and taking the time to format the output is a pain.
+
+Notice that there are a lot of variables measured in these data, and that some interesting phenomena are measured by multiple variables. For instance, smoking is measured by \texttt{packyrs} and \texttt{yrsquit} - if someone has zero pack-years (that is, they have never smoked) then they will also have zero years quit. Similarly, a current smoker of any amount of packs per year will have zero years quit. We can also look at the variables measured through blood samples, like LDL cholesterol (\texttt{ldl}) and get an idea of the range in our sample population. Last, in the variables like \texttt{male} which consist of only two values (sex was measured as male or female in this dataset), the mean tells us the proportion of our sample who was male (or for other binary variables, it will tell us the proportion which is coded as 1). The \texttt{descrip} function works similarly to \texttt{summary} in base R, but gives more information and returns it in a format that, as we described above, is easier to export from R.
+
+Another powerful feature of \texttt{descrip} is its ability to present stratified summaries, or summaries on a subset of the data. For instance, let's calculate descriptive statistics on the \texttt{age} variable within males and females:
+<<>>=
+descrip(mri$age, strata = mri$male)
+@
+
+Here the row for \texttt{Str 0} corresponds to females (since they are coded as 0 for \texttt{male}), and males are \texttt{Str 1}. If we further wanted to restrict to only those people who were over 75 years old, we could use the \texttt{subset} argument:
+<<>>=
+descrip(mri$age, strata = mri$male, subset = mri$age > 75)
+@
+
+However, the descrip function can only give us a fixed number of summaries (mean, count, etc). Oftentimes we need only a subset of these, or perhaps different summary measures. For this, we turn to more powerful functions.
+
+\subsection{Flexibility: \texttt{tableStat()} and \texttt{tabulate()}}
+The main draw of \texttt{tableStat()} and \texttt{tabulate()} is their ability to supply only a subset of the summary measures from \texttt{descrip()}. These functions focus on display and flexibility. The user supplies the format for the summary statistics to be displayed in, which makes exporting results from a call to \texttt{tablestat()} or \texttt{tabulate()} even easier than it was for \texttt{descrip()}. Of the two, \texttt{tableStat()} is the base, and \texttt{tabulate()} adds some additional formatting and options. For example, let's say that we want the same summary statistics as we would get from \texttt{descrip()}, but we want to control the printout. For this, we use the \texttt{stat} argument. The options are 
+\begin{figure}[ht]
+\begin{tabular}{cl|cl}
+Name & Summary Measure & Name & Summary Measure\\
+\hline
+\texttt{"count"} & Number of observations on a variable & \texttt{"sd"} & Standard Deviation\\
+\texttt{"missing"} & Number of missing observations & \texttt{"variance"} & Variance\\
+\texttt{"mean"} & Arithmetic mean & \texttt{"min"} & Minimum value\\
+\texttt{"geometric mean"} & Geometric mean & \texttt{"max"} & Maximum value\\
+\texttt{"median"} & 50th percentile & \texttt{"quantiles"} & Display quantiles\\
+\texttt{"probabilities"} & Display percentiles & \texttt{"mn(sd)"} & Display Mean (SD) format\\
+\texttt{"range"} & Maximum value - minimum value & \texttt{"iqr"} & Interquartile range (75th - 25th percentiles)\\
+\texttt{"all"} & Display all summary measures & \texttt{"row\%"} & Display row percentages\\
+\texttt{"col\%"} & Display column percentages & \texttt{"tot\%"} & Display percentage of total\\
+\end{tabular}
+\label{stattable}
+\end{displaymath}
+The following gets us close to results we could display in a table for a puplication. We want to have 
+\begin{displaymath}
+N: \ n; \ Mean \ (SD): \ mn \ (sd); \ Range: \ max - min,
+\end{displaymath}
+which we get via:
+<<>>=
+tableStat(mri$age, stat = "N: @count@; Mean (SD): @mean@ (@sd@); Range: @max@ - @min@")
+@
+
+Note that all of the values enclosed in \texttt{@} symbols are from Table \ref{stattable} and are run by \texttt{tableStat()}, while the other values in the string are used for formatting. This function can also take stratification variables; if we want to see the above stratified by sex, we use
+<<>>=
+tableStat(mri$age, strata = mri$male, stat = "N: @count@; Mean (SD): @mean@ (@sd@); Range: @min@ - @max@")
+@
+
+
 \section{Analyses}
 First, a disclaimer. All of the following analyses are for teaching. This is not the way that the authors recommend performing an analysis. We do emphasize heavily the need to prespecify all analyses in any setting, in order to have correct reproduceability and error rates. The two functions we will use in these analyses are \texttt{regress} and \texttt{lincom}. To learn more about either of these functions, type
 <<eval=FALSE>>=
@@ -85,7 +142,7 @@ First, a disclaimer. All of the following analyses are for teaching. This is not
 
 From these help files, we learn that the minimum we need to enter into \texttt{regress} is a functional, a formula, and a dataset. A functional takes an object and returns a value; for instance, the mean is a functional because it takes a distribution and returns the mean. The allowed functionals for \texttt{regress} are:
 \begin{displaymath}
-\begin{tabular}{c|c}
+\begin{tabular}{c|l}
 Functional & Type of Regression\\
 \hline
 \texttt{"mean"} & Linear Regression\\
