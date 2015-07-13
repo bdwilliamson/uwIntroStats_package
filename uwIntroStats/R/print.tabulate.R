@@ -70,14 +70,14 @@ function(x,...){
         uWaldStat <- NULL
         uWaldP <- NULL
         if("uWald" %in% tests){
-          uWaldTest <- exact.test(observeds, method="Z-unpooled", to.plot=FALSE)
+          uWaldTest <- Exact::exact.test(observeds, method="Z-unpooled", to.plot=FALSE)
           uWaldStat <- uWaldTest$test.statistic
           uWaldP <- uWaldTest$p.value
         }
         uScoreStat <- NULL
         uScoreP <- NULL
         if("uScore" %in% tests){
-          uScoreTest <- exact.test(observeds, method="Z-pooled", to.plot=FALSE)
+          uScoreTest <- Exact::exact.test(observeds, method="Z-pooled", to.plot=FALSE)
           uScoreStat <- uScoreTest$test.statistic
           uScoreP <- uScoreTest$p.value
         }
@@ -146,14 +146,14 @@ function(x,...){
         uWaldStat <- NULL
         uWaldP <- NULL
         if("uWald" %in% tests){
-          uWaldTest <- exact.test(observeds, method="Z-unpooled", to.plot=FALSE)
+          uWaldTest <- Exact::exact.test(observeds, method="Z-unpooled", to.plot=FALSE)
           uWaldStat <- uWaldTest$test.statistic
           uWaldP <- uWaldTest$p.value
         }
         uScoreStat <- NULL
         uScoreP <- NULL
         if("uScore" %in% tests){
-          uScoreTest <- exact.test(observeds, method="Z-pooled", to.plot=FALSE)
+          uScoreTest <- Exact::exact.test(observeds, method="Z-pooled", to.plot=FALSE)
           uScoreStat <- uScoreTest$test.statistic
           uScoreP <- uScoreTest$p.value
         }
@@ -232,7 +232,7 @@ function(x,...){
     } else if (nDims > 3){
       arraylist <- list()
       for(i in 1:finalDim){
-        arraylist[[i]] <- aaply(array, nDims, tabPrintFormat, list=list[[i]])
+        arraylist[[i]] <- plyr::aaply(array, nDims, tabPrintFormat, list=list[[i]])
       }
       names(arraylist) <- unlist(dimnames(array)[nDims])
       return(arraylist)
@@ -542,7 +542,7 @@ function(x,...){
     if(length(dim(array)) == 2){
       return(array[-dim(array)[1], -dim(array)[2]])
     } else {
-      newArray <- aaply(array, tail(dim(array), n=1), removeLastDims)
+      newArray <- plyr::aaply(array, tail(dim(array), n=1), removeLastDims)
     }
   }
   ## Format and print the values

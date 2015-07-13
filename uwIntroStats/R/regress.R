@@ -697,11 +697,11 @@ regress <-
           form <- paste(newy,"~", form, sep="")
           formula <- as.formula(form, env=.GlobalEnv)
         } 
-        fit <- if(!is.null(w)) geeglm(formula, weights=w, family="gaussian",id=id, data=data,...) else geeglm(formula, family="gaussian",id=id, data=data,...)
+        fit <- if(!is.null(w)) geepack::geeglm(formula, weights=w, family="gaussian",id=id, data=data,...) else geepack::geeglm(formula, family="gaussian",id=id, data=data,...)
       } else if (fnctl=="odds"){
-        fit <- if(!is.null(w)) geeglm(formula, weights=w, family="binomial",id=id, data=data,...) else geeglm(formula, family="binomial",id=id, data=data,...)
+        fit <- if(!is.null(w)) geepack::geeglm(formula, weights=w, family="binomial",id=id, data=data,...) else geepack::geeglm(formula, family="binomial",id=id, data=data,...)
       } else {
-        fit <- if(!is.null(w)) geeglm(formula, weights=w, family="poisson",id=id, data=data,...) else geeglm(formula, family="poisson",id=id, data=data,...)
+        fit <- if(!is.null(w)) geepack::geeglm(formula, weights=w, family="poisson",id=id, data=data,...) else geepack::geeglm(formula, family="poisson",id=id, data=data,...)
       }
     }
     
