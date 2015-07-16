@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.3.10)  13 JUL 2015 10:40
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.3.10)  16 JUL 2015 12:29
 entering extended mode
 **test_cases.tex
 
@@ -212,6 +212,9 @@ Package: wrapfig 2003/01/31  v 3.6
 ("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\url\url.sty"
 \Urlmuskip=\muskip11
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\placeins\placeins.sty"
+Package: placeins 2005/04/18  v 2.2
 )
 ("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\graphics\lscape.sty"
 Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
@@ -562,34 +565,34 @@ Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
 )
 ("C:\Users\Brian Williamson\Documents\uwIntroStats_package\using_uwIntroStats\t
 est_cases.aux")
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 38.
-LaTeX Font Info:    ... okay on input line 38.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 38.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 38.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 39.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 39.
 
 ("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\base\ts1cmr.fd"
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    ... okay on input line 39.
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             http://www.ctan.org/tex-archive/ 
 (lastpage)             macros/latex/contrib/pageslts/ 
 (lastpage)             or
 (lastpage)             http://www.ctan.org/tex-archive/ 
 (lastpage)             install/macros/latex/contrib/pageslts.tds.zip
-(lastpage)             ! on input line 38.
+(lastpage)             ! on input line 39.
 
 ("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -642,7 +645,7 @@ Package lastpage Info: Please have a look at the pageslts package at
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box34
-Package hyperref Info: Link coloring ON on input line 38.
+Package hyperref Info: Link coloring ON on input line 39.
 ("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\hyperref\nameref.sty"
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -652,9 +655,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count141
 )
-LaTeX Info: Redefining \ref on input line 38.
-LaTeX Info: Redefining \pageref on input line 38.
-LaTeX Info: Redefining \nameref on input line 38.
+LaTeX Info: Redefining \ref on input line 39.
+LaTeX Info: Redefining \pageref on input line 39.
+LaTeX Info: Redefining \nameref on input line 39.
 
 ("C:\Users\Brian Williamson\Documents\uwIntroStats_package\using_uwIntroStats\t
 est_cases.out")
@@ -664,14 +667,14 @@ est_cases.out")
 
 ("C:\Users\Brian Williamson\Documents\uwIntroStats_package\using_uwIntroStats\t
 est_cases-concordance.tex")
-LaTeX Font Info:    Try loading font information for T1+aett on input line 40.
+LaTeX Font Info:    Try loading font information for T1+aett on input line 41.
 
 ("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\ae\t1aett.fd"
 File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
 )
 
 LaTeX Font Warning: Font shape `T1/aett/bx/n' undefined
-(Font)              using `T1/aett/m/n' instead on input line 40.
+(Font)              using `T1/aett/m/n' instead on input line 41.
 
 
 ("C:\Users\Brian Williamson\Documents\uwIntroStats_package\using_uwIntroStats\t
@@ -696,43 +699,85 @@ File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 [1
 
 {C:/Users/Brian Williamson/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}] 
-[2] [3] [4] [5] [6] 
+[2] [3] [4] [5] [6] [7] [8]
+<test_cases-plot.pdf, id=217, 433.62pt x 433.62pt>
+File: test_cases-plot.pdf Graphic file (type pdf)
+ <use test_cases-plot.pdf>
+Package pdftex.def Info: test_cases-plot.pdf used on input line 336.
+(pdftex.def)             Requested size: 272.45943pt x 272.47408pt.
+
+[9] <test_cases-agescatter.pdf, id=222, 433.62pt x 433.62pt>
+File: test_cases-agescatter.pdf Graphic file (type pdf)
+
+<use test_cases-agescatter.pdf>
+Package pdftex.def Info: test_cases-agescatter.pdf used on input line 350.
+(pdftex.def)             Requested size: 272.45943pt x 272.47408pt.
+ [10 <C:/Users/Brian Williamson/Documents/uwIntroStats_package/using_uwIntroSta
+ts/test_cases-plot.pdf>]
+<test_cases-stratscatter.pdf, id=233, 433.62pt x 433.62pt>
+File: test_cases-stratscatter.pdf Graphic file (type pdf)
+
+<use test_cases-stratscatter.pdf>
+Package pdftex.def Info: test_cases-stratscatter.pdf used on input line 364.
+(pdftex.def)             Requested size: 272.45943pt x 272.47408pt.
+ [11 <C:/Users/Brian Williamson/Documents/uwIntroStats_package/using_uwIntroSta
+ts/test_cases-agescatter.pdf>] [12 <C:/Users/Brian Williamson/Documents/uwIntro
+Stats_package/using_uwIntroStats/test_cases-stratscatter.pdf>] [13] [14] [15] [
+16] [17] [18] [19] [20] [21] [22]
+LaTeX Font Info:    Try loading font information for TS1+aett on input line 836
+.
+
+(C:/Users/BRIANW~1/DOCUME~1/R/R-32~1.1/share/texmf/tex/latex\ts1aett.fd
+File: ts1aett.fd 
+)
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 836
+.
+
+("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\base\ts1cmtt.fd"
+File: ts1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <10> not available
+(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 836.
+
+[23] 
 AED: lastpage setting LastPage
-[7]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 264.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 264.
+[24] [25]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 897.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 897.
 
 ("C:\Users\Brian Williamson\Documents\uwIntroStats_package\using_uwIntroStats\t
 est_cases.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 264.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 264.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 897.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 897.
 Package rerunfilecheck Info: File `test_cases.out' has not changed.
-(rerunfilecheck)             Checksum: 58F1172268F3561E246B052A7909BFAA;434.
+(rerunfilecheck)             Checksum: A9B72B75770FE4B23A85DE9B7261F747;1769.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 264.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 897.
  ) 
 Here is how much of TeX's memory you used:
- 10024 strings out of 493921
- 146811 string characters out of 3141635
- 250753 words of memory out of 3000000
- 13091 multiletter control sequences out of 15000+200000
- 22645 words of font info for 55 fonts, out of 3000000 for 9000
+ 10151 strings out of 493921
+ 149148 string characters out of 3141635
+ 252069 words of memory out of 3000000
+ 13160 multiletter control sequences out of 15000+200000
+ 22942 words of font info for 56 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 41i,7n,43p,1063b,505s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/public/amsfonts/cm/cmb
-x10.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/public/amsfonts/
-cm/cmbx12.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/public/ams
-fonts/cm/cmmi10.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/publ
-ic/amsfonts/cm/cmr10.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1
-/public/amsfonts/cm/cmsy10.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts
-/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex
-/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on test_cases.pdf (7 pages, 124922 bytes).
+ 41i,10n,43p,1337b,507s stack positions out of 5000i,500n,10000p,200000b,50000s
+ <C:\Users\Brian Williamson\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen
+\ec\dpi600\tctt1000.pk><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/p
+ublic/amsfonts/cm/cmbx10.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/t
+ype1/public/amsfonts/cm/cmbx12.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Brian Williamson/SkyDrive/Mi
+kTex/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Brian Williamson/SkyDri
+ve/MikTex/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Brian Williamson/Sk
+yDrive/MikTex/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Brian William
+son/SkyDrive/MikTex/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/Brian W
+illiamson/SkyDrive/MikTex/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on test_cases.pdf (25 pages, 319008 bytes).
 PDF statistics:
- 119 PDF objects out of 1000 (max. 8388607)
- 16 named destinations out of 1000 (max. 500000)
- 61 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 358 PDF objects out of 1000 (max. 8388607)
+ 59 named destinations out of 1000 (max. 500000)
+ 236 words of extra memory for PDF output out of 10000 (max. 10000000)
 

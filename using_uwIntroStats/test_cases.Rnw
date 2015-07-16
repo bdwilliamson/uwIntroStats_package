@@ -11,6 +11,7 @@
 \usepackage{amsmath}
 \usepackage{url}
 \usepackage{amssymb}
+\usepackage{placeins}
 \usepackage{amscd}
 \usepackage{lscape}
 \usepackage{graphicx}
@@ -68,7 +69,7 @@ library(survival)
 library(uwIntroStats)
 @
 
-Last, we load the data, \texttt{mri} that we will be using throughout this document. Information about the dataset can be found at \url{http://www.emersonstatistics.com/datasets/mri.pdf}. Since the data is part of the package, we can load it via
+Don't worry about the warning message for now; that will be covered in section 3.2. Last, we load the data, \texttt{mri} that we will be using throughout this document. Information about the dataset can be found at \url{http://www.emersonstatistics.com/datasets/mri.pdf}. Since the data is part of the package, we can load it via
 <<>>=
 data(mri)
 @
@@ -86,11 +87,14 @@ descrip(mri)
 
 This call gives us a quick look at the distribution of each variable in the sample, and can be easily exported to a word processing software. This is important, because displaying raw R output in a publication is not usually ideal, and taking the time to format the output is a pain.
 
-Notice that there are a lot of variables measured in these data, and that some interesting phenomena are measured by multiple variables. For instance, smoking is measured by \texttt{packyrs} and \texttt{yrsquit} - if someone has zero pack-years (that is, they have never smoked) then they will also have zero years quit. Similarly, a current smoker of any amount of packs per year will have zero years quit. We can also look at the variables measured through blood samples, like LDL cholesterol (\texttt{ldl}) and get an idea of the range in our sample population. Last, in the variables like \texttt{male} which consist of only two values (sex was measured as male or female in this dataset), the mean tells us the proportion of our sample who was male (or for other binary variables, it will tell us the proportion which is coded as 1). The \texttt{descrip} function works similarly to \texttt{summary} in base R, but gives more information and returns it in a format that, as we described above, is easier to export from R.
+Notice that there are a lot of variables measured in these data, and that some interesting phenomena are measured by multiple variables. For instance, smoking is measured by \texttt{packyrs} and \texttt{yrsquit} - if someone has zero pack-years (that is, they have never smoked) then they will also have zero years quit. Similarly, a current smoker of any amount of packs per year will have zero years quit. We can also look at the variables measured through blood samples, like LDL cholesterol (\texttt{ldl}) and get an idea of the range in our sample population. Last, in the variables like \texttt{male} which consist of only two values (sex was measured as male or female in this dataset), the mean tells us the proportion of our sample who was male (or for other binary variables, it will tell us the proportion which is coded as 1). The \texttt{descrip()} function works similarly to \texttt{summary()} in base R, but gives more information and returns it in a format that, as we described above, is easier to export from R.
 
-Another powerful feature of \texttt{descrip} is its ability to present stratified summaries, or summaries on a subset of the data. For instance, let's calculate descriptive statistics on the \texttt{age} variable within males and females:
+Another powerful feature of \texttt{descrip()} is its ability to present stratified summaries, or summaries on a subset of the data. For instance, let's calculate descriptive statistics on the \texttt{age} variable within males and females:
 <<>>=
 descrip(mri$age, strata = mri$male)
+
+## Call the summary function, to compare
+summary(mri$age)
 @
 
 Here the row for \texttt{Str 0} corresponds to females (since they are coded as 0 for \texttt{male}), and males are \texttt{Str 1}. If we further wanted to restrict to only those people who were over 75 years old, we could use the \texttt{subset} argument:
@@ -98,11 +102,11 @@ Here the row for \texttt{Str 0} corresponds to females (since they are coded as 
 descrip(mri$age, strata = mri$male, subset = mri$age > 75)
 @
 
-However, the descrip function can only give us a fixed number of summaries (mean, count, etc). Oftentimes we need only a subset of these, or perhaps different summary measures. For this, we turn to more powerful functions.
+However, the \texttt{descrip()} function can only give us a fixed number of summaries (mean, count, etc). Oftentimes we need only a subset of these, or perhaps different summary measures. For this, we turn to more powerful functions.
 
 \subsection{Flexibility: \texttt{tableStat()} and \texttt{tabulate()}}
-The main draw of \texttt{tableStat()} and \texttt{tabulate()} is their ability to supply only a subset of the summary measures from \texttt{descrip()}. These functions focus on display and flexibility. The user supplies the format for the summary statistics to be displayed in, which makes exporting results from a call to \texttt{tablestat()} or \texttt{tabulate()} even easier than it was for \texttt{descrip()}. Of the two, \texttt{tableStat()} is the base, and \texttt{tabulate()} adds some additional formatting and options. For example, let's say that we want the same summary statistics as we would get from \texttt{descrip()}, but we want to control the printout. For this, we use the \texttt{stat} argument. The options are 
-\begin{figure}[ht]
+The main draw of \texttt{tableStat()} and \texttt{tabulate()} is their ability to supply only a subset of the summary measures from \texttt{descrip()}. These functions focus on display and flexibility. The user supplies the format for the summary statistics to be displayed in, which makes exporting results from a call to \texttt{tablestat()} or \texttt{tabulate()} even easier than it was for \texttt{descrip()}. Of the two, \texttt{tableStat()} is the base, and \texttt{tabulate()} adds some additional formatting and options. For example, let's say that we want the same summary statistics as we would get from \texttt{descrip()}, but we want to control the printout. For this, we use the \texttt{stat} argument. The options are presented in Table \ref{stattable}.
+\begin{table}[ht]
 \begin{tabular}{cl|cl}
 Name & Summary Measure & Name & Summary Measure\\
 \hline
@@ -116,8 +120,10 @@ Name & Summary Measure & Name & Summary Measure\\
 \texttt{"all"} & Display all summary measures & \texttt{"row\%"} & Display row percentages\\
 \texttt{"col\%"} & Display column percentages & \texttt{"tot\%"} & Display percentage of total\\
 \end{tabular}
+\caption{Summary measures calculated by \texttt{tableStat()} and \texttt{tabulate()}.}
 \label{stattable}
-\end{displaymath}
+\end{table}
+\FloatBarrier
 The following gets us close to results we could display in a table for a puplication. We want to have 
 \begin{displaymath}
 N: \ n; \ Mean \ (SD): \ mn \ (sd); \ Range: \ max - min,
@@ -132,30 +138,251 @@ Note that all of the values enclosed in \texttt{@} symbols are from Table \ref{s
 tableStat(mri$age, strata = mri$male, stat = "N: @count@; Mean (SD): @mean@ (@sd@); Range: @min@ - @max@")
 @
 
+Now if we wanted to see this in table form, in perhaps a nicer layout, we could use the \texttt{tabulate()} function. When we loaded the \texttt{uwIntroStats} package at the beginning of this document, recall that we got a warning message from R saying
+\begin{verbatim}
+The following object is masked from ‘package:base’:
 
-\section{Analyses}
-First, a disclaimer. All of the following analyses are for teaching. This is not the way that the authors recommend performing an analysis. We do emphasize heavily the need to prespecify all analyses in any setting, in order to have correct reproduceability and error rates. The two functions we will use in these analyses are \texttt{regress} and \texttt{lincom}. To learn more about either of these functions, type
-<<eval=FALSE>>=
-?regress
-?lincom
-@
+    tabulate
+\end{verbatim}
 
-From these help files, we learn that the minimum we need to enter into \texttt{regress} is a functional, a formula, and a dataset. A functional takes an object and returns a value; for instance, the mean is a functional because it takes a distribution and returns the mean. The allowed functionals for \texttt{regress} are:
-\begin{displaymath}
-\begin{tabular}{c|l}
-Functional & Type of Regression\\
-\hline
-\texttt{"mean"} & Linear Regression\\
-\texttt{"geometric mean"} & Linear Regression on logarithmically transformed Y\\
-\texttt{"odds"} & Logistic Regression\\
-\texttt{"rate"} & Poisson Regression \\
-\texttt{"hazard"} & Proportional Hazards Regression
-\end{tabular}
-\end{displaymath}
-\subsection{Analysis 1}
-A natural question is, ``Do males have lower cerebral atrophy score than females''? To answer this question, we run a linear regression of atrophy on the variable male:
+This means that our function \texttt{tabulate()} overwrites the function called \texttt{tabulatte()} in the base R package, which takes a numeric vector and counts the number of times each integer occurs in it. Our function does a similar task, but on combinations of strata. The syntax is very similar to the syntax for \texttt{tableStat()}, but rather than explicitly telling \texttt{tabulate()} the strata, it creates the tables with each dimension corresponding to a variable in the order they are entered. For instance, if we want a table of \texttt{age} (in the rows) and \texttt{male} (in the columns), we would write
 <<>>=
-regress("mean", atrophy~age, data=mri)
+tabulate(mri$age, mri$male)
 @
 
+By default, \texttt{tabulate} gives us the count in each combination of the strata, and gives us the overall $\chi^2$ test statistic, degrees of freedom, and p-value. We can add in other arguments as well. Let's say that we are interested in an odds ratio or a risk ratio - \texttt{tabulate()} can supply these, if we set \texttt{dispRatios = TRUE}. However, we supply both the odds ratio and the risk ratio, even though in some cases only one is appropriate. Thus it is up to the user to know which they can use. To display these ratios for \texttt{male} versus \texttt{chf} (an indicator variable of whether the patient had been diagnosed with congestive heart failure prior to MRI), we type
+<<>>=
+tabulate(mri$male, mri$chf, dispRatios = TRUE)
+@
+Now we are given a point estimate and a 95\% confidence interval for both the odds and risk ratio, in addition to the $\chi^2$ estimate. 
+
+Last, similar to \texttt{tableStat()}, we can identify different statistics to display. The syntax is exactly the same, and the same statistics from Table \ref{stattable} are valid in \texttt{tabulate()}.
+
+\section{Plotting}
+Plots and descriptive statistics together lead to a much better understanding of the data. In our package, we have implemented two types of plots: boxplots and scatterplots. In doing so, we have attempted to address some concerns with both types of plots.
+\subsection{Boxplots}
+Boxplots reduce the data down to four summary measures: minimum, maximum, median, and the interquartile range (25th to 75th quantile). They also show ``outliers'' in the data. We put this in quotes because the definition of ``outlier'' depends on the function you call, and the software you are running. Even in the base R version, \texttt{boxplot()}, the boxplots can be constructed so that no outliers are shown. 
+
+Much of the criticism of boxplots lies both in this determination of outliers and in the dramatic reduction of the data. In our version, \texttt{bplot()}, we have added jittered data onto the boxplots (jittering allows us to see the data, but randomly adds noise so that we can see individual points better), and we have added the mean and standard deviation onto the plot. We can also produce stratified boxplots. For our function, the variable on the y-axis comes first, followed by the variable on the x-axis. This convention, while at odds with base R, is an attempt to make our functions match up with the regression scheme of response followed by predictors.
+
+For our first example, let's create a boxplot showing the age distribution of the \texttt{diabetes} variable:
+<<>>=
+## Base R boxplot
+boxplot(mri$age ~ mri$diabetes)
+
+## Our version of boxplot
+bplot(mri$age, mri$diabetes)
+@
+In comparing the two, see that our plot displays the mean line and $\pm$ standard deviation box in blue and overlays the jittered data on top of the boxplots produced by the base R function. Now if we also wanted to stratify by race, we write
+<<>>=
+bplot(mri$age, mri$diabetes, strata = mri$race)
+@
+This boxplot breaks down diabetes by race, again showing the mean and standard deviation bars. Note that like normal plots, we can define the axis labels and title by hand.
+
+\subsection{Scatterplots}
+Scatterplots are a very common way to view data. They plot all of the data in one window, which allows the user to get a good overall view. However, many times the data is clumped together in some spots, and it is hard to see all of the points. Thus, similar to our approach in \texttt{bplot()}, our \texttt{scatter()} function jitters the data slightly by default. To illustrate this difference, we consider the distribution of cerebral atrophy by age group. In the base R scatterplot,
+<<fig = TRUE, include = FALSE, label = plot>>=
+plot(mri$age, mri$atrophy)
+@
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=0.4\textwidth]{test_cases-plot}
+\caption{Base R Scatterplot}
+\label{baseR}
+\end{center}
+\end{figure}
+\FloatBarrier
+we see that a lot of the values sit on top of each other. In our version (which again uses the Y followed by X convention),
+<<include = FALSE, fig = TRUE, label = agescatter>>=
+scatter(mri$atrophy, mri$age)
+@
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[keepaspectratio = true, width=0.4\textwidth]{test_cases-agescatter}
+\caption{Scatterplot of atrophy vs age}
+\label{agescatter}
+\end{center}
+\end{figure}
+\FloatBarrier
+the jittered data allows us to see where all of the points lie much better. Also notice that \texttt{scatter()} displayes a loess curve by default. We can also display a line of best fit calculated by least squares by adding \texttt{plotLSfit = TRUE}. Last, we can stratify, which is particularly useful if we want to see differences across a third variable, and \texttt{scatter()} will automatically color the data appropriately:
+<<include = FALSE, fig = TRUE, label = stratscatter>>=
+scatter(mri$atrophy, mri$age, strata = mri$race)
+@
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[keepaspectratio = true, width=0.4\textwidth]{test_cases-stratscatter}
+\caption{Scatterplot of atrophy vs age stratified by race}
+\label{stratscatter}
+\end{center}
+\end{figure}
+\FloatBarrier
+
+\section{Transformations of a Variable}
+In many cases (especially in regression, which we will cover in section 7), it is more useful to model a transformation of a variable than the raw data itself. We present three functions to easily transform a variable. In each case, the function returns a list of: a matrix with the new transformed variable, the type of transformation performed, a vector describing how the variable was created, the name of the created variable, and the original data.
+\subsection{Dummy Variables}
+Dummy variables are a convenient way of creating indicator variables against some reference. For example, in the \texttt{mri} data, if we wanted to create a dummy variable for \texttt{race}, this would create 3 indicator variables (since there are four levels of race). By default, our \texttt{dummy()} function creates these indicators using the smallest value as the reference. 
+<<>>=
+dummy.race <- dummy(mri$race)
+head(dummy.race, n = 10)
+@
+Thus the set of dummy variables for race created above has: an indicator of whether the patient is black or white, an indicator of whether the patient is Asian or white, and an indicator of whether the patient is listed as ``other'' or white. These variables would allow us, in a regression, to compare each of the races against the white reference group.
+
+\subsection{Linear Splines}
+Linear splines create a piecewise linear fit between user specified ``knot'' points; these are the points in the variable that we allow the slope of the line to change. There are two major ways to parameterize linear splines, and we have implemented both in this package. The first is based on the absolute slope between knots - that is, if we had a variable (like \texttt{ldl} in the \texttt{mri} dataset) that took on values between 11 and 247 and we placed knots at 70 and 150, we would see three columns: the first would show the minimum of 70 and the value of \texttt{ldl}; the second would show the minimum of \texttt{ldl} - 70 and 80; and the last column would show the remaining part of \texttt{ldl}. For example, if \texttt{ldl} = 71 for one patient, we would see \begin{verbatim} 70 1 0 \end{verbatim}. If \texttt{ldl} = 247, we would see \begin{verbatim} 70 80 97 \end{verbatim}.
+
+The second parameterization is denoted by us as ``change''. This uses the change between knots to specify the slopes. Under this parameterization, we would see, for a value of 115, \begin{verbatim} 115 45 0 \end{verbatim}, which corresponds to: 115 units between the minimum and the value, 45 units between knot 1 (at 70) and the value, and zero units between knot 2 (at 150) and the value. We do not show negative units.
+
+These two parameterizations can be accessed via
+<<>>=
+lspline.ldl <- lspline(mri$ldl, knots = c(70, 150))
+head(lspline.ldl, n = 10)
+lsplineD.ldl <- lsplineD(mri$ldl, knots = c(70, 150))
+head(lsplineD.ldl, n = 10)
+@
+\subsection{Polynomials}
+Last we come to polynomials. This function creates a polynomial of the specified degree simply by multiplying the variable by itself the correct number of times. If we wanted to create a parabola in \texttt{age}, we type
+<<>>=
+age.parabola <- polynomial(mri$age, degree = 2)
+head(age.parabola, n = 10)
+@
+The ``(ctr)'' after each term tells us that \texttt{polynomial()} has automatically centered each term, and by default it centers at the mean of the variable. 
+
+\section{One and Two Sample Functions}
+Many of our analyses boil down to one-sample or two-sample problems; What is the mean time to death? What is the median home price in Seattle? What is the difference in mean time to death between control and the treatment group? The list goes on. There are many methods of analyzing one-sample relationships, and in our package we have implemented three. 
+\subsection{Correlation}
+While correlation is not an excellent source of inference, since it is inherently a feature of the dataset collected, sometimes it is important to know when variables are correlated. In the base R package, there are a few functions to calculate correlation: \texttt{cor()}, \texttt{var()}, \texttt{cov()}, and \texttt{cov2cor()}. Our function, \texttt{correlate()}, computes the correlation matrix between an arbitrary number of variables, and optionally also does this within a stratification variable. This is the real advantage of \texttt{correlate()}, since in base R we would have to manually subset the data into each stratum. If we want to examine the correlation between sex and diabetes, (and then stratify by race), we get
+<<>>=
+## Base R - returns only one number!
+cor(mri$male, mri$diabetes)
+
+## uwIntroStats version
+correlate(mri$male, mri$diabetes)
+
+## Stratify on race
+correlate(mri$male, mri$diabetes, strata = mri$race)
+@
+
+Our function takes the pain out of calculating multiple correlations within stratum variables. We also return a correlation matrix rather than a single number, which allows the user to go straight to a covariance matrix by squaring. We also allow calculation of Spearman or Pearson (default) correlation.
+
+\subsection{Point Estimates and Inference}
+As mentioned above, since correlation is a function of the data gathered, we usually need other methods for our inference. One of the most common tests is the t-test, since we are often interested in the mean and making comparisons between means. Perhaps less common are the Wilcoxon and Mann-Whitney, which use the ``rank'' of the variables compared.   
+\subsubsection{T-tests}
+In the base R package, the \texttt{t.test()} function performs a t-test as you would expect. Our function \texttt{ttest()} improves on this by allowing stratification, calculation of the geometric mean, allowing for presuming unequal variances between samples, and making a cleaner output. For example, a t-test of whether the mean of the \texttt{ldl} variable is equal to 125 yields, in base R and \texttt{uwIntroStats}
+<<>>=
+## base R
+t.test(mri$ldl, mu = 125)
+## uwIntroStats
+ttest(mri$ldl, null.hypoth = 125)
+@
+
+If instead we wanted a two-sample t-test of whether the difference in mean LDL between males and females were zero, we would get
+<<>>=
+## base R
+t.test(mri$ldl[mri$male == 0], mri$ldl[mri$male == 1])
+
+## uwIntroStats
+ttest(mri$ldl, by = mri$male)
+@
+
+Note that in our package, the default is to presume unequal variances between samples, which the authors believe to usually be the correct course. Also, we don't have to subset the data manually. We also run two-sided tests by default, but others can be specified.
+
+\subsubsection{Generic Inference}
+Until now, all of the methods in this section work on multiple samples. However, if we want to produce point estimates, interval estimates, and p-values for an arbitrary functional (mean, geometric mean, proportion, median, quantile, odds) of a variable, we can use the \texttt{oneSample()} function. Base R does not have a function which performs this general inference all in one spot. In the following tests, we will run one- and two-sample t-tests and an exact binomial test, all on the LDL variable. The t-tests run by \texttt{oneSample()} are an alternative to \texttt{ttest()} as described above. The output is not as verbose, but all of the information is the same:
+<<>>=
+## base R
+t.test(mri$ldl, mu = 125)
+
+## ttest
+ttest(mri$ldl, null.hypoth = 125)
+
+## oneSample
+oneSample("mean", mri$ldl, null.hypothesis = 125)
+@
+
+However, the true flexibility of the \texttt{oneSample()} function comes into play when we ask about different functionals. If we want inference on the geometric mean (which might make sense since LDL is a biological variable that may exhibit extreme values due to illness), in base R or with \texttt{ttest()} we have to logarithmically transform our variable and then run the t-test. With \texttt{oneSample()}, we simply run on \texttt{"geometric mean"}:
+<<>>=
+## base R
+t.test(log(mri$ldl), mu = log(125))
+
+## ttest
+ttest(log(mri$ldl), null.hypoth = log(125))
+
+## oneSample
+oneSample("geometric mean", mri$ldl, null.hypothesis = 125)
+@
+
+We can also compute an exact binomial test of the proportion of LDL values that are greater than 128:
+<<>>=
+## base R
+binom.test(sum(mri$ldl > 128, na.rm = TRUE), n = sum(!is.na(mri$ldl)))
+
+## oneSample
+oneSample("prop", mri$ldl > 128, null.hypothesis = 0.5)
+oneSample("prop", mri$ldl, above = 128, null.hypothesis = 0.5)
+@
+
+The syntax for \texttt{oneSample()} is much more intuitive; we simply enter that we want to test a proportion, and then give the logical value to test or specify the threshold. Also, rather than having to count successes, the total, and dealing with missing values by hand, we can let \texttt{oneSample()} handle everything for us and give output that is clearer to read.
+
+\subsubsection{Wilcoxon and Mann-Whitney}
+The most similar function between our package and the base R package is the function to perform Wilcoxon Signed Rank tests and Mann-Whitney-Wilcoxon Ranked Sum tests. Our function, \texttt{wilcoxon()}, adds formatting and variances, and prints the z-score and p-value in addition to the test statistic and p-value. Otherwise, the functions are the same, though we follow our usual syntax of Y followed by X. For example, if we want to test diseased versus healthy (in a made-up dataset), we can get 
+
+<<>>=
+## create the data
+cf <- c(1153, 1132, 1165, 1460, 1162, 1493, 1358, 1453, 1185, 1824, 1793, 1930, 2075)
+healthy <- c(996, 1080, 1182, 1452, 1634, 1619, 1140, 1123, 1113, 1463, 1632, 1614, 1836)
+
+## base R
+wilcox.test(healthy, cf, paired = TRUE)
+
+## uwIntroStats
+wilcoxon(cf, healthy, paired = TRUE)
+@
+
+Note that in the output of \texttt{wilcoxon()}, we have displayed the data calculated by the signed rank test, and given both the test statistic (V) and the z-score (Z).
+
+\section{Regression}
+Regression is one of the most widely used and easily understood methods of statistical analysis. The base R package has many different functions to perform regression: \texttt{lm()} for linear regression, \texttt{glm()} for generalized linear regression (which allows you to perform logistic regression, for example), \texttt{coxph()} for proportional hazards regression, and \texttt{geeglm()} as (one) method for correlated data regression. Each function has slightly different options, and remembering all of these is a chore. Part of the motivation for \texttt{regress()} is to alleviate this problem. This function provides one interface through which all types of regression can be performed. We also print the output from the regression in a much more understandable manner. Also, as we did in \texttt{ttest()}, we allow the user to calculate and use robust standard error estimates (using the Huber-White sandwich estimator), which adds flexibility. The next four subsections deal with aspects of \texttt{regress()} in more detail.
+
+\subsection{Basics of \texttt{regress()}}
+The minimum we need to enter into \texttt{regress} is a functional, a formula, and a dataset. A functional takes an object and returns a value; for instance, the mean is a functional because it takes a distribution and returns the mean. The allowed functionals are displayed in Table \ref{fnctl}. Once we have a functional in mind (for now we choose the mean), we need to decide if we want to use robust standard error estimates. The default in \texttt{regress()} is to use these estimates, since we usually believe that the variances are not truly equal between groups compared in a regression analysis. The base R functions do presume equal variances between groups, which can lead to conservative (or anti-conservative) inference in some situations. The last change we have made to the usual regression output is displaying F-statistics rather than t-statistics for the test of each variable. We decided to use the F-distribution to make our results line up more easily with classical ANOVA tables. In most cases, the F-statistic is simply the square of the t-statistic. The inference is the same. To see \texttt{regress()} in action, consider testing the association between age and atrophy. The syntax for this computation is the same as that for any of the previous commands you might have used. 
+
+<<>>=
+## base R
+summary(lm(atrophy ~ age, data = mri))
+## uwIntroStats
+regress("mean", atrophy ~ age, data = mri)
+@
+
+Note that by default, our output is printed in a table, rather than having to call \texttt{summary.lm()}. The inference on the individual coefficients is different because we have used the F-distribution and are using robust standard error estimates, but we get approximately the same p-values. Also, the overall F-statistic is different in our version because we are using the robust standard error estimates. The numbers next to the coefficients tell us which to specify in any post-testing commands we run (see section 8).
+
+\subsection{Regression on different functionals}
+As mentioned above, part of the motivation for the \texttt{regress()} function was to have all types of regression in one function. Thus the other functionals we allow, and their corresponding commands in base R, are displayed in Table \ref{fnctl}. Note that we only display the options which lead to a certain type of regression, not the rest of the syntax.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{c|l|l}
+Functional & Type of Regression & Previous command (package)\\
+\hline
+\texttt{"mean"} & Linear Regression & \texttt{lm()} (stats - base R)\\
+\texttt{"geometric mean"} & Linear Regression on logarithmically transformed Y & \texttt{lm()} ,with Y log transformed (stats - base R)\\
+\texttt{"odds"} & Logistic Regression & \texttt{glm(family = binomial)} (stats - base R)\\
+\texttt{"rate"} & Poisson Regression & \texttt{glm(family = poisson)} (stats - base R)\\
+\texttt{"hazard"} & Proportional Hazards Regression & \texttt{coxph()} (survival)
+\end{tabular}
+\caption{Allowed functionals for \texttt{regress()}.}
+\label{fnctl}
+\end{table}
+\FloatBarrier
+
+\subsection{Correlated data regression}
+
+\subsection{Multiple-partial F-tests}
+
+
+\section{Analysis/Post-testing}
+
+\subsection{lincom}
+
+\subsection{predict}
+\section{Diagnostics}
 \end{document}
