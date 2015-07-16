@@ -810,7 +810,7 @@ Z 1.7821         0.037368
 Note that in the output of \texttt{wilcoxon()}, we have displayed the data calculated by the signed rank test, and given both the test statistic (V) and the z-score (Z).
 
 \section{Regression}
-Regression is one of the most widely used and easily understood methods of statistical analysis. The base R package has many different functions to perform regression: \texttt{lm()} for linear regression, \texttt{glm()} for generalized linear regression (which allows you to perform logistic regression, for example), \texttt{coxph()} for proportional hazards regression, and \texttt{geeglm()} as (one) method for correlated data regression. Each function has slightly different options, and remembering all of these is a chore. Part of the motivation for \texttt{regress()} is to alleviate this problem. This function provides one interface through which all types of regression can be performed. We also print the output from the regression in a much more understandable manner. Also, as we did in \texttt{ttest()}, we allow the user to calculate and use robust standard error estimates (using the Huber-White sandwich estimator), which adds flexibility. The next four subsections deal with aspects of \texttt{regress()} in more detail.
+Regression is one of the most widely used and easily understood methods of statistical analysis. The base R package has many different functions to perform regression: \texttt{lm()} for linear regression, \texttt{glm()} for generalized linear regression (which allows you to perform logistic regression, for example), \texttt{coxph()} for proportional hazards regression, and \texttt{geeglm()} as (one) method for correlated data regression. Each function has slightly different options, and remembering all of these is a chore. Part of the motivation for \texttt{regress()} is to alleviate this problem. This function provides one interface through which all types of regression can be performed. We also print the output from the regression in a much more understandable manner. Also, as we did in \texttt{ttest()}, we allow the user to calculate and use robust standard error estimates (using the Huber-White sandwich estimator), which adds flexibility. The \texttt{regress()} function does all of this while keeping the same formula syntax as its predecessors: \texttt{y~x1+x2*x3} still produces a linear model with coefficients for \texttt{x1}, \texttt{x2}, \texttt{x3}, and the interaction between \texttt{x2} and \texttt{x3}. The next four subsections deal with aspects of \texttt{regress()} in more detail.
 
 \subsection{Basics of \texttt{regress()}}
 The minimum we need to enter into \texttt{regress} is a functional, a formula, and a dataset. A functional takes an object and returns a value; for instance, the mean is a functional because it takes a distribution and returns the mean. The allowed functionals are displayed in Table \ref{fnctl}. Once we have a functional in mind (for now we choose the mean), we need to decide if we want to use robust standard error estimates. The default in \texttt{regress()} is to use these estimates, since we usually believe that the variances are not truly equal between groups compared in a regression analysis. The base R functions do presume equal variances between groups, which can lead to conservative (or anti-conservative) inference in some situations. The last change we have made to the usual regression output is displaying F-statistics rather than t-statistics for the test of each variable. We decided to use the F-distribution to make our results line up more easily with classical ANOVA tables. In most cases, the F-statistic is simply the square of the t-statistic. The inference is the same. To see \texttt{regress()} in action, consider testing the association between age and atrophy. The syntax for this computation is the same as that for any of the previous commands you might have used. 
@@ -883,15 +883,362 @@ Functional & Type of Regression & Previous command (package)\\
 \end{table}
 \FloatBarrier
 
+If we enter a functional other than the mean, there is usually a transformation that needs to be applied to the data within the \texttt{regress()} function. In all of the cases listed in Table \ref{fnctl}, the transformation is the logarithm. For example, sometimes the logistic regression model is taught as having a ``log link'', or the poisson regression model is taught as having the ``logit link''. These both refer to the function of the parameter having logarithms, so that the model is linear in the coefficients on the predictors. Therefore, in each case, we back-transform - by using the \texttt{exp(x)} function, which is equivalent to $e^x$ - the output of the regression by default, but also display the output that has not been back-transformed. This allows the user to easily see the results in the correct units, while also retaining the ability to compare with other software or handle the un-exponentiated results. If we want to examine the association between LDL and age, but want to use the geometric mean, we get
+\begin{Schunk}
+\begin{Sinput}
+> regress("geom", ldl ~ age, data = mri)
+\end{Sinput}
+\begin{Soutput}
+( 10  cases deleted due to missing values)
+
+
+Call:
+regress(fnctl = "geom", formula = ldl ~ age, data = mri)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.39512 -0.17020  0.03572  0.19342  0.70883 
+
+Coefficients:
+
+Raw Model:
+                 Estimate   Naive SE   Robust SE        F stat    df Pr(>F)   
+[1] Intercept       4.876     0.1494     0.1437           1150.70 1  < 0.00005
+[2] age          -1.077e-03  1.999e-03  1.932e-03            0.31 1    0.5771 
+
+Transformed Model:
+                 e(Est)    e(95%L)   e(95%H)         F stat    df Pr(>F)   
+[1] Intercept      131.1     98.87     173.8           1150.70 1  < 0.00005
+[2] age            0.9989    0.9951    1.003              0.31 1    0.5771 
+
+Residual standard error: 0.2929 on 723 degrees of freedom
+  (10 observations deleted due to missingness)
+Multiple R-squared:  0.0004018,	Adjusted R-squared:  -0.0009808 
+F-statistic: 0.3112 on 1 and 723 DF,  p-value: 0.5771
+\end{Soutput}
+\end{Schunk}
+
+In the transformed table, we do not display the standard error estimates, since they do not scale appropriately with the transformation. We could compare this to the base R function by log-transforming the \texttt{ldl} variable, running \texttt{lm()}, and back-transforming the results ourselves:
+\begin{Schunk}
+\begin{Sinput}
+> ## transform the ldl variable
+> logldl <- log(mri$ldl)
+> ## create the model
+> mod <- lm(logldl ~ age, data = mri)
+> ## view the coefficients (untransformed)
+> summary(mod)
+\end{Sinput}
+\begin{Soutput}
+Call:
+lm(formula = logldl ~ age, data = mri)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.39512 -0.17020  0.03572  0.19342  0.70883 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  4.875983   0.149445  32.627   <2e-16 ***
+age         -0.001077   0.001999  -0.539     0.59    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.2929 on 723 degrees of freedom
+  (10 observations deleted due to missingness)
+Multiple R-squared:  0.0004018,	Adjusted R-squared:  -0.0009808 
+F-statistic: 0.2906 on 1 and 723 DF,  p-value: 0.59
+\end{Soutput}
+\begin{Sinput}
+> ## back-transform the coefficients and CI
+> mod.sum <- summary(mod)
+> ## this gives the coefficients
+> exp(mod.sum$coefficients[,1])
+\end{Sinput}
+\begin{Soutput}
+(Intercept)         age 
+131.1029250   0.9989231 
+\end{Soutput}
+\begin{Sinput}
+> ## this gives the CI
+> exp(mod.sum$coefficients[,1] - 1.96*mod.sum$coefficients[,2])
+\end{Sinput}
+\begin{Soutput}
+(Intercept)         age 
+ 97.8143254   0.9950173 
+\end{Soutput}
+\begin{Sinput}
+> exp(mod.sum$coefficients[,1] + 1.96*mod.sum$coefficients[,2])
+\end{Sinput}
+\begin{Soutput}
+(Intercept)         age 
+ 175.720447    1.002844 
+\end{Soutput}
+\end{Schunk}
+
+First, this is much more work, and requires thought for how to calculate the confidence interval - should we use the convenient approximation of 1.96, or should we use the \texttt{qnorm()} function? Second, we again lose the option of using robust standard error estimates. To use these, we would have to manually code a few more lines, which would increase the likelihood of a small mistake in the code. Our \texttt{regress()} function pulls all of this together in a simple format, leading to much fewer mistakes.
+
 \subsection{Correlated data regression}
+This section does not serve as a primer for when to account for correlated data in your regression model; rather, if you know that you have correlated data, it gives you a method to accounting for it. We will not use the \texttt{mri} data for this example. Instead, we will use the \texttt{salary} data, available at \url{http://www.emersonstatistics.com/datasets/salary.txt}. The documentation for this file is at \url{http://www.emersonstatistics.com/datasets/salary.doc}. These data deal with salaries at the University of Washington, and have multiple records on most participants. In fact, for any current faculty member in 1995 who had been employed by the university for more than one year, there were yearly records dating back to when the faculty member was hired. Thus by nature these data are correlated - in the simplest sense, we expect that the salary for a single faculty member will rise (or at least stay constant) each year. Therefore, we need to use the correlated data apparatus built into \texttt{regress()}. This functionality uses the \texttt{geeglm()} function from the package \texttt{geepack}, but frames the output consistently with the rest of the \texttt{regress()} options and uses the same syntax.
+
+First, let's create the data:
+\begin{Schunk}
+\begin{Sinput}
+> salary <- read.table("http://www.emersonstatistics.com/datasets/salary.txt", header = TRUE, stringsAsFactors = FALSE)
+> salary$female <- ifelse(salary$sex == "F", 1, 0)
+\end{Sinput}
+\end{Schunk}
+This code makes sure that the header in the text file is read as variable names, and that the string variables do not get converted to factor variables. We also create an indicator variable of whether the person is female or not. Next, suppose we are interested in the mean salary for females as opposed to males. Since raises are usually calculated as a percentage of current salary, and starting salaries can vary by year, we decide that the year in which a person started is important in determining their salary. For a more in-depth look at this thought process, see any document on determining potential confounding variables (for one, see parts of \url{http://www.emersonstatistics.com/GeneralMaterials/analysis.pdf}). By adding the \texttt{id} argument to \texttt{regress()}, we can account for the correlated data. In the \texttt{salary} dataset, the ID column is named \texttt{id}, and thus we have:
+\begin{Schunk}
+\begin{Sinput}
+> ## adjusting for correlated data
+> regress("mean",salary ~ female*year, id = id, data = salary)
+\end{Sinput}
+\begin{Soutput}
+Call:
+regress(fnctl = "mean", formula = salary ~ female * year, data = salary, 
+    id = id)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-3727.9   -907.4   -230.0    719.2   7605.5  
+
+Coefficients:
+                   Estimate  Std Err   95%L         95%H         Wald      df Pr(>|W|) 
+[1] Intercept       -17417     283.6    -17973       -16861        3771.66 1  < 0.00005
+[2] female            4102     528.7      3065         5138          60.20 1  < 0.00005
+[3] year             255.5     3.536     248.6        262.5        5222.05 1  < 0.00005
+[4] female:year     -57.88     6.370    -70.36       -45.39          82.56 1  < 0.00005
+
+ Estimated Scale Parameters: 
+            Estimate  Std.err
+(Intercept)  2024610 77997.57
+
+ Correlation: Structure =  independence 
+
+ Number of Clusters:  1597 
+
+ Maximum Cluster Size:  20 
+\end{Soutput}
+\begin{Sinput}
+> ## without adjusting
+> regress("mean", salary ~ female*year, data = salary)
+\end{Sinput}
+\begin{Soutput}
+Call:
+regress(fnctl = "mean", formula = salary ~ female * year, data = salary)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3727.9  -907.4  -230.0   719.2  7605.5 
+
+Coefficients:
+                   Estimate  Naive SE  Robust SE    95%L      95%H         F stat    df Pr(>F)   
+[1] Intercept       -17417     176.5     167.6       -17745    -17088       10802.86 1  < 0.00005
+[2] female            4102     420.7     299.5         3515      4689         187.59 1  < 0.00005
+[3] year             255.5     2.021     2.005        251.6     259.5       16235.87 1  < 0.00005
+[4] female:year     -57.88     4.757     3.541       -64.82    -50.94         267.10 1  < 0.00005
+
+Residual standard error: 1423 on 19788 degrees of freedom
+Multiple R-squared:  0.487,	Adjusted R-squared:  0.4869 
+F-statistic:  7166 on 3 and 19788 DF,  p-value: < 2.2e-16
+\end{Soutput}
+\end{Schunk}
+Notice that we get some extra information in the output where we adjusted - we see that there are 1597 unique faculty members in the data, and that the longest we have data for is 20 years. Therefore treating the data as independent, like we do in the second call to \texttt{regress()}, will lead to invalid standard error estimates and therefore invalid confidence intervals and inference. 
 
 \subsection{Multiple-partial F-tests}
+The major added functionality that \texttt{regress()} brings to the table is the ability to perform multiple-partial F-tests. Some of these are done automatically when certain dummy variables, polynomial variables, or linear splines are entered - if created in a manner similar to our functions above. Others must be specified by the user, using a special function called \texttt{U()}.
 
+As an example of the automatic multiple-partial F-test calculation, let's say we run a regression of atrophy on race, modeled as dummy variables. Recall from our work above that the dummy variables created by \texttt{race} have three levels, and each is in reference to the level coded as \texttt{white}. When we run this regression,
+\begin{Schunk}
+\begin{Sinput}
+> regress("mean", atrophy ~ dummy(race), data = mri)
+\end{Sinput}
+\begin{Soutput}
+Call:
+regress(fnctl = "mean", formula = atrophy ~ dummy(race), data = mri)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-31.243  -9.243  -0.462   7.757  47.757 
+
+Coefficients:
+                   Estimate  Naive SE  Robust SE    95%L      95%H         F stat    df Pr(>F)   
+[1] Intercept        36.24     0.5408    0.5438       35.18     37.31        4441.94 1  < 0.00005
+    dummy(race)                                                                 0.65 3    0.5832 
+[2]    race.2       -1.781     1.379     1.334       -4.401     0.8381          1.78 1    0.1823 
+[3]    race.3        0.2676    1.962     1.904       -3.470     4.005           0.02 1    0.8882 
+[4]    race.4       -1.493     3.772     4.422       -10.17     7.189           0.11 1    0.7357 
+
+ Dummy terms calculated from race, reference = 1 
+
+Residual standard error: 12.93 on 731 degrees of freedom
+Multiple R-squared:  0.002535,	Adjusted R-squared:  -0.001559 
+F-statistic: 0.6499 on 3 and 731 DF,  p-value: 0.5832
+\end{Soutput}
+\end{Schunk}
+notice that the coefficients for each dummy variable are presented in the usual way (though it is up to you to remember what \texttt{race.2} stands for). However, there is a new line above all of the dummy variable coefficients. First we see that this line does not get a coefficient number - that's because this line is only for the multiple partial F-test. Also, note that the regression coefficients are indented beneath it. This denotes that these dummy variables all belong to the same original variable (race). The test has three degrees of freedom, because there are three dummy variables that it is simultaneously testing. Recall that in an F-test, and in the t-test of normal linear regression in \texttt{lm()}, the null hypothesis for each of the p-values presented in the regression table is that the regression coefficient is equal to zero. The multiple partial F-test simulataneously tests that \emph{all three} coefficients are equal to zero. It allows us to declare tha there is no significant association between race and atrophy at the 0.05 level, since we have tested all race variables simultaneoudly and returned a p-value of 0.58. 
+
+We also see that after the coefficients table, \texttt{regress()} tells us how the dummy variables were computed. 
+
+Now for the user-defined multiple-partial F-tests, we need to be a bit careful. If entered in a call to \texttt{regress()}, the \texttt{U()} function takes in a formula, which can be named, and returns the specified multiple-partial F-test to the regression output. It also adds any new variables to the regression model. As an example of the \texttt{U()} function, if we wanted to add age and male to our model, and we wanted to have a multiple-partial F-test of these two variables, we could add
+\begin{Schunk}
+\begin{Sinput}
+> U(~age + male)
+\end{Sinput}
+\end{Schunk}
+to the model above. 
+\begin{Schunk}
+\begin{Sinput}
+> regress("mean", atrophy ~ dummy(race) + U(~age + male), data = mri)
+\end{Sinput}
+\begin{Soutput}
+Call:
+regress(fnctl = "mean", formula = atrophy ~ dummy(race) + U(~age + 
+    male), data = mri)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-34.120  -8.331  -0.434   7.325  53.915 
+
+Coefficients:
+                     Estimate  Naive SE  Robust SE    95%L      95%H         F stat    df Pr(>F)   
+[1] Intercept         -17.87     6.079     6.589       -30.81    -4.933           7.35 1    0.0068 
+    dummy(race)                                                                   1.14 3    0.3315 
+[2]    race.2         -2.109     1.280     1.246       -4.554     0.3370          2.87 1    0.0909 
+[3]    race.3          0.2664    1.822     1.780       -3.228     3.761           0.02 1    0.8810 
+[4]    race.4         -2.812     3.503     3.812       -10.30     4.671           0.54 1    0.4609 
+    U(age + male)                                                                52.66 2  < 0.00005
+[5]   age              0.6866   0.08134   0.08836       0.5132    0.8601         60.38 1  < 0.00005
+[6]   male             5.988     0.8867    0.8895       4.242     7.734          45.32 1  < 0.00005
+
+ Dummy terms calculated from race, reference = 1 
+
+Residual standard error: 12 on 729 degrees of freedom
+Multiple R-squared:  0.1439,	Adjusted R-squared:  0.138 
+F-statistic: 21.32 on 5 and 729 DF,  p-value: < 2.2e-16
+\end{Soutput}
+\end{Schunk}
+Note that again the multiple-partial F-test line is not a coefficient, but that the variables specified in the \texttt{U()} forumla are part of the regression model. If we wanted to make this output a bit more readable, we could give the second multiple-partial F-test a name by adding \texttt{testnm = } within our call to \texttt{U()}, before the formula.
+\begin{Schunk}
+\begin{Sinput}
+> regress("mean", atrophy ~ dummy(race) + U(ma = ~age + male), data = mri)
+\end{Sinput}
+\begin{Soutput}
+Call:
+regress(fnctl = "mean", formula = atrophy ~ dummy(race) + U(ma = ~age + 
+    male), data = mri)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-34.120  -8.331  -0.434   7.325  53.915 
+
+Coefficients:
+                   Estimate  Naive SE  Robust SE    95%L      95%H         F stat    df Pr(>F)   
+[1] Intercept       -17.87     6.079     6.589       -30.81    -4.933           7.35 1    0.0068 
+    dummy(race)                                                                 1.14 3    0.3315 
+[2]    race.2       -2.109     1.280     1.246       -4.554     0.3370          2.87 1    0.0909 
+[3]    race.3        0.2664    1.822     1.780       -3.228     3.761           0.02 1    0.8810 
+[4]    race.4       -2.812     3.503     3.812       -10.30     4.671           0.54 1    0.4609 
+    ma                                                                         52.66 2  < 0.00005
+[5]   age            0.6866   0.08134   0.08836       0.5132    0.8601         60.38 1  < 0.00005
+[6]   male           5.988     0.8867    0.8895       4.242     7.734          45.32 1  < 0.00005
+
+ Dummy terms calculated from race, reference = 1 
+
+Residual standard error: 12 on 729 degrees of freedom
+Multiple R-squared:  0.1439,	Adjusted R-squared:  0.138 
+F-statistic: 21.32 on 5 and 729 DF,  p-value: < 2.2e-16
+\end{Soutput}
+\end{Schunk}
+
+Other than the new name, the output is exactly the same as our original call. 
 
 \section{Analysis/Post-testing}
+After we have created a regression model and run the test, sometimes we want to check parts of our model. Usually, this comes in the form of an ANOVA table testing whether a combination of our coefficients are simultaneously equal to zero. As we saw in the previous section, \texttt{regress()} allows us to run these types of commands within the regression call. However, to check these results - or to avoid using \texttt{U()} within a call to \texttt{regress()} - we can use post-testing commands. 
 
-\subsection{lincom}
+Also, it is sometimes of interest to predict on a new data set. The object created by a call to \texttt{regress()} is like all other regression objects (from calls to \texttt{lm()}, \texttt{glm()}, etc) in that it allows predictions.
 
-\subsection{predict}
+\subsection{Linear Combinations of Regression Coefficients}
+A very useful function in STATA is the \texttt{lincom} function. This is a post-testing function which allows the user to specify a linear combination of the regression coefficients to simultaneously test. We have recreated this function in R, and it follows a similar syntax. Recall that the \texttt{regress()} function displayes a number next to each coefficient in the coefficients table. These numbers refer to the position of each variable in the call to \texttt{lincom()}. The default null hypothesis is that the linear combination is equal to zero.
+
+This function can take either a vector or a matrix determining the linear combination to test. To have a better idea of how this works, we provide an example. In the previous section, when we introduced multiple-partial F-tests, we ran a regression of atrophy on race (modeled as dummy variables), male, and age. We can perform the same test using \texttt{lincom()}:
+\begin{Schunk}
+\begin{Sinput}
+> ## get the model
+> mod <- regress("mean", atrophy ~ dummy(race) + age + male, data = mri)
+> ## get the test of age and male
+> lincom(mod, comb = c(0,0,0,0,1,1))
+\end{Sinput}
+\begin{Soutput}
+H0: 1*age+1*male   =  0 
+Ha: 1*age+1*male  !=  0 
+   Estimate   Std. Err.           T Pr(T > |t|)        95%L        95%H 
+     6.6744      0.8942      7.4645      1.0000      4.9190      8.4299 
+\end{Soutput}
+\end{Schunk}
+This test gives us the same inference as before - that the probability of seeing this event is extrememly small if the null hypothesis is true. Now in some cases we might be interested in combinations that aren't just the raw data. If we want, for example, twice the male coefficient, we can get this easily:
+\begin{Schunk}
+\begin{Sinput}
+> lincom(mod, comb = c(0,0,0,0,1,2))
+\end{Sinput}
+\begin{Soutput}
+H0: 1*age+2*male   =  0 
+Ha: 1*age+2*male  !=  0 
+   Estimate   Std. Err.           T Pr(T > |t|)        95%L        95%H 
+    12.6622      1.7814      7.1079      1.0000      9.1649     16.1596 
+\end{Soutput}
+\end{Schunk}
+
+\subsection{Prediction}
+Prediction with a \texttt{uRegress} object (which is created by a call to \texttt{regress()}) follows the same syntax as prediction for any other regression object. Say we have split the mri data into a training and test set to learn our linear regression model on. First we set a seed, so that our random number generator will always start in the same place and we are guaranteed reproducible results.
+\begin{Schunk}
+\begin{Sinput}
+> set.seed(47)
+> samp <- sample(1:nrow(mri), nrow(mri)/2, replace = FALSE)
+> mri.train <- mri[samp, ]
+> mri.test <- mri[-samp,]
+> modlm <- lm(atrophy ~ age + male + dummy(race), data = mri.train)
+> modreg <- regress("mean", atrophy ~ age + male + dummy(race), data = mri.train)
+> predslm <- predict(modlm, data = mri.test)
+> predsreg <- predict(modreg, data = mri.test)
+> head(predslm, n = 5)
+\end{Sinput}
+\begin{Soutput}
+     719      275      559      603      420 
+34.67201 46.44437 31.99498 38.41326 38.41326 
+\end{Soutput}
+\begin{Sinput}
+> head(predsreg, n = 5)
+\end{Sinput}
+\begin{Soutput}
+     719      275      559      603      420 
+34.67201 46.44437 31.99498 38.41326 38.41326 
+\end{Soutput}
+\end{Schunk}
+
+The above code reassures us that the predictions given on a \texttt{uRegress} object are the same as the predictions given on a \texttt{lm} object. The same is true for all of the other types of regression possible with \texttt{regress()}.
+
 \section{Diagnostics}
+Besides the other tools we have already covered that can double as diagnostic tools - scatterplots, boxplots - sometimes it is useful to look at residuals calculated from a regression model. Objects of class \texttt{uRegress}, like all other regression objects, have a function to extract residuals. The function we use is \texttt{uresiduals()}, which can return unstandardized, standardized, studentized, or jackknifed residuals. If we want the residuals from the model regressing age on ldl, it is easy to get both studentized and jackknifed residuals.
+\begin{Schunk}
+\begin{Sinput}
+> ldlReg <- regress("mean", age ~ ldl, data = mri)
+> student.resid <- uResiduals(ldlReg, "studentized")
+> jack.resid <- uResiduals(ldlReg, "jackknife")
+> head(student.resid, n = 5)
+\end{Sinput}
+\begin{Soutput}
+         1          2          3          4          5 
+-0.4676531  1.1641617  2.8293373 -0.5011149 -0.8294973 
+\end{Soutput}
+\begin{Sinput}
+> head(jack.resid, n = 5)
+\end{Sinput}
+\begin{Soutput}
+         1          2          3          4          5 
+-0.4674003  1.1644483  2.8431637 -0.5008553 -0.8293181 
+\end{Soutput}
+\end{Schunk}
+
+As with prediction, the residuals can be returned from any regression type allowed by \texttt{regress()}.
 \end{document}
