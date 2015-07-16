@@ -1,0 +1,95 @@
+\documentclass[landscape]{article}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{fullpage}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage[percent]{overpic}
+\usepackage{mathrsfs}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{placeins}
+\usepackage{amscd}
+\usepackage{lscape}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{listings}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[left=2cm,right=2cm,top=2.5cm,bottom=2.5cm, headsep = 0.9cm]{geometry}
+\usepackage{verbdef}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.0in}
+\usepackage{setspace}
+\definecolor{gray}{RGB}{90,90,90}
+\usepackage[colorlinks=true, linktoc=all, linkcolor=blue]{hyperref}
+\usepackage{fancyvrb}
+\usepackage{Sweave}
+\usepackage{indentfirst}
+\DefineVerbatimEnvironment{Sinput}{Verbatim} {xleftmargin=2em}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=2em}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{xleftmargin=2em}
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+\pagestyle{plain}
+\setlength\parindent{1cm}
+
+\begin{document}
+<<echo=false>>=
+  options(width = 500)
+@
+  \SweaveOpts{concordance=TRUE}
+\centerline{\large{\textbf{Using \texttt{uwIntroStats}}}}
+\centerline{\textbf{Authors: Brian D. Williamson and Scott S. Emerson, M.D., Ph.D.}}
+\centerline{\textbf{University of Washington Department of Biostatistics}}
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Each statistics and biostatistics department around the world, in conjunction with their collaborators (for us at the University of Washington this includes departments like Epidemiology and Global Health), must choose a statistical software to teach in introductory courses. At the University of Washington, STATA has been taught for many years. While STATA is a powerful software, with relatively user-friendly syntax, it is not very flexible. Only one data set can be read in at a time, and there is only one data type. Simulations are especially difficult to run. While STATA is an important tool to know, we argue that learning the fundamentals of R opens up many possibilities and a lot of power. 
+
+We have written another document, ``An Introduction to R'', hosted at \url{http://www.emersonstatistics.com/GeneralMaterials/R/IntroToR.pdf}, which serves as an introduction to the R philosophy of programming and lays out some of the basic data manipulation strategies. In this document, we assume that the reader has read ``An Introduction to R'' or is at least familiar with the basic R data types, data manipulation, basic functions for descriptive statistics, installing and loading packages. We now present a detailed walkthrough of functions in R that perform the same task as functions in STATA, with syntax provided. 
+
+Many of these functions are available in the base R package, which is automatically installed when R is installed and automatically loaded each time you boot up R. However, some functions are only available in other packages which you have to install and load manually. In particular, one of the goals of the \texttt{uwIntroStats} package is to facilitate easy adoption of R for STATA users. We leave introduction of this package to a separate document entitled ``Using the \texttt{uwIntroStats} Package''.
+
+\section{Descriptive Statistics}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+\texttt{summarize} & \texttt{summary(), mean(), sd(), var(), min(), max()} 
+\end{tabular}\\
+\\
+In STATA, the \texttt{summarize} command calculates the number of observations, mean, standard deviation, minimum, and maximum value for each variable in the data set. For example, if we use the \texttt{mri} data set from \url{http://www.emersonstatistics.com/datasets/mri.txt}, then we can run (showing only the first five variables):
+\begin{verbatim}
+summarize
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+        ptid |       735         368    212.3205          1        735
+     mridate |       735    76422.93    31896.42      10192     123191
+         age |       735    74.56599    5.451364         65         99
+        male |       735    .4979592    .5003363          0          1
+        race |       735    1.318367    .6659304          1          4
+-------------+--------------------------------------------------------
+
+\end{verbatim}
+This conveniently displays all of these summary statistics with one command. In R, this is a bit harder. To find the mean or the median, we simply type \texttt{mean(data)} or \texttt{median(data)}. Many of the other simple functions (\texttt{sum} - compute a sum, \texttt{dim} - return the dimensions of an object) operate in a similar way. So on the \texttt{mri} data, from the \texttt{uwIntroStats} package, we would see
+<<>>=
+library(uwIntroStats)
+data(mri)
+mean(mri$age)
+median(mri$age)
+min(mri$age)
+max(mri$age)
+sd(mri$age)
+length(mri$age)
+@
+These give us flexible options in case we ever need only a subset of these summary statistics. If we wanted to apply one of these functions to the entire data, we could use the \texttt{apply()} function:
+<<>>=
+apply(mri, 2, mean, na.rm = TRUE)
+@
+The last argument, \texttt{na.rm = TRUE}, is passed to the \texttt{mean()} function and makes sure that missing values are removed from the variable when attempting to calculate the mean. Otherwise, the function will return \texttt{NA}. 
+\end{document}
