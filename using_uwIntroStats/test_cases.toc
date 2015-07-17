@@ -21,7 +21,7 @@
 \contentsline {subsection}{\numberline {7.2}Regression on different functionals}{24}{subsection.7.2}
 \contentsline {subsection}{\numberline {7.3}Correlated data regression}{27}{subsection.7.3}
 \contentsline {subsection}{\numberline {7.4}Multiple-partial F-tests}{28}{subsection.7.4}
-\contentsline {section}{\numberline {8}Analysis/Post-testing}{31}{section.8}
+\contentsline {section}{\numberline {8}Post Estimation}{31}{section.8}
 \contentsline {subsection}{\numberline {8.1}Linear Combinations of Regression Coefficients}{31}{subsection.8.1}
 \contentsline {subsection}{\numberline {8.2}Prediction}{32}{subsection.8.2}
 \contentsline {section}{\numberline {9}Diagnostics}{33}{section.9}

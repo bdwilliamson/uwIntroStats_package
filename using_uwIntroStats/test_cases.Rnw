@@ -38,10 +38,10 @@
 
 \begin{document}
 <<echo=false>>=
-options(width=500)
+options(width = 500)
 @
 \SweaveOpts{concordance=TRUE}
-\centerline{\large{\textbf{Using \texttt{uwIntroStats}}}}
+\centerline{\large{\textbf{Using the \texttt{uwIntroStats} Package}}}
 \centerline{\textbf{Authors: Brian D. Williamson and Scott S. Emerson, M.D., Ph.D.}}
 \centerline{\textbf{University of Washington Department of Biostatistics}}
 \tableofcontents
@@ -441,8 +441,8 @@ regress("mean", atrophy ~ dummy(race) + U(ma = ~age + male), data = mri)
 
 Other than the new name, the output is exactly the same as our original call. 
 
-\section{Analysis/Post-testing}
-After we have created a regression model and run the test, sometimes we want to check parts of our model. Usually, this comes in the form of an ANOVA table testing whether a combination of our coefficients are simultaneously equal to zero. As we saw in the previous section, \texttt{regress()} allows us to run these types of commands within the regression call. However, to check these results - or to avoid using \texttt{U()} within a call to \texttt{regress()} - we can use post-testing commands. 
+\section{Post Estimation}
+After we have created a regression model and run the test, sometimes we want to check parts of our model. Usually, this comes in the form of an ANOVA table testing whether a combination of our coefficients are simultaneously equal to zero. As we saw in the previous section, \texttt{regress()} allows us to run these types of commands within the regression call. However, to check these results - or to avoid using \texttt{U()} within a call to \texttt{regress()} - we can use post estimation commands. 
 
 Also, it is sometimes of interest to predict on a new data set. The object created by a call to \texttt{regress()} is like all other regression objects (from calls to \texttt{lm()}, \texttt{glm()}, etc) in that it allows predictions.
 
