@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.3.10)  16 JUL 2015 17:16
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.3.10)  17 JUL 2015 14:19
 entering extended mode
 **stata_translation.tex
 
@@ -678,65 +678,219 @@ LaTeX Font Warning: Font shape `T1/aett/bx/n' undefined
 
 
 ("C:\Users\Brian Williamson\Documents\uwIntroStats_package\STATA_translation\st
-ata_translation.toc")
-\tf@toc=\write5
- [1
-
-{C:/Users/Brian Williamson/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-LaTeX Font Info:    Try loading font information for U+msa on input line 50.
+ata_translation.toc"
+LaTeX Font Info:    Try loading font information for U+msa on input line 3.
 
 ("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 50.
+LaTeX Font Info:    Try loading font information for U+msb on input line 3.
 
 ("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+rsfs on input line 50.
+LaTeX Font Info:    Try loading font information for U+rsfs on input line 3.
 
 ("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\jknappen\ursfs.fd"
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
-)
-Underfull \hbox (badness 10000) in paragraph at lines 55--63
+))
+\tf@toc=\write5
+
+[1
+
+{C:/Users/Brian Williamson/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
+Underfull \hbox (badness 10000) in paragraph at lines 57--67
 
  []
 
-[2] 
-AED: lastpage setting LastPage
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 72.
+
+
+Overfull \hbox (30.05562pt too wide) in paragraph at lines 96--96
+ []\T1/aett/m/n/7 infile ptid mridate age male race weight height packyrs yrsqu
+it alcoh physact chf chd stroke diabetes genhlth ldl alb crt plt sbp aai fev ds
+st atrophy whgrd numinf volinf obstime death using[] 
+ []
+
+LaTeX Font Info:    Try loading font information for TS1+aett on input line 96.
+
+(C:/Users/BRIANW~1/DOCUME~1/R/R-32~1.1/share/texmf/tex/latex\ts1aett.fd
+File: ts1aett.fd 
+)
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 96.
+
+
+("C:\Users\Brian Williamson\SkyDrive\MikTex\tex\latex\base\ts1cmtt.fd"
+File: ts1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <7> not available
+(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 96.
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 160--169
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 160--169
+
+ []
+
 [3]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 128.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 128.
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 179.
+
+[4]
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 262.
+
+<fev1bplot.png, id=140, 475.7775pt x 346.29375pt>
+File: fev1bplot.png Graphic file (type png)
+ <use fev1bplot.png>
+Package pdftex.def Info: fev1bplot.png used on input line 279.
+(pdftex.def)             Requested size: 284.52756pt x 207.10149pt.
+ [5]
+<stata_translation-fev1bplot.pdf, id=146, 433.62pt x 433.62pt>
+File: stata_translation-fev1bplot.pdf Graphic file (type pdf)
+
+<use stata_translation-fev1bplot.pdf>
+Package pdftex.def Info: stata_translation-fev1bplot.pdf used on input line 296
+.
+(pdftex.def)             Requested size: 284.52756pt x 284.54257pt.
+ [6 <C:/Users/Brian Williamson/Documents/uwIntroStats_package/STATA_translation
+/fev1bplot.png (PNG copy)>]
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 317.
+
+[7 <C:/Users/Brian Williamson/Documents/uwIntroStats_package/STATA_translation/
+stata_translation-fev1bplot.pdf>]
+<fev1hist.png, id=163, 475.7775pt x 346.29375pt>
+File: fev1hist.png Graphic file (type png)
+ <use fev1hist.png>
+Package pdftex.def Info: fev1hist.png used on input line 333.
+(pdftex.def)             Requested size: 284.52756pt x 207.10149pt.
+
+<stata_translation-fev1hist.pdf, id=164, 433.62pt x 433.62pt>
+File: stata_translation-fev1hist.pdf Graphic file (type pdf)
+
+<use stata_translation-fev1hist.pdf>
+Package pdftex.def Info: stata_translation-fev1hist.pdf used on input line 350.
+
+(pdftex.def)             Requested size: 284.52756pt x 284.54257pt.
+ [8 <C:/Users/Brian Williamson/Documents/uwIntroStats_package/STATA_translation
+/fev1hist.png (PNG copy)>]
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 371.
+
+[9 <C:/Users/Brian Williamson/Documents/uwIntroStats_package/STATA_translation/
+stata_translation-fev1hist.pdf>]
+<fev1scatter.png, id=181, 475.7775pt x 346.29375pt>
+File: fev1scatter.png Graphic file (type png)
+ <use fev1scatter.png>
+Package pdftex.def Info: fev1scatter.png used on input line 387.
+(pdftex.def)             Requested size: 284.52756pt x 207.10149pt.
+
+<stata_translation-fev1scatter.pdf, id=182, 433.62pt x 433.62pt>
+File: stata_translation-fev1scatter.pdf Graphic file (type pdf)
+
+<use stata_translation-fev1scatter.pdf>
+Package pdftex.def Info: stata_translation-fev1scatter.pdf used on input line 4
+14.
+(pdftex.def)             Requested size: 284.52756pt x 284.54257pt.
+
+<stata_translation-fev1scatter2.pdf, id=183, 433.62pt x 433.62pt>
+File: stata_translation-fev1scatter2.pdf Graphic file (type pdf)
+
+<use stata_translation-fev1scatter2.pdf>
+Package pdftex.def Info: stata_translation-fev1scatter2.pdf used on input line 
+415.
+(pdftex.def)             Requested size: 284.52756pt x 284.54257pt.
+ [10 <C:/Users/Brian Williamson/Documents/uwIntroStats_package/STATA_translatio
+n/fev1scatter.png (PNG copy)>]
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 437.
+
+[11 <C:/Users/Brian Williamson/Documents/uwIntroStats_package/STATA_translation
+/stata_translation-fev1scatter.pdf> <C:/Users/Brian Williamson/Documents/uwIntr
+oStats_package/STATA_translation/stata_translation-fev1scatter2.pdf>] [12]
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 521.
+
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 558.
+
+[13] [14]
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 648.
+
+[15]
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 717.
+
+[16]
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 791.
+
+[17]
+
+LaTeX Warning: The counter will not be printed.
+             The label is:  on input line 872.
+
+
+AED: lastpage setting LastPage
+[18]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 884.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 884.
 
 ("C:\Users\Brian Williamson\Documents\uwIntroStats_package\STATA_translation\st
 ata_translation.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 128.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 128.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 884.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 884.
 Package rerunfilecheck Info: File `stata_translation.out' has not changed.
-(rerunfilecheck)             Checksum: EC367ACA20B931EA30ECDAC00CDA61B9;106.
+(rerunfilecheck)             Checksum: 2D03307A6B1B79055799D19319EBE12F;999.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 128.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 884.
  ) 
 Here is how much of TeX's memory you used:
- 10021 strings out of 493921
- 147076 string characters out of 3141635
- 249759 words of memory out of 3000000
- 13094 multiletter control sequences out of 15000+200000
- 22155 words of font info for 53 fonts, out of 3000000 for 9000
+ 10164 strings out of 493921
+ 149535 string characters out of 3141635
+ 250763 words of memory out of 3000000
+ 13159 multiletter control sequences out of 15000+200000
+ 27939 words of font info for 63 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 41i,7n,43p,728b,382s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/public/amsfonts/cm/cmb
-x10.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/public/amsfonts/
-cm/cmbx12.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/public/ams
-fonts/cm/cmr10.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/publi
-c/amsfonts/cm/cmtt10.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1
-/public/amsfonts/cm/cmtt12.pfb>
-Output written on stata_translation.pdf (3 pages, 81402 bytes).
+ 41i,7n,43p,913b,620s stack positions out of 5000i,500n,10000p,200000b,50000s
+ <C:\Users\Brian Williamson\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen
+\ec\dpi525\tctt0800.pk><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/p
+ublic/amsfonts/cm/cmbx10.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/t
+ype1/public/amsfonts/cm/cmbx12.pfb><C:/Users/Brian Williamson/SkyDrive/MikTex/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Brian Williamson/SkyDrive/Mi
+kTex/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Brian Williamson/SkyDri
+ve/MikTex/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Brian Williamson/S
+kyDrive/MikTex/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Brian Williams
+on/SkyDrive/MikTex/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Brian Wil
+liamson/SkyDrive/MikTex/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/Bri
+an Williamson/SkyDrive/MikTex/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Use
+rs/Brian Williamson/SkyDrive/MikTex/fonts/type1/public/amsfonts/cm/cmtt12.pfb><
+C:/Users/Brian Williamson/SkyDrive/MikTex/fonts/type1/public/amsfonts/cm/cmtt8.
+pfb>
+Output written on stata_translation.pdf (18 pages, 326975 bytes).
 PDF statistics:
- 58 PDF objects out of 1000 (max. 8388607)
- 7 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 305 PDF objects out of 1000 (max. 8388607)
+ 61 named destinations out of 1000 (max. 500000)
+ 176 words of extra memory for PDF output out of 10000 (max. 10000000)
 

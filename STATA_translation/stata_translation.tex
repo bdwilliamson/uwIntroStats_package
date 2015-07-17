@@ -52,6 +52,8 @@ We have written another document, ``An Introduction to R'', hosted at \url{http:
 Many of these functions are available in the base R package, which is automatically installed when R is installed and automatically loaded each time you boot up R. However, some functions are only available in other packages which you have to install and load manually. In particular, one of the goals of the \texttt{uwIntroStats} package is to facilitate easy adoption of R for STATA users. We leave introduction of this package to a separate document entitled ``Using the \texttt{uwIntroStats} Package''.
 
 \section{Descriptive Statistics}
+
+\subsection{Simple Descriptives}
 Quick view of functions:\\
 \begin{tabular}{c|l}
 STATA & R (base) \\
@@ -59,8 +61,27 @@ STATA & R (base) \\
 \texttt{summarize} & \texttt{summary(), mean(), sd(), var(), min(), max()} 
 \end{tabular}\\
 \\
-In STATA, the \texttt{summarize} command calculates the number of observations, mean, standard deviation, minimum, and maximum value for each variable in the data set. For example, if we use the \texttt{mri} data set from \url{http://www.emersonstatistics.com/datasets/mri.txt}, then we can run (showing only the first five variables):
+In STATA, the \texttt{summarize} command calculates the number of observations, mean, standard deviation, minimum, and maximum value for each variable in the data set. The STATA command conveniently displays all of these summary statistics with one command. In R, this is a bit harder. To find the mean or the median, we simply type \texttt{mean(data)} or \texttt{median(data)}. Many of the other simple functions (\texttt{sum} - compute a sum, \texttt{dim} - return the dimensions of an object) operate in a similar way. For our example, let's use the \texttt{mri} data set from \url{http://www.emersonstatistics.com/datasets/mri.txt}. In STATA, we need to download from the internet and read in the file. We can also do this in R (see ``An Introduction to R'' for more information), but it is much easier and faster to load it in from the \texttt{uwIntroStats} package.
+\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Calculate summary statistics - mean, standard deviation, minimum, and maximum - for variables in the \texttt{mri} data.
+
+\underline{Data:} \texttt{mri}
+
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
 \begin{verbatim}
+* First read in the mri data *
+infile ptid mridate age male race weight height packyrs yrsquit alcoh physact chf chd stroke diabetes genhlth ldl alb crt plt sbp aai fev dsst atrophy whgrd numinf volinf obstime death using 
+"http://www.emersonstatistics.com/datasets/mri.txt"
+
+* This will throw ''errors'' - this is due to the headers in the file *
+* Delete this first row of NAs *
+drop in 1
+
+/* Now call summarize. Note that normally this will print all variables, but we have not included them all */
 summarize
 
     Variable |       Obs        Mean    Std. Dev.       Min        Max
@@ -72,12 +93,17 @@ summarize
         race |       735    1.318367    .6659304          1          4
 -------------+--------------------------------------------------------
 
-\end{verbatim}
-This conveniently displays all of these summary statistics with one command. In R, this is a bit harder. To find the mean or the median, we simply type \texttt{mean(data)} or \texttt{median(data)}. Many of the other simple functions (\texttt{sum} - compute a sum, \texttt{dim} - return the dimensions of an object) operate in a similar way. So on the \texttt{mri} data, from the \texttt{uwIntroStats} package, we would see
+\end{verbatim}}
+
+\item \underline{R Code and Output:}
+{\scriptsize
 \begin{Schunk}
 \begin{Sinput}
+> ## Load the uwIntroStats package
 > library(uwIntroStats)
+> ## Load the mri data
 > data(mri)
+> ## Calculate summary statistics
 > mean(mri$age)
 \end{Sinput}
 \begin{Soutput}
@@ -114,15 +140,745 @@ This conveniently displays all of these summary statistics with one command. In 
 [1] 735
 \end{Soutput}
 \end{Schunk}
-These give us flexible options in case we ever need only a subset of these summary statistics. If we wanted to apply one of these functions to the entire data, we could use the \texttt{apply()} function:
+}
+\end{enumerate}
+The R functions give us flexible options in case we ever need only a subset of these summary statistics. If we wanted to apply one of these functions to the entire data, we could use the \texttt{apply()} function (again, we only display the first five elements for the sake of space):
+{\scriptsize
 \begin{Schunk}
 \begin{Sinput}
-> apply(mri, 2, mean, na.rm = TRUE)
+> head(apply(mri, 2, mean, na.rm = TRUE), n = 5)
 \end{Sinput}
 \begin{Soutput}
-        ptid      mridate          age         male         race       weight       height      packyrs      yrsquit        alcoh      physact          chf          chd       stroke     diabetes      genhlth          ldl          alb          crt          plt          sbp          aai          fev         dsst      atrophy        whgrd       numinf       volinf      obstime        death 
-3.680000e+02 7.642293e+04 7.456599e+01 4.979592e-01 1.318367e+00 1.599499e+02 1.657774e+02 1.960048e+01 9.661224e+00 2.109365e+00 1.922335e+00 5.578231e-02 3.346939e-01 2.367347e-01 1.074830e-01 2.587755e+00 1.258028e+02 3.994407e+00 1.063984e+00 2.459849e+02 1.311053e+02 1.103246e+00 2.206817e+00 4.105671e+01 3.598367e+01 2.006812e+00 6.108844e-01 3.222979e+00 1.804075e+03 1.809524e-01 
+        ptid      mridate          age         male         race 
+3.680000e+02 7.642293e+04 7.456599e+01 4.979592e-01 1.318367e+00 
 \end{Soutput}
 \end{Schunk}
+}
 The last argument, \texttt{na.rm = TRUE}, is passed to the \texttt{mean()} function and makes sure that missing values are removed from the variable when attempting to calculate the mean. Otherwise, the function will return \texttt{NA}. 
+
+\subsection{The Chi-squared test}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+\texttt{tabulate, chi2} & \texttt{table()} and \texttt{chisq.test()}\\
+\texttt{cc} & \\
+\texttt{cs} & \\
+\end{tabular}\\
+\\
+
+In STATA, \texttt{tabulate} displays tables of frequency counts. If you add the \texttt{oneway} or \texttt{twoway} arguments, a chi-squared test is performed as well. The chi-squared test in this case is a descriptive statistic - it measures how well the observations match up with the expected distribution based on the sample proportions. The \texttt{cc} and \texttt{cs} commands also compute chi-squared tests, on case control and cohort data respectively. 
+
+The base R function \texttt{chisq.test()} performs the chi-squared test on tables,  matrices,  and vectors. The function \texttt{table()} returns a frequency table of the variables entered. However, in order to calculate Odds Ratios, Risk Ratios, or other statistics (for example the likelihood  ratio,  Mantel-Haenszel  statistic,  and  others)  you  must  use  other  functions developed  for different R packages and piece the information together. For example, the \texttt{Exact} package and the \texttt{uwIntroStats} package both have functions for calculating these ratios. These packages give more output than the base R functions, and in the case of \texttt{uwIntroStats} follow a similar syntax to STATA.
+\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Calculate chi-squared statistics on the tabulation of \texttt{male} and \texttt{diabetes}. 
+
+\underline{Data:} \texttt{mri}
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+cc male diabetes
+                                                         Proportion
+                 |   Exposed   Unexposed  |      Total     Exposed
+-----------------+------------------------+------------------------
+           Cases |        53         313  |        366       0.1448
+        Controls |        26         343  |        369       0.0705
+-----------------+------------------------+------------------------
+           Total |        79         656  |        735       0.1075
+                 |                        |
+                 |      Point estimate    |    [95\% Conf. Interval]
+                 |------------------------+------------------------
+      Odds ratio |         2.233841       |    1.333028    3.814119 (exact)
+ Attr. frac. ex. |         .5523406       |    .2498281    .7378163 (exact)
+ Attr. frac. pop |         .0799837       |
+                 +-------------------------------------------------
+                               chi2(1) =    10.59  Pr>chi2 = 0.0011
+
+cs male diabetes
+
+                 | diabetes               |
+                 |   Exposed   Unexposed  |      Total
+-----------------+------------------------+------------
+           Cases |        53         313  |        366
+        Noncases |        26         343  |        369
+-----------------+------------------------+------------
+           Total |        79         656  |        735
+                 |                        |
+            Risk |  .6708861    .4771341  |   .4979592
+                 |                        |
+                 |      Point estimate    |    [95\% Conf. Interval]
+                 |------------------------+------------------------
+ Risk difference |         .1937519       |    .0833099     .304194 
+      Risk ratio |         1.406074       |    1.181535    1.673285 
+ Attr. frac. ex. |            .2888       |    .1536436    .4023731 
+ Attr. frac. pop |         .0418208       |
+                 +-------------------------------------------------
+                               chi2(1) =    10.59  Pr>chi2 = 0.0011
+
+}
+\item \underline{R Code and Output}
+{\scriptsize
+\begin{Schunk}
+\begin{Sinput}
+> table(mri$male, mri$diabetes)
+\end{Sinput}
+\begin{Soutput}
+      0   1
+  0 343  26
+  1 313  53
+\end{Soutput}
+\begin{Sinput}
+> ## Use the "correct = FALSE" argument to halt application of continuity correction
+> chisq.test(mri$male, mri$diabetes, correct = FALSE)
+\end{Sinput}
+\begin{Soutput}
+	Pearson's Chi-squared test
+
+data:  mri$male and mri$diabetes
+X-squared = 10.588, df = 1, p-value = 0.001138
+\end{Soutput}
+\end{Schunk}
+}
+\end{enumerate}
+
+\section{Plots}
+\subsection{Boxplots}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+\texttt{graph box} & \texttt{boxplot()}
+\end{tabular}
+
+The boxplot is usually used as a method of visualizing data quickly, since it reduces the data down to essentially four numbers: minimum, maximum, median, and interquartile range. The syntax for boxplots is quite similar between STATA and R, and each gives approximately the same output. However, it is important to read the documentation for each function to see how ``outliers'' are computed. In both cases, the default rule for detecting outliers is those observations which lie outside of 1.5 times the IQR. Knowing the rule is important for deciding whether to classify these observations as outliers or not.
+\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Produce a boxplot to describe the distribution of forced exhalation volume (FEV) by smoking group.
+
+\underline{Data:} \texttt{fev}
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+\begin{verbatim}
+* Read in the data *
+use "https://courses.washington.edu/b511/Data/FEV1ClinTrial.dta"
+
+* Rename the variables *
+rename Y0 FEV1base
+rename Y1 FEV1wk24
+rename T smoke
+
+* Make the boxplot *
+graph box FEV1base, by(smoke) ytitle(FEV)
+\end{verbatim}}
+\begin{figure}[ht]
+\centering
+\includegraphics[width = 10cm]{fev1bplot.png}
+\end{figure}
+\FloatBarrier
+\item \underline{R Code and Output}
+{\scriptsize
+\begin{Schunk}
+\begin{Sinput}
+> ## Read in the data
+> fev <- read.table("http://courses.washington.edu/b511/Data/FEV1ClinTrial.dat", sep = "")
+> ## Rename the data
+> names(fev) <- c("FEV1wk24", "FEV1base", "smoke")
+> ## Create the boxplot
+> boxplot(fev$smoke, fev$FEV1base)
+\end{Sinput}
+\end{Schunk}
+\begin{figure}[ht]
+\centering
+\includegraphics[width = 10cm]{stata_translation-fev1bplot.pdf}
+\end{figure}
+\FloatBarrier
+}
+\end{enumerate}
+
+\subsection{Histograms}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+\texttt{histogram} & \texttt{hist()}
+\end{tabular}
+
+The syntax for creating a histogram is very similar between R and STATA. However, if the STATA dataset has labels for the variables, it will automatically put in these labels on the plot. In R, we have to manually label the plot.
+\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Produce a histogram of FEV at week 24.
+
+\underline{Data:} \texttt{fev}
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+\begin{verbatim}
+* Read in the data, rename variables *
+use "https://courses.washington.edu/b511/Data/FEV1ClinTrial.dta"
+rename Y0 FEV1base
+rename Y1 FEV1wk24
+rename T smoke
+
+* Create the histogram *
+histogram FEV1wk24
+\end{verbatim}
+}
+\begin{figure}[ht]
+\centering
+\includegraphics[width = 10cm]{fev1hist.png}
+\end{figure}
+\FloatBarrier
+\item \underline{R Code and Output}
+{\scriptsize
+\begin{Schunk}
+\begin{Sinput}
+> ## Read in the data, rename the variables
+> fev <- read.table("http://courses.washington.edu/b511/Data/FEV1ClinTrial.dat", sep = "")
+> names(fev) <- c("FEV1wk24", "FEV1base", "smoke")
+> ## Create the histogram
+> hist(fev$FEV1wk24, xlab = "FEV1 at week 24", main = "Histogram of FEV1 at week 24")
+\end{Sinput}
+\end{Schunk}
+}
+\begin{figure}[ht]
+\centering
+\includegraphics[width = 10cm]{stata_translation-fev1hist.pdf}
+\end{figure}
+\FloatBarrier
+\end{enumerate}
+
+\subsection{Scatterplots}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+\texttt{scatter} & \texttt{plot()} \\
+ & \texttt{scatter.smooth()}
+\end{tabular}
+
+The base R version of the scatterplot takes an x anda y variable (which must be of the same length) and plots the points as specified by these coordinates. If you wish to have least squares lines or other additions to the plot, you must use the \texttt{abline()} function, or use the \texttt{scatter.smooth()} function. The STATA version of scatterplot takes a y-variable followed by a x-variable, followed by any arguments. 
+\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Produce a scatterplot of FEV at 24 weeks against FEV at baseline, with loess and least squares lines fit to the graph.
+
+\underline{Data:} \texttt{fev}
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+\begin{verbatim}
+* Read in the data, rename variables *
+use "https://courses.washington.edu/b511/Data/FEV1ClinTrial.dta"
+rename Y0 FEV1base
+rename Y1 FEV1wk24
+rename T smoke
+
+* Create the scatterplot *
+scatter FEV1wk24 FEV1base || lfit FEV1wk24 FEV1base || lowess FEV1wk24 FEV1base
+\end{verbatim}
+}
+\begin{figure}[ht]
+\centering
+\includegraphics[width = 10cm]{fev1scatter.png}
+\end{figure}
+\FloatBarrier
+\item \underline{R Code and Output}
+{\scriptsize
+\begin{Schunk}
+\begin{Sinput}
+> ## Read in the data, rename the variables
+> fev <- read.table("http://courses.washington.edu/b511/Data/FEV1ClinTrial.dat", sep = "")
+> names(fev) <- c("FEV1wk24", "FEV1base", "smoke")
+> ## create the scatterplot - this doesn't have loess curve!
+> plot(fev$FEV1base, fev$FEV1wk24, xlab = "FEV1 at baseline", ylab = "FEV1 at week 24", main = "Scatterplot of FEV1 at baseline vs week 24")
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> scatter.smooth(fev$FEV1wk24, fev$FEV1base, xlab = "FEV1 at baseline", ylab = "FEV1 at week 24", main = "Scatterplot of FEV1 at baseline vs week 24")
+> ## add the least squares line - don't worry about how we calculated the lines for now!
+> fev1.lm <- lm(FEV1wk24 ~ FEV1base, data = fev)
+> abline(fev1.lm, col = "red")
+> ## add a legend
+> legend(.5, 3.5, legend = c("Loess", "Least Squares"), fill = c("black", "red"))
+\end{Sinput}
+\end{Schunk}
+}
+\begin{figure}[ht]
+\centering
+\includegraphics[width = 10cm]{stata_translation-fev1scatter.pdf}
+\includegraphics[width = 10cm]{stata_translation-fev1scatter2.pdf}
+\end{figure}
+\FloatBarrier
+\end{enumerate}
+
+\section{Correlation}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+\texttt{correlate} & \texttt{cor()} \\
+ & \texttt{cov()}
+\end{tabular}
+
+In STATA, the command to compute a correlation matrix is \texttt{correlate}. In base R, there are a few different functions to compute correlation, covariance, or variance. The \texttt{cor()} function computes the correlation between two vectors or matrices. The \texttt{cov()} function computes the covariance between two vectors or matrices. In both of these cases, if a matrix is entered, then the covariance (or correlation) is computed between the columns of the matrices. Last, \texttt{var()} computes variance as we discussed above, but \texttt{var()} computed on two matrices returns the same as \texttt{cov()}.
+
+%\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Compute the correlation and covariance between FEV at week 24 and FEV at baseline.
+
+\underline{Data:} \texttt{fev}
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+\begin{verbatim}
+* Read in the data, rename variables *
+use "https://courses.washington.edu/b511/Data/FEV1ClinTrial.dta"
+rename Y0 FEV1base
+rename Y1 FEV1wk24
+rename T smoke
+
+* Compute *
+correlate FEV1wk24 FEV1base
+(obs=520)
+
+             | FEV1wk24 FEV1base
+-------------+------------------
+    FEV1wk24 |   1.0000
+    FEV1base |   0.8932   1.0000
+
+correlate FEV1wk24 FEV1base, cov
+(obs=520)
+
+             | FEV1wk24 FEV1base
+-------------+------------------
+    FEV1wk24 |  .413977
+    FEV1base |  .343671  .357618
+
+\end{verbatim}
+}
+Notice that the STATA output when we asked for the covariances gave the covariance in the lower left, and the variance of the individual variables along the diagonal.
+\item \underline{R Code and Output}
+{\scriptsize
+\begin{Schunk}
+\begin{Sinput}
+> ## Read in the data, rename variables
+> fev <- read.table("http://courses.washington.edu/b511/Data/FEV1ClinTrial.dat", sep = "")
+> names(fev) <- c("FEV1wk24", "FEV1base", "smoke")
+> ## Compute
+> cor(fev$FEV1wk24, fev$FEV1base)
+\end{Sinput}
+\begin{Soutput}
+[1] 0.8931929
+\end{Soutput}
+\begin{Sinput}
+> cov(fev$FEV1wk24, fev$FEV1base)
+\end{Sinput}
+\begin{Soutput}
+[1] 0.3436712
+\end{Soutput}
+\begin{Sinput}
+> var(fev$FEV1wk24)
+\end{Sinput}
+\begin{Soutput}
+[1] 0.413977
+\end{Soutput}
+\begin{Sinput}
+> var(fev$FEV1base)
+\end{Sinput}
+\begin{Soutput}
+[1] 0.3576181
+\end{Soutput}
+\end{Schunk}
+}
+\end{enumerate}
+
+To run pairwise correlations, in R you need to add the argument \texttt{use = "pairwise.complete.obs"}. To run a different method of correlation calculation, use the \texttt{method} argument, and set it to either \texttt{"pearson"} (default), \texttt{"spearman"}, or \texttt{"kendall"}.
+
+In STATA, use the \texttt{pwcorr} command, which has all of the same arguments as the \texttt{correlate} command. 
+
+\section{Distribution Functions}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+\texttt{display} \emph{distname}\texttt{prob(}\emph{statistic}\texttt{)} & \texttt{p}\emph{distname}\texttt{(}\emph{statistic}\texttt{)}
+\end{tabular}
+
+Say we calculate a test statistic (z-score, t-statistic, chi-squared statistic) and want to find the p-value. Recall that for a p-value we want to find the probability of values at least as extreme as our value, given that the null hypothesis is true. If we calculate a z-score of 1 for our data, then we know that we are dealing with the normal distribution. To find the p-value, then, we have to call the cumulative distribution function command in R or in STATA. Example 1 has the correct code for this example. The other distributions both follow the convention in this example, and for that reason we have placed \emph{distname} in italics in the ``Quick view'' section.
+\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Calculate the p-value associated with a z-score of 1.
+
+\underline{Data:} None.
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+\begin{verbatim}
+display 1-normprob(1)
+.15865525
+\end{verbatim}
+}
+\item \underline{R Code and Output}
+{\scriptsize
+\begin{Schunk}
+\begin{Sinput}
+> 1 - pnorm(1)
+\end{Sinput}
+\begin{Soutput}
+[1] 0.1586553
+\end{Soutput}
+\end{Schunk}
+}
+\end{enumerate}
+
+\section{One Sample Inference}
+\subsection{The One Sample t-test}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+ttest & t.test()
+\end{tabular}
+
+While the commands for the t-test look very similar in STATA and in R, there are a few differences. Most noticeably, the output is very different. Also, STATA provides inference for each one-sided hypothesis (both that the mean is less than the null hypothesized value, and that it is greater) individually, while R defaults to providing inference for the two-sided test. Using the \texttt{alternative} argument to \texttt{t.test()} allows the user to change the inference by providing either \texttt{"less"} or \texttt{"greater"} for a one-sided test.
+\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Test that the mean atrophy score is equal to 30.
+
+\underline{Data:} \texttt{mri}
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+\begin{verbatim}
+ttest atrophy == 30
+
+One-sample t test
+------------------------------------------------------------------------------
+Variable |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+ atrophy |     735    35.98367    .4766699    12.92294    35.04787    36.91947
+------------------------------------------------------------------------------
+    mean = mean(atrophy)                                          t =  12.5531
+Ho: mean = 30                                    degrees of freedom =      734
+
+    Ha: mean < 30               Ha: mean != 30                 Ha: mean > 30
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+\end{verbatim}
+}
+\item \underline{R Code and Output}
+{\scriptsize
+\begin{Schunk}
+\begin{Sinput}
+> ## Two-sided test
+> t.test(mri$atrophy, mu = 0)
+\end{Sinput}
+\begin{Soutput}
+	One Sample t-test
+
+data:  mri$atrophy
+t = 75.49, df = 734, p-value < 2.2e-16
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ 35.04787 36.91947
+sample estimates:
+mean of x 
+ 35.98367 
+\end{Soutput}
+\begin{Sinput}
+> ## One-sided tests
+> t.test(mri$atrophy, mu = 0, alternative = "less")
+\end{Sinput}
+\begin{Soutput}
+	One Sample t-test
+
+data:  mri$atrophy
+t = 75.49, df = 734, p-value = 1
+alternative hypothesis: true mean is less than 0
+95 percent confidence interval:
+     -Inf 36.76872
+sample estimates:
+mean of x 
+ 35.98367 
+\end{Soutput}
+\begin{Sinput}
+> t.test(mri$atrophy, mu = 0, alternative = "greater")
+\end{Sinput}
+\begin{Soutput}
+	One Sample t-test
+
+data:  mri$atrophy
+t = 75.49, df = 734, p-value < 2.2e-16
+alternative hypothesis: true mean is greater than 0
+95 percent confidence interval:
+ 35.19863      Inf
+sample estimates:
+mean of x 
+ 35.98367 
+\end{Soutput}
+\end{Schunk}
+}
+\end{enumerate}
+
+\section{Two Sample Inference}
+\subsection{The Two Sample t-test}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+\texttt{ttest} & \texttt{t.test()}
+\end{tabular}
+
+Both the \texttt{ttest} command in STATA and the \texttt{t.test()} function in R are equipped to handle two-sample inference as well. Both functions by default presume that the two groups have equal variances. They also provide the option that the test is a matched-pairs test.
+\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Test whether the mean atrophy score is different between males and females.
+
+\underline{Data:} \texttt{mri}
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+\begin{verbatim}
+ ttest atrophy, by(male)
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+       0 |     369    32.90515    .6363956    12.22476    31.65372    34.15658
+       1 |     366    39.08743    .6733026    12.88104    37.76339    40.41147
+---------+--------------------------------------------------------------------
+combined |     735    35.98367    .4766699    12.92294    35.04787    36.91947
+---------+--------------------------------------------------------------------
+    diff |           -6.182283    .9262663               -8.000734   -4.363831
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -6.6744
+Ho: diff = 0                                     degrees of freedom =      733
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 1.0000
+
+\end{verbatim}
+}
+\item \underline{R Code and Output}
+{\scriptsize
+\begin{Schunk}
+\begin{Sinput}
+> t.test(mri$atrophy[mri$male == 0], mri$atrophy[mri$male == 1])
+\end{Sinput}
+\begin{Soutput}
+	Welch Two Sample t-test
+
+data:  mri$atrophy[mri$male == 0] and mri$atrophy[mri$male == 1]
+t = -6.673, df = 730.33, p-value = 4.956e-11
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -8.001133 -4.363432
+sample estimates:
+mean of x mean of y 
+ 32.90515  39.08743 
+\end{Soutput}
+\end{Schunk}
+}
+The t-test in R requires that we subset our data if we want to test within another group.
+\end{enumerate}
+
+\section{Linear Regression}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+\texttt{regress} & \texttt{lm()}
+\end{tabular}
+
+In STATA, the \texttt{regress} command takes the dependent variable (y) followed by the independent variables (x). In R, we need to give \texttt{lm()} a \emph{formula} - an object with a `~' character. For example, if we wanted to regress atrophy on age in the \texttt{mri} data, the formula would be 
+\begin{verbatim}
+atrophy ~ age
+\end{verbatim}
+We also need to supply \texttt{lm()} with a dataset, using the \texttt{data = } argument. 
+
+The call to \texttt{lm()} creates a \texttt{lm} object, and in order to print the full inference (like STATA does by default) we need to use the \texttt{summary()} function. Once we have done this, the output agrees.
+\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Determine the association between age and cerebral atrophy by regressing atrophy on age.
+
+\underline{Data:} \texttt{mri}
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+\begin{verbatim}
+regress atrophy age
+
+      Source |       SS       df       MS              Number of obs =     735
+-------------+------------------------------           F(  1,   733) =   69.58
+       Model |   10626.648     1   10626.648           Prob > F      =  0.0000
+    Residual |  111953.156   733  152.732819           R-squared     =  0.0867
+-------------+------------------------------           Adj R-squared =  0.0854
+       Total |  122579.804   734  167.002458           Root MSE      =  12.359
+
+------------------------------------------------------------------------------
+     atrophy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |   .6979831   .0836783     8.34   0.000     .5337054    .8622609
+       _cons |  -16.06213   6.256186    -2.57   0.010    -28.34431   -3.779947
+------------------------------------------------------------------------------
+
+\end{verbatim}
+}
+\item \underline{R Code and Output}
+{\scriptsize
+\begin{Schunk}
+\begin{Sinput}
+> atr.lm <- lm(atrophy ~ age, data = mri)
+> summary(atr.lm)
+\end{Sinput}
+\begin{Soutput}
+Call:
+lm(formula = atrophy ~ age, data = mri)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-36.870  -8.589  -0.870   7.666  51.203 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -16.06213    6.25619  -2.567   0.0104 *  
+age           0.69798    0.08368   8.341 3.64e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 12.36 on 733 degrees of freedom
+Multiple R-squared:  0.08669,	Adjusted R-squared:  0.08545 
+F-statistic: 69.58 on 1 and 733 DF,  p-value: 3.635e-16
+\end{Soutput}
+\end{Schunk}
+}
+\end{enumerate}
+
+\section{Generalized Linear Models}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+\texttt{glm, family() linnk()} & \texttt{glm(family = )}\\
+\texttt{stcox} & \texttt{coxph()}
+\end{tabular}
+
+Generalized linear models allow the user to perform logistic regression, poisson regression, and proportional hazards regression, to name a few. In both STATA and R, for all of the types besides proportional hazard regression, the function is \texttt{glm}. In these cases, we need to supply the function with a \emph{family} so that the correct type of regression is run. We also sometimes need to specify the correct \emph{link} function. The link function specifies what function of the parameter of interest (usually mean response) is linear in the coefficients. For example, in logistic regression, we use a log link function because our assumption is that (for a model with only one predictor):
+\begin{displaymath}
+\log (E(Y)) = \beta_0 + \beta_1 X
+\end{displaymath}
+In both cases, \texttt{binomial} is the correct family for logistic regression. However, in STATA, we need to specify a link function to differentiate logistic (\texttt{link(logit)}) from poisson (\texttt{link(probit)}) regression. In R, we use \texttt{family = "poisson"} to run poisson regression.
+
+In both languages, proportional hazards regression requires a special function. In STATA this is \texttt{stcox}, while in R it is \texttt{coxph()}. Both of these functions have the same syntax as the functions for linear regression in their respective languages. 
+\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:} Examine the relationship between diabetes and age using logistic regression.
+
+\underline{Data:} \texttt{mri}
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+\begin{verbatim}
+glm diabetes age, family(binomial) link(log)
+
+Iteration 0:   log likelihood = -347.07514  
+Iteration 1:   log likelihood = -251.86635  
+Iteration 2:   log likelihood = -250.64888  
+Iteration 3:   log likelihood = -250.64853  
+Iteration 4:   log likelihood = -250.64853  
+
+Generalized linear models                          No. of obs      =       735
+Optimization     : ML                              Residual df     =       733
+                                                   Scale parameter =         1
+Deviance         =  501.2970586                    (1/df) Deviance =  .6838978
+Pearson          =  734.9984355                    (1/df) Pearson  =  1.002726
+
+Variance function: V(u) = u*(1-u)                  [Bernoulli]
+Link function    : g(u) = ln(u)                    [Log]
+
+                                                   AIC             =   .687479
+Log likelihood   = -250.6485293                    BIC             = -4336.408
+
+------------------------------------------------------------------------------
+             |                 OIM
+    diabetes |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |  -.0108457   .0201345    -0.54   0.590    -.0503086    .0286172
+       _cons |  -1.423417   1.498109    -0.95   0.342    -4.359657    1.512823
+------------------------------------------------------------------------------
+
+\end{verbatim}
+}
+\item \underline{R Code and Output}
+{\scriptsize
+\begin{Schunk}
+\begin{Sinput}
+> diabetes.glm <- glm(diabetes ~ age, data = mri, family = "binomial")
+> summary(diabetes.glm)
+\end{Sinput}
+\begin{Soutput}
+Call:
+glm(formula = diabetes ~ age, family = "binomial", data = mri)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-0.5032  -0.4863  -0.4780  -0.4619   2.2011  
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)
+(Intercept) -1.21557    1.66965  -0.728    0.467
+age         -0.01211    0.02242  -0.540    0.589
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 501.59  on 734  degrees of freedom
+Residual deviance: 501.30  on 733  degrees of freedom
+AIC: 505.3
+
+Number of Fisher Scoring iterations: 4
+\end{Soutput}
+\end{Schunk}
+}
+\end{enumerate}
+
+\section{Post-Estimation}
+Quick view of functions:\\
+\begin{tabular}{c|l}
+STATA & R (base) \\
+\hline
+
+\end{tabular}
+
+
+%\newline
+\noindent \underline{Example 1}
+
+\underline{Goal:}
+
+\underline{Data:}
+\begin{enumerate}[]
+\item \underline{STATA Code and Output}
+{\scriptsize
+\begin{verbatim}
+
+\end{verbatim}
+}
+\item \underline{R Code and Output}
+{\scriptsize
+
+}
+\end{enumerate}
 \end{document}

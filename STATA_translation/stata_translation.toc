@@ -1,2 +1,17 @@
 \contentsline {section}{\numberline {1}Introduction}{2}{section.1}
 \contentsline {section}{\numberline {2}Descriptive Statistics}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Simple Descriptives}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}The Chi-squared test}{4}{subsection.2.2}
+\contentsline {section}{\numberline {3}Plots}{5}{section.3}
+\contentsline {subsection}{\numberline {3.1}Boxplots}{5}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Histograms}{7}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Scatterplots}{9}{subsection.3.3}
+\contentsline {section}{\numberline {4}Correlation}{11}{section.4}
+\contentsline {section}{\numberline {5}Distribution Functions}{13}{section.5}
+\contentsline {section}{\numberline {6}One Sample Inference}{13}{section.6}
+\contentsline {subsection}{\numberline {6.1}The One Sample t-test}{13}{subsection.6.1}
+\contentsline {section}{\numberline {7}Two Sample Inference}{15}{section.7}
+\contentsline {subsection}{\numberline {7.1}The Two Sample t-test}{15}{subsection.7.1}
+\contentsline {section}{\numberline {8}Linear Regression}{16}{section.8}
+\contentsline {section}{\numberline {9}Generalized Linear Models}{17}{section.9}
+\contentsline {section}{\numberline {10}Post-Estimation}{18}{section.10}
