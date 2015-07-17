@@ -54,30 +54,21 @@
 \BOOKMARK [1][-]{section.6.1}{Function Help}{chapter.6}% 54
 \BOOKMARK [0][-]{chapter.7}{Descriptive Statistics}{}% 55
 \BOOKMARK [1][-]{section.7.1}{Simple Descriptives}{chapter.7}% 56
-\BOOKMARK [1][-]{section.7.2}{Other Descriptives and the uwIntroStats package}{chapter.7}% 57
-\BOOKMARK [1][-]{section.7.3}{Summarize vs descrip\(\)}{chapter.7}% 58
-\BOOKMARK [0][-]{chapter.8}{Chi-square Test}{}% 59
-\BOOKMARK [0][-]{chapter.9}{Plots}{}% 60
-\BOOKMARK [1][-]{section.9.1}{Boxplots}{chapter.9}% 61
-\BOOKMARK [1][-]{section.9.2}{Histograms}{chapter.9}% 62
-\BOOKMARK [1][-]{section.9.3}{Scatterplots}{chapter.9}% 63
-\BOOKMARK [0][-]{chapter.10}{Correlations}{}% 64
-\BOOKMARK [1][-]{section.10.1}{Pairwise Correlations}{chapter.10}% 65
-\BOOKMARK [0][-]{chapter.11}{Cumulative Distribution Functions}{}% 66
-\BOOKMARK [0][-]{chapter.12}{One-Sample Inference}{}% 67
-\BOOKMARK [1][-]{section.12.1}{The one-sample t-test}{chapter.12}% 68
-\BOOKMARK [0][-]{chapter.13}{Two-Sample Inference}{}% 69
-\BOOKMARK [1][-]{section.13.1}{The two-sample t-test}{chapter.13}% 70
-\BOOKMARK [0][-]{chapter.14}{Linear Regression}{}% 71
-\BOOKMARK [0][-]{chapter.15}{Regression on Functionals other than the Mean}{}% 72
-\BOOKMARK [0][-]{chapter.16}{Graphical User Interfaces}{}% 73
-\BOOKMARK [1][-]{section.16.1}{The Basic R GUI}{chapter.16}% 74
-\BOOKMARK [1][-]{section.16.2}{RStudio}{chapter.16}% 75
-\BOOKMARK [0][-]{chapter.17}{Examples from Lectures}{}% 76
-\BOOKMARK [1][-]{section.17.1}{BIOST 511 \(Taught by David Yanez, Autumn 2013\)}{chapter.17}% 77
-\BOOKMARK [2][-]{subsection.17.1.1}{Variance and Standard Deviation - Slide 51}{section.17.1}% 78
-\BOOKMARK [2][-]{subsection.17.1.2}{Calculating Quantiles and Percentiles - Slide 53}{section.17.1}% 79
-\BOOKMARK [2][-]{subsection.17.1.3}{2x2 Table - Slide 110}{section.17.1}% 80
-\BOOKMARK [2][-]{subsection.17.1.4}{Next Example}{section.17.1}% 81
-\BOOKMARK [1][-]{section.17.2}{BIOST 514/517 \(Taught by Katie Kerr, Autumn 2013\)}{chapter.17}% 82
-\BOOKMARK [1][-]{section.17.3}{Autumn 2014}{chapter.17}% 83
+\BOOKMARK [1][-]{section.7.2}{Other Descriptives}{chapter.7}% 57
+\BOOKMARK [0][-]{chapter.8}{Chi-square Test}{}% 58
+\BOOKMARK [0][-]{chapter.9}{Plots}{}% 59
+\BOOKMARK [1][-]{section.9.1}{Boxplots}{chapter.9}% 60
+\BOOKMARK [1][-]{section.9.2}{Histograms}{chapter.9}% 61
+\BOOKMARK [1][-]{section.9.3}{Scatterplots}{chapter.9}% 62
+\BOOKMARK [0][-]{chapter.10}{Correlations}{}% 63
+\BOOKMARK [1][-]{section.10.1}{Pairwise Correlations}{chapter.10}% 64
+\BOOKMARK [0][-]{chapter.11}{Cumulative Distribution Functions}{}% 65
+\BOOKMARK [0][-]{chapter.12}{One-Sample Inference}{}% 66
+\BOOKMARK [1][-]{section.12.1}{The one-sample t-test}{chapter.12}% 67
+\BOOKMARK [0][-]{chapter.13}{Two-Sample Inference}{}% 68
+\BOOKMARK [1][-]{section.13.1}{The two-sample t-test}{chapter.13}% 69
+\BOOKMARK [0][-]{chapter.14}{Linear Regression}{}% 70
+\BOOKMARK [0][-]{chapter.15}{Regression on Functionals other than the Mean}{}% 71
+\BOOKMARK [0][-]{chapter.16}{Graphical User Interfaces}{}% 72
+\BOOKMARK [1][-]{section.16.1}{The Basic R GUI}{chapter.16}% 73
+\BOOKMARK [1][-]{section.16.2}{RStudio}{chapter.16}% 74
