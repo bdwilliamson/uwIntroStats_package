@@ -3,7 +3,11 @@ title: "Stata-R Translations"
 author: "Brian D. Williamson and Scott S. Emerson, MD PhD"
 subtitle: "University of Washington Department of Biostatistics"
 date: "22 July, 2015"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: default
 header - includes:
    - \usepackage{graphicx}
    - \usepackage[colorlinks=true, linktoc=all, linkcolor=blue]{hyperref}
@@ -523,9 +527,9 @@ STATA | R (base)
 
 
 Generalized linear models allow the user to perform logistic regression, poisson regression, and proportional hazards regression, to name a few. In both STATA and R, for all of the types besides proportional hazard regression, the function is `glm`. In these cases, we need to supply the function with a *family* so that the correct type of regression is run. We also sometimes need to specify the correct *link* function. The link function specifies what function of the parameter of interest (usually mean response) is linear in the coefficients. For example, in logistic regression, we use a log link function because our assumption is that (for a model with only one predictor):
-\begin{displaymath}
+$$
 \log (E(Y)) = \beta_0 + \beta_1 X
-\end{displaymath}
+$$
 In both cases, `binomial` is the correct family for logistic regression. However, in STATA, we need to specify a link function to differentiate logistic (`link(logit)`) from poisson (`link(probit)`) regression. In R, we use `family = "poisson"` to run poisson regression.
 
 In both languages, proportional hazards regression requires a special function. In STATA this is `stcox`, while in R it is `coxph()`. Both of these functions have the same syntax as the functions for linear regression in their respective languages. 
