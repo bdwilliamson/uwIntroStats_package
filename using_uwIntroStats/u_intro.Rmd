@@ -1,0 +1,15 @@
+---
+title: "User Specified Multiple-Partial F-tests in Regression"
+date: "July 22, 2015"
+output: html_document
+---
+
+Many times in an analysis, multiple variables in the data will be measuring the same quantity. For example, in the `mri` data available at [Scott Emerson's website](http://www.emersonstatistics.com/datasets/mri.txt) and documented [on the same page](http://www.emersonstatistics.com/datasets/mri.pdf), both the `yrsquit` and `packyrs` variables measure the amount of smoking that a person does. 
+
+To fully analyze these variables, we need to run multiple-partial F-tests. Prior to the `uwIntroStats` package, the process to perform these tests involved more code than was necessary. First the user had to create a linear model (or perhaps multiple linear models), and then run an ANOVA test. 
+
+Now, using the `U()` function, the user can specify multiple-partial F-tests within a call to `regress()`, the regression function supplied by `uwIntroStats`. A full explanation of that function can be found in ["Regression in uwIntroStats"](regress_intro.html).
+
+This document provides an introduction to using the `U()` function as a supplement to regression analyses.
+
+

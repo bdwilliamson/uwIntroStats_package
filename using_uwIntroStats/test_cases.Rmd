@@ -1,16 +1,18 @@
 ---
 title: "Using the `uwIntroStats` Package"
 author: "Brian D. Williamson and Scott S. Emerson, MD PhD"
-subtitle: "University of Washington Department of Biostatistics"
 date: "22 July, 2015"
 output:
   html_document:
-    toc: true
-    toc_depth: 2
     theme: default
+    toc: yes
+    toc_depth: 2
+  pdf_document:
+    toc: yes
+subtitle: University of Washington Department of Biostatistics
 header - includes:
-   - \usepackage{graphicx}
-   - \usepackage[colorlinks=true, linktoc=all, linkcolor=blue]{hyperref}
+- \usepackage{graphicx}
+- \usepackage[colorlinks=true, linktoc=all, linkcolor=blue]{hyperref}
 ---
 ```{r echo = FALSE, include = FALSE}
 incCount <- function(inObj, useName) {
@@ -366,10 +368,10 @@ As mentioned above, part of the motivation for the `regress()` function was to h
 |Functional | Type of Regression | Previous command (package)|
 |---|:---|:---|
 |`"mean"` | Linear Regression | `lm()` (`stats` - base R) |
-|`"geometric mean"` | Linear Regression on logarithmically transformed Y | `lm()` ,with Y log transformed (`stats` - base R) |
+|`"geometric mean"` | Linear Regression on logarithmically transformed Y | `lm()`, with Y log transformed (`stats` - base R) |
 |`"odds"` | Logistic Regression | `glm(family = binomial)` (`stats` - base R) |
 |`"rate"` | Poisson Regression | `glm(family = poisson)` (`stats` - base R) |
-|`"hazard"` | Proportional Hazards Regression | `coxph()` (`survival`)
+|`"hazard"` | Proportional Hazards Regression | `coxph()` (`survival`)|
 
 
 If we enter a functional other than the mean, there is usually a transformation that needs to be applied to the data within the `regress()` function. In all of the cases listed in `r  I(pasteLabel("Table", tableCount, "fnctl"))`, the transformation is the logarithm. For example, sometimes the logistic regression model is taught as having a "log link", or the poisson regression model is taught as having the "logit link". These both refer to the function of the parameter having logarithms, so that the model is linear in the coefficients on the predictors. Therefore, in each case, we back-transform - by using the `exp(x)` function, which is equivalent to $e^x$ - the output of the regression by default, but also display the output that has not been back-transformed. This allows the user to easily see the results in the correct units, while also retaining the ability to compare with other software or handle the un-exponentiated results. If we want to examine the association between LDL and age, but want to use the geometric mean, we get
