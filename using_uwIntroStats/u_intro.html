@@ -9,7 +9,6 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="date" content="2015-07-22" />
 
 <title>User Specified Multiple-Partial F-tests in Regression</title>
 
@@ -68,14 +67,100 @@ img {
 
 <div id="header">
 <h1 class="title">User Specified Multiple-Partial F-tests in Regression</h1>
-<h4 class="date"><em>July 22, 2015</em></h4>
+<h4 class="date"><em>23 July, 2015</em></h4>
 </div>
 
 
 <p>Many times in an analysis, multiple variables in the data will be measuring the same quantity. For example, in the <code>mri</code> data available at <a href="http://www.emersonstatistics.com/datasets/mri.txt">Scott Emerson’s website</a> and documented <a href="http://www.emersonstatistics.com/datasets/mri.pdf">on the same page</a>, both the <code>yrsquit</code> and <code>packyrs</code> variables measure the amount of smoking that a person does.</p>
 <p>To fully analyze these variables, we need to run multiple-partial F-tests. Prior to the <code>uwIntroStats</code> package, the process to perform these tests involved more code than was necessary. First the user had to create a linear model (or perhaps multiple linear models), and then run an ANOVA test.</p>
 <p>Now, using the <code>U()</code> function, the user can specify multiple-partial F-tests within a call to <code>regress()</code>, the regression function supplied by <code>uwIntroStats</code>. A full explanation of that function can be found in <a href="regress_intro.html">“Regression in uwIntroStats”</a>.</p>
-<p>This document provides an introduction to using the <code>U()</code> function as a supplement to regression analyses.</p>
+<p>This document provides an introduction to using the <code>U()</code> function as a supplement to regression analyses. In each case, we will use linear regression to avoid confusion, and leave all of the arguments to <code>regress()</code> up to its own vignette.</p>
+<div id="arguments-to-the-u-function" class="section level1">
+<h1>Arguments to the <code>U()</code> function</h1>
+<p>To continue our example above, if we want to describe the association between cerebral atrophy and smoking and age using linear regression, we would have to use both the <code>yrsquit</code> and <code>packyrs</code> variables, in addition to the <code>age</code> variable. But as we already described, the former two both measure smoking habits, and thus are truly one variable.</p>
+<p>The <code>U()</code> function only requires a formula when it is used to create a multiple-partial F-test. However, this is not a usual formula, because the response variable has already been defined in the outer formula in the call to <code>regress()</code>. For example, the formula given to <code>regress()</code> without the multiple-partial F-test would follow the usual convention of <code>lm()</code>.</p>
+<pre><code>atrophy ~ age + packyrs + yrsquit</code></pre>
+<p>Now if we want to make the F-test, we give <code>U()</code> the formula</p>
+<pre><code>~ packyrs + yrsquit</code></pre>
+<p>and it knows to use the response variable <code>atrophy</code>. In fact, an error will be returned if a response variable is entered to the <code>U()</code> formula.</p>
+<p>Now we can run the regression.</p>
+<pre class="r"><code>library(uwIntroStats)</code></pre>
+<pre><code>## 
+## Attaching package: 'uwIntroStats'
+## 
+## The following object is masked from 'package:base':
+## 
+##     tabulate</code></pre>
+<pre class="r"><code>data(mri)
+regress(&quot;mean&quot;, atrophy ~ age + U(~packyrs + yrsquit), data = mri)</code></pre>
+<pre><code>## ( 1  cases deleted due to missing values)
+## 
+## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = atrophy ~ age + U(~packyrs + 
+##     yrsquit), data = mri)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -35.673  -8.610  -0.873   7.727  52.552 
+## 
+## Coefficients:
+##                             Estimate  Naive SE  Robust SE    95%L      
+## [1] Intercept                -18.22     6.312     6.812        -31.60  
+## [2] age                       0.7096   0.08401   0.09077       0.5314  
+##     U(packyrs + yrsquit)                                               
+## [3]   packyrs                0.02860   0.01694   0.01685     -4.488e-03
+## [4]   yrsquit                0.07252   0.03241   0.03221      9.288e-03
+##                             95%H         F stat    df Pr(&gt;F)   
+## [1] Intercept                -4.850           7.16 1    0.0076 
+## [2] age                       0.8878         61.12 1  &lt; 0.00005
+##     U(packyrs + yrsquit)                      4.37 2    0.0130 
+## [3]   packyrs                0.06168          2.88 1    0.0901 
+## [4]   yrsquit                 0.1358          5.07 1    0.0246 
+## 
+## Residual standard error: 12.27 on 730 degrees of freedom
+##   (1 observation deleted due to missingness)
+## Multiple R-squared:  0.09961,    Adjusted R-squared:  0.09591 
+## F-statistic: 23.05 on 3 and 730 DF,  p-value: 2.882e-14</code></pre>
+<p>The regression output indicates that the variable for smoking should be in the model. The F-statistic for the multiple-partial F-test, which tests that the <code>packyrs</code> and <code>yrsquit</code> coefficient estimates are simultaneously equal to zero, is 4.37 with a p-value of less than 0.05. Thus we would conclude that both age and smoking are associated with cerebral atrophy. For a full example of the inference we would make from this model, see the <a href="regress_intro.html">vignette</a> for using <code>regress()</code>.</p>
+</div>
+<div id="naming-the-groups-defined-by-u" class="section level1">
+<h1>Naming the groups defined by <code>U()</code></h1>
+<p>In our example above, we stated that both variables were actually measuring smoking habits. Thus in our regression call we could name this group to have more informative output. The <code>U()</code> function allows us to name the groups by placing an “=” before the tilde in the formula, and assigning a name on the left. In our example above, we could name the group “smoke” by writing</p>
+<pre><code>U(smoke = ~packyrs + yrsquit)</code></pre>
+<p>This would return the following output.</p>
+<pre class="r"><code>regress(&quot;mean&quot;, atrophy ~ age + U(smoke = ~packyrs + yrsquit), data = mri)</code></pre>
+<pre><code>## ( 1  cases deleted due to missing values)
+## 
+## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = atrophy ~ age + U(smoke = ~packyrs + 
+##     yrsquit), data = mri)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -35.673  -8.610  -0.873   7.727  52.552 
+## 
+## Coefficients:
+##                  Estimate  Naive SE  Robust SE    95%L       95%H     
+## [1] Intercept     -18.22     6.312     6.812        -31.60    -4.850  
+## [2] age            0.7096   0.08401   0.09077       0.5314     0.8878 
+##     smoke                                                             
+## [3]   packyrs     0.02860   0.01694   0.01685     -4.488e-03  0.06168 
+## [4]   yrsquit     0.07252   0.03241   0.03221      9.288e-03   0.1358 
+##                     F stat    df Pr(&gt;F)   
+## [1] Intercept            7.16 1    0.0076 
+## [2] age                 61.12 1  &lt; 0.00005
+##     smoke                4.37 2    0.0130 
+## [3]   packyrs            2.88 1    0.0901 
+## [4]   yrsquit            5.07 1    0.0246 
+## 
+## Residual standard error: 12.27 on 730 degrees of freedom
+##   (1 observation deleted due to missingness)
+## Multiple R-squared:  0.09961,    Adjusted R-squared:  0.09591 
+## F-statistic: 23.05 on 3 and 730 DF,  p-value: 2.882e-14</code></pre>
+<p>This is more informative than above, because now we are immediately reminded that <code>yrsquit</code> and <code>packyrs</code> are measuring smoking history when we look at the output.</p>
+</div>
 
 
 </div>
