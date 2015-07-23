@@ -2,8 +2,8 @@ Package: uwIntroStats
 Type: Package
 Title: Descriptive Statistics, Inference, Regression, and Plotting in
         an Introductory Statistics Course
-Version: 0.0.1
-Date: 2015-07-13
+Version: 0.0.2
+Date: 2015-07-23
 Maintainer: Brian D. Williamson <brianw26@uw.edu>
 Authors@R: c(person(given = "Scott S.", family = "Emerson", role = "aut"),
 	     person(given = "Andrew J.", family = "Spieker", role = "aut"),
@@ -15,11 +15,11 @@ Description: A set of tools designed to facilitate easy adoption of R for studen
 Imports: Exact, geepack, plyr, survival, sandwich
 License: GPL-2
 NeedsCompilation: no
-Packaged: 2015-07-13 16:11:30 UTC; Brian Williamson
+Packaged: 2015-07-23 16:15:52 UTC; Brian Williamson
 Author: Scott S. Emerson [aut],
   Andrew J. Spieker [aut],
   Brian D. Williamson [aut, cre],
   R Core Team [ctb],
   Terry M Therneu [ctb],
   Thomas Lumley [ctb]
-Built: R 3.2.1; ; 2015-07-13 16:11:54 UTC; windows
+Built: R 3.2.1; ; 2015-07-23 16:16:01 UTC; windows

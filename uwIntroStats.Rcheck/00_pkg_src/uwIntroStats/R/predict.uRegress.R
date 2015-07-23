@@ -13,7 +13,7 @@ predict.uRegress <- function(object, ...){
   } else if(class(object$fit)[1]=="glm"){
     ret <- predict.glm(object$fit,...)
   } else if (class(object$fit)[1]=="coxph"){
-    ret <- survival::predict.coxph(object$fit, ...)
+    ret <- predict(object$fit, ...)
   } else {
     stop("Predictions not yet implemented for objects of type 'geeglm'")
   }

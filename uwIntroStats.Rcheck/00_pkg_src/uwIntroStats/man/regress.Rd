@@ -42,7 +42,7 @@ regress(fnctl, formula, data, intercept = fnctl!="hazard",
         replaceZeroes, useFdstn = TRUE, suppress = FALSE, na.action, method = "qr", 
         model.f = TRUE, model.x = FALSE, model.y = FALSE, qr = TRUE,
         singular.ok = TRUE, contrasts = NULL, offset,control = list(...),
-        tt, init, ..., version=FALSE)
+        init, ..., version=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -109,8 +109,8 @@ linear regression model.
 if \code{TRUE}, and a model which requires exponentiation (for instance, regression on the geometric mean) is computed, then a table with only the exponentiated coefficients and confidence interval is returned. Otherwise, two tables are returned - one with the original unexponentiated coefficients, and one with the exponentiated coefficients.
 } \item{na.action, method, model.f, model.x, model.y, qr, singular.ok, offset, contrasts, control}{
 optional arguments that are passed to the functionality of \code{lm} or \code{glm}.
-} \item{tt, init}{
-optional arguments that are passed to the functionality of \code{coxph}.
+} \item{init}{
+optional argument that are passed to the functionality of \code{coxph}.
 }
   \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
@@ -125,7 +125,7 @@ if \code{TRUE}, returns the version of the function. No other computation is per
 %%  ~~ If necessary, more details than the description above ~~
 Regression models include linear regression (for the ``mean'' functional), logistic regression (for the ``odds''
 functional), Poisson regression (for the ``rate'' functional), and proportional hazards regression (for the
-``hazard'' functional). Objects created using the \code{\link[uwIntroStats]{U}} function can also be passed in. If the \code{\link[uwIntroStats]{U}} call involves a partial formula of the form \code{~ var1 + var2}, then \code{regress} will return a multiple-partial F-test involving \code{var1} and \code{var2}. The multiple partial tests must be the last terms specified in the model (i.e. no other predictors can follow them).
+``hazard'' functional). Penalized proportional hazards regression and time-transform are not supported in the \code{regress} function. Objects created using the \code{\link[uwIntroStats]{U}} function can also be passed in. If the \code{\link[uwIntroStats]{U}} call involves a partial formula of the form \code{~ var1 + var2}, then \code{regress} will return a multiple-partial F-test involving \code{var1} and \code{var2}. The multiple partial tests must be the last terms specified in the model (i.e. no other predictors can follow them).
 
 }
 \value{

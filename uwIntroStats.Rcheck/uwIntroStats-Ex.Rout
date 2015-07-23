@@ -8531,7 +8531,7 @@ Warning in print.wilcoxon(x) :
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  10.72 0.73 24.92 NA NA 
+Time elapsed:  11.81 0.57 21.22 NA NA 
 > grDevices::dev.off()
 null device 
           1 

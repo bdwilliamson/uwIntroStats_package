@@ -43,9 +43,15 @@ function (y, x, strata=rep(1,length(y)), subset= rep(TRUE,length(y)), reference=
   xlbl <- ylbl <- NULL
   if (!("xlab" %in% hyperNames)) {
     xlbl <- as.character(match.call(expand.dots=F)$x)
+    if(xlbl[1] == "$"){
+      xlbl <- paste0(xlbl[2], xlbl[1], xlbl[3])
+    }
   }
   if (!("ylab" %in% hyperNames)) {
     ylbl <- as.character(match.call(expand.dots=F)$y)
+    if(ylbl[1] == "$"){
+      ylbl <- paste0(ylbl[2], ylbl[1], ylbl[3])
+    }
   }
   u <- !is.na(x) & !is.na(y) & !is.na(strata)
   y <- y[u]

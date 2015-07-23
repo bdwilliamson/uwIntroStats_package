@@ -24,7 +24,6 @@
 ##       contrasts     - special contrasts for regression
 ##       offset        - any offset
 ##       control       - 
-##       tt            - special for cox regression
 ##       init          - for cox regression
 ##       ...           - other arbitrary arguments to lower level functions
 ##       version       - the version of the function
@@ -36,7 +35,7 @@ regress <-
             strata=rep(1,n),weights=rep(1,n),id=1:n,ties="efron",subset=rep(TRUE,n),
             robustSE = TRUE, conf.level=0.95, exponentiate=fnctl!="mean",
             replaceZeroes, useFdstn=TRUE, suppress=FALSE, na.action, method="qr", model.f=TRUE, model.x=FALSE, model.y=FALSE, qr=TRUE,
-            singular.ok=TRUE, contrasts=NULL, offset,control=list(...),tt, init, ..., version=FALSE) {
+            singular.ok=TRUE, contrasts=NULL, offset,control=list(...), init, ..., version=FALSE) {
     
     vrsn <- "20150502"
     if (version) return(vrsn)
@@ -92,7 +91,8 @@ regress <-
         stop("A formula argument is required")
       mf <- Call[c(1, indx)]
       mf[[1]] <- as.name("model.frame")
-      special <- c("strata", "cluster", "tt")
+      #special <- c("strata", "cluster", "tt")
+      special <- c("strata", "cluster")
     }
     ## Get the correct formula and any multiple-partial F-tests
     testlst <- testList(formula, mf, m, data)
@@ -351,18 +351,13 @@ regress <-
       
       temp$formula <- coxform
       
-      special <- c("strata", "cluster", "tt")
+      special <- c("strata", "cluster")
       if (missing(data)){
         temp$formula <- terms(coxform, special)
       } else {
         temp$formula <- terms(coxform, special, data = data)
       }
       method <- ties
-      if (!is.null(attr(temp$formula, "specials")$tt)) {
-        coxenv <- new.env(parent = environment(formula))
-        assign("tt", function(x) x, env = coxenv)
-        environment(temp$formula) <- coxenv
-      }
       formula <- temp$formula
       mf <- eval(temp, parent.frame())
       if (nrow(mf) == 0) 
@@ -448,78 +443,6 @@ regress <-
         else strata.keep <- strata(mf[, stemp$vars], shortlabel = TRUE)
         strats <- as.numeric(strata.keep)
       }
-      timetrans <- attr(Terms, "specials")$tt
-      if (missing(tt)) 
-        tt <- NULL
-      if (length(timetrans)) {
-        timetrans <- untangle.specials(Terms, "tt")
-        ntrans <- length(timetrans$terms)
-        if (is.null(tt)) {
-          tt <- function(x, time, riskset, weights) {
-            obrien <- function(x) {
-              r <- rank(x)
-              (r - 0.5)/(0.5 + length(r) - r)
-            }
-            unlist(tapply(x, riskset, obrien))
-          }
-        }
-        if (is.function(tt)) 
-          tt <- list(tt)
-        if (is.list(tt)) {
-          if (any(!sapply(tt, is.function))) 
-            stop("The tt argument must contain function or list of functions")
-          if (length(tt) != ntrans) {
-            if (length(tt) == 1) {
-              temp <- vector("list", ntrans)
-              for (i in 1:ntrans) temp[[i]] <- tt[[1]]
-              tt <- temp
-            }
-            else stop("Wrong length for tt argument")
-          }
-        }
-        else stop("The tt argument must contain a function or list of functions")
-        if (ncol(Y) == 2) {
-          if (length(strats) == 0) {
-            sorted <- order(-Y[, 1], Y[, 2])
-            newstrat <- rep.int(0L, nrow(Y))
-            newstrat[1] <- 1L
-          }
-          else {
-            sorted <- order(strats, -Y[, 1], Y[, 2])
-            newstrat <- as.integer(c(1, 1 * (diff(strats[sorted]) != 
-                                               0)))
-          }
-          if (storage.mode(Y) != "double") 
-            storage.mode(Y) <- "double"
-          counts <- .Call(Ccoxcount1, Y[sorted, ], as.integer(newstrat))
-          tindex <- sorted[counts$index]
-        }
-        else {
-          if (length(strats) == 0) {
-            sort.end <- order(-Y[, 2], Y[, 3])
-            sort.start <- order(-Y[, 1])
-            newstrat <- c(1L, rep(0, nrow(Y) - 1))
-          }
-          else {
-            sort.end <- order(strats, -Y[, 2], Y[, 3])
-            sort.start <- order(strats, -Y[, 1])
-            newstrat <- c(1L, as.integer(diff(strats[sort.end]) != 
-                                           0))
-          }
-          if (storage.mode(Y) != "double") 
-            storage.mode(Y) <- "double"
-          counts <- .Call(Ccoxcount2, Y, as.integer(sort.start - 
-                                                      1L), as.integer(sort.end - 1L), as.integer(newstrat))
-          tindex <- counts$index
-        }
-        mf <- mf[tindex, ]
-        Y <- Surv(rep(counts$time, counts$nrisk), counts$status)
-        type <- "right"
-        strats <- rep(1:length(counts$nrisk), counts$nrisk)
-        w <- model.weights(mf)
-        for (i in 1:ntrans) mf[[timetrans$var[i]]] <- (tt[[i]])(mf[[timetrans$var[i]]], 
-                                                                Y[, 1], strats, w)
-      }
       contrast.arg <- NULL
       attr(Terms, "intercept") <- TRUE
       adrop <- 0
@@ -560,34 +483,20 @@ regress <-
       contr.save <- attr(X, "contrasts")
       if (missing(init)) 
         init <- NULL
-      pterms <- sapply(mf, inherits, "coxph.penalty")
-      if (any(pterms)) {
-        pattr <- lapply(mf[pterms], attributes)
-        pname <- names(pterms)[pterms]
-        ord <- attr(Terms, "order")[match(pname, attr(Terms, 
-                                                      "term.labels"))]
-        if (any(ord > 1)) 
-          stop("Penalty terms cannot be in an interaction")
-        pcols <- assign[match(pname, names(assign))]
-        fit <- coxpenal.fit(X, Y, strats, offset, init = init, 
-                            control, weights = w, method = method, row.names(mf), 
-                            pcols, pattr, assign)
+      if (method == "breslow" || method == "efron") {
+        if (type == "right") 
+          fitter <- get("coxph.fit")
+        else fitter <- get("agreg.fit")
       }
-      else {
-        if (method == "breslow" || method == "efron") {
-          if (type == "right") 
-            fitter <- get("coxph.fit")
-          else fitter <- get("agreg.fit")
-        }
-        else if (method == "exact") {
-          if (type == "right") 
-            fitter <- get("coxexact.fit")
-          else fitter <- get("agexact.fit")
-        }
-        else stop(paste("Unknown method", method))
-        fit <- fitter(X, Y, strats, offset, init, control, weights = w, 
-                      method = method, row.names(mf))
+      else if (method == "exact") {
+        if (type == "right") 
+          fitter <- get("coxexact.fit")
+        else fitter <- get("agexact.fit")
       }
+      else stop(paste("Unknown method", method))
+      fit <- fitter(X, Y, strats, offset, init, control, weights = w, 
+                    method = method, row.names(mf))
+      
       if (is.character(fit)) {
         fit <- list(fail = fit)
         class(fit) <- "coxph"
@@ -645,19 +554,12 @@ regress <-
         if (length(na.action)) 
           fit$na.action <- na.action
         if (model.f) {
-          if (length(timetrans)) {
-            mf[[".surv."]] <- Y
-            mf[[".strata."]] <- strats
-            stop("Time transform + model frame: code incomplete")
-          }
           fit$model <- mf
         }
         if (model.x) {
           fit$x <- X
           if (length(strats)) {
-            if (length(timetrans)) 
-              fit$strata <- strats
-            else fit$strata <- strata.keep
+            fit$strata <- strata.keep
           }
         }
         if (model.y) 
