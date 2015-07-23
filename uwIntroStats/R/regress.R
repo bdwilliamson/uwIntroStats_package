@@ -36,7 +36,7 @@ regress <-
             strata=rep(1,n),weights=rep(1,n),id=1:n,ties="efron",subset=rep(TRUE,n),
             robustSE = TRUE, conf.level=0.95, exponentiate=fnctl!="mean",
             replaceZeroes, useFdstn=TRUE, suppress=FALSE, na.action, method="qr", model.f=TRUE, model.x=FALSE, model.y=FALSE, qr=TRUE,
-            singular.ok=TRUE, contrasts=NULL, offset,control=list(...),tt, init, ..., version=FALSE) {
+            singular.ok=TRUE, contrasts=NULL, offset,control=list(...), tt, init, ..., version=FALSE) {
     
     vrsn <- "20150502"
     if (version) return(vrsn)
@@ -491,7 +491,7 @@ regress <-
           }
           if (storage.mode(Y) != "double") 
             storage.mode(Y) <- "double"
-          counts <- .Call(Ccoxcount1, Y[sorted, ], as.integer(newstrat))
+          counts <- .Call(survival:::Ccoxcount1, Y[sorted, ], as.integer(newstrat))
           tindex <- sorted[counts$index]
         }
         else {
@@ -508,7 +508,7 @@ regress <-
           }
           if (storage.mode(Y) != "double") 
             storage.mode(Y) <- "double"
-          counts <- .Call(Ccoxcount2, Y, as.integer(sort.start - 
+          counts <- .Call(survival:::Ccoxcount2, Y, as.integer(sort.start - 
                                                       1L), as.integer(sort.end - 1L), as.integer(newstrat))
           tindex <- counts$index
         }
@@ -560,34 +560,20 @@ regress <-
       contr.save <- attr(X, "contrasts")
       if (missing(init)) 
         init <- NULL
-      pterms <- sapply(mf, inherits, "coxph.penalty")
-      if (any(pterms)) {
-        pattr <- lapply(mf[pterms], attributes)
-        pname <- names(pterms)[pterms]
-        ord <- attr(Terms, "order")[match(pname, attr(Terms, 
-                                                      "term.labels"))]
-        if (any(ord > 1)) 
-          stop("Penalty terms cannot be in an interaction")
-        pcols <- assign[match(pname, names(assign))]
-        fit <- coxpenal.fit(X, Y, strats, offset, init = init, 
-                            control, weights = w, method = method, row.names(mf), 
-                            pcols, pattr, assign)
+      if (method == "breslow" || method == "efron") {
+        if (type == "right") 
+          fitter <- get("coxph.fit")
+        else fitter <- get("agreg.fit")
       }
-      else {
-        if (method == "breslow" || method == "efron") {
-          if (type == "right") 
-            fitter <- get("coxph.fit")
-          else fitter <- get("agreg.fit")
-        }
-        else if (method == "exact") {
-          if (type == "right") 
-            fitter <- get("coxexact.fit")
-          else fitter <- get("agexact.fit")
-        }
-        else stop(paste("Unknown method", method))
-        fit <- fitter(X, Y, strats, offset, init, control, weights = w, 
-                      method = method, row.names(mf))
+      else if (method == "exact") {
+        if (type == "right") 
+          fitter <- get("coxexact.fit")
+        else fitter <- get("agexact.fit")
       }
+      else stop(paste("Unknown method", method))
+      fit <- fitter(X, Y, strats, offset, init, control, weights = w, 
+                    method = method, row.names(mf))
+      
       if (is.character(fit)) {
         fit <- list(fail = fit)
         class(fit) <- "coxph"
