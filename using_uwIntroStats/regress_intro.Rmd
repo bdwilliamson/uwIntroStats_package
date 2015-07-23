@@ -34,7 +34,7 @@ The *data* argument is exactly the same as that in `lm()` or any of the other re
 Last, *id* allows the user to fit a generalized estimating equations (GEE) model while using the same syntax as any of the functionals to `regress()`. The GEE framework is a useful way to model correlated data, which often comes in the form of repeated measurements.
 
 # Linear Regression
-As a first example, we run a linear regression analysis of atrophy on age and male, from the `mri` data.
+As a first example, we run a linear regression analysis of atrophy on age and male, from the `mri` data. This dataset is included in the `uwIntroStats` package, and its documentation can be found on Scott Emerson's website [here](http://www.emersonstatistics.com/datasets/mri.pdf).
 ```{r}
 ## Preparing our R session
 library(uwIntroStats)

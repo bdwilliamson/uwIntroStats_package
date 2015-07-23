@@ -1,0 +1,99 @@
+\documentclass{article}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{fullpage}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage[percent]{overpic}
+\usepackage{mathrsfs}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{lscape}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{listings}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm, headsep = 0.9cm]{geometry}
+\usepackage{verbdef}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.0in}
+\usepackage{setspace}
+\definecolor{gray}{RGB}{90,90,90}
+\usepackage[colorlinks=true, linktoc=all, linkcolor=blue]{hyperref}
+
+\pagestyle{plain}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\centerline{\large{\textbf{Examples of some \texttt{uwIntroStats} Functions}}}
+\centerline{\textbf{Author: Brian D. Williamson}}
+\tableofcontents
+$$$$
+\section{Introduction}
+This document is meant to illustrate the use of some of the major \texttt{uwIntroStats} functions. The examples will be shown with R code and output. For more options, see the help files provided with the package. Thus, before starting, load both the packages that \texttt{uwIntroStats} relies on:
+<<>>=
+## uwIntroStats relies on the Exact, survival, 
+## plyr, and sandwich packages
+library(Exact)
+library(survival)
+library(plyr)
+library(sandwich)
+@
+Now load the \texttt{uwIntroStats} package (if you don't have it installed, go to ``emersonstatistics.com/R'' and download the appropriate file).
+<<>>=
+library(uwIntroStats)
+@
+We will also be working with the \texttt{mri} dataset, so prepare that as well:
+<<>>=
+data(mri)
+attach(mri)
+@
+The reference manual for the \texttt{mri} dataset can be found on ``emersonstatistics.com/Datasets''. 
+
+\section{Descriptive Statistics}
+\subsection{\texttt{descrip()}}
+Now that we have our package and dataset loaded, we can delve deeper into the functions. When we first get a dataset, we often want to find some descriptive statistics. The most common are the number of observations a variable has, the number of missing observations, the mean, median, standard deviation, and some others. The default \texttt{descrip()} function will give all of this and more to us. Let's say we wanted to get descriptive statistics for \texttt{age}:
+<<>>=
+descrip(age)
+@
+However, what if we are interested in the whole dataset? We can do this too!
+<<>>=
+descrip(mri)
+@
+Now we know that the \texttt{male} variable can stratify the data. A natural question to ask is: what are the descriptive statistics for age stratified by sex?
+<<>>=
+descrip(age, strata=male)
+@
+Other functionality of \texttt{descrip()}, as with all of the functions in R, can be found by typing
+<<>>=
+?descrip
+@
+\subsection{\texttt{tableStat()}}
+The next step is to build tables of descriptive statistics. For example, suppose we wish to have a table with count, row percentage, column percentage, standard deviation, and range. This is easy with \texttt{tableStat()}! We will build this table using \texttt{stroke} as our variable, stratified by \texttt{race} and \texttt{male}
+<<>>=
+tableStat(stroke, race, male, stat="count=@count@; row%=@row%@ col%=@col%@; sd=@sd@; range = @min@ - @max@")
+@
+
+\section{Plots}
+\subsection{Box plots}
+As we cover in our document ``An Introduction to R'', box plots can be controversial as a descriptive plot of the data. However, we aimed to mitigate some of those concerns with our box plot function. It is straightforward to add jittered data to the plot (allowing us to see all of the data allows us to see where ``outliers'' really are) and overlay the sample mean and standard deviation - giving us a much better picture of the data. Let's create a boxplot of fev by race:
+<<fig=true>>=
+bplot(fev, race, xlab="Race", ylab="FEV")
+@
+\\Notice that by default the jittered data is added to the plot, and the plots are overlaid with sample mean and standard deviation. Now we can also stratify by sex:
+<<fig=true>>=
+bplot(fev, race, strata=male, xlab="Race by Sex", ylab="FEV")
+@
+
+\subsection{Scatter plots}
+We also often wish to view a scatter plot of the data. 
+
+\section{Inference}
+\subsection{\texttt{tabulate()}}
+
+
+\end{document}
