@@ -4,8 +4,8 @@ author: "Brian D. Williamson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Multiple-Partial F-tests in Regression}
-  %\VignetteEngine{knitr::rmarkdown}
+  \VignetteIndexEntry{Multiple-Partial F-tests in Regression}
+  \VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 

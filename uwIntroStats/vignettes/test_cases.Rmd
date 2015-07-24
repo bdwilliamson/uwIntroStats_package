@@ -13,8 +13,8 @@ header - includes:
 - \usepackage{graphicx}
 - \usepackage[colorlinks=true, linktoc=all, linkcolor=blue]{hyperref}
 vignette: >
-  %\VignetteIndexEntry{Using uwIntroStats}
-  %\VignetteEngine{knitr::rmarkdown}
+  \VignetteIndexEntry{Using uwIntroStats}
+  \VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 ```{r echo = FALSE, include = FALSE}
@@ -43,6 +43,7 @@ pasteLabel <- function(preText, inObj, objName, insLink = TRUE) {
 ## Preparing `uwIntroStats`
 
 Before we can dive in and run any analyses, we first need to install the package. This is done via
+
 ```{r eval = FALSE}
 install.packages("uwIntroStats")
 ```
@@ -61,6 +62,7 @@ library(uwIntroStats)
 ```
 
 Don't worry about the warning message for now; that will be covered in section 3.2. Last, we load the data, `mri` that we will be using throughout this document. Information about the dataset can be found at [mri.pdf](http://www.emersonstatistics.com/datasets/mri.pdf). Since the data is part of the package, we can load it via
+
 ```{r}
 data(mri)
 ```
@@ -72,6 +74,7 @@ Descriptive statistics are an important part of any analysis. Often, they are ju
 
 ## The basics: `descrip()`
 The `uwIntroStats` package was designed with descriptive statistics in mind. The basic function for descriptive statistics is `descrip()`. This function takes in an arbitrary number of variables, and by default calculates the number of observations, the number of missing values, the mean, standard deviation, mininum value, maximum value, and the 25th, 50th, and 75th percentiles of each variable. For instance, if we wanted a quick glance at the `mri` data, we could type
+
 ```{r}
 descrip(mri)
 ```
@@ -81,6 +84,7 @@ This call gives us a quick look at the distribution of each variable in the samp
 Notice that there are a lot of variables measured in these data, and that some interesting phenomena are measured by multiple variables. For instance, smoking is measured by `packyrs` and `yrsquit` - if someone has zero pack-years (that is, they have never smoked) then they will also have zero years quit. Similarly, a current smoker of any amount of packs per year will have zero years quit. We can also look at the variables measured through blood samples, like LDL cholesterol (`ldl`) and get an idea of the range in our sample population. Last, in the variables like `male` which consist of only two values (sex was measured as male or female in this dataset), the mean tells us the proportion of our sample who was male (or for other binary variables, it will tell us the proportion which is coded as 1). The `descrip()` function works similarly to `summary()` in base R, but gives more information and returns it in a format that, as we described above, is easier to export from R.
 
 Another powerful feature of `descrip()` is its ability to present stratified summaries, or summaries on a subset of the data. For instance, let's calculate descriptive statistics on the `age` variable within males and females:
+
 ```{r}
 descrip(mri$age, strata = mri$male)
 
@@ -89,6 +93,7 @@ summary(mri$age)
 ```
 
 Here the row for `Str 0` corresponds to females (since they are coded as 0 for `male`), and males are `Str 1`. If we further wanted to restrict to only those people who were over 75 years old, we could use the `subset` argument:
+
 ```{r}
 descrip(mri$age, strata = mri$male, subset = mri$age > 75)
 ```
@@ -121,11 +126,13 @@ $$
 N: \ n; \ Mean \ (SD): \ mn \ (sd); \ Range: \ max - min,
 $$
 which we get via:
+
 ```{r}
 tableStat(mri$age, stat = "N: @count@; Mean (SD): @mean@ (@sd@); Range: @max@ - @min@")
 ```
 
 Note that all of the values enclosed in \texttt{@} symbols are from Table \ref{stattable} and are run by \texttt{tableStat()}, while the other values in the string are used for formatting. This function can also take stratification variables; if we want to see the above stratified by sex, we use
+
 ```{r}
 tableStat(mri$age, strata = mri$male, stat = "N: @count@; Mean (SD): @mean@ (@sd@); Range: @min@ - @max@")
 ```
@@ -138,11 +145,13 @@ The following object is masked from ‘package:base’:
 ```
 
 This means that our function `tabulate()` overwrites the function called `tabulatte()` in the base R package, which takes a numeric vector and counts the number of times each integer occurs in it. Our function does a similar task, but on combinations of strata. The syntax is very similar to the syntax for `tableStat()`, but rather than explicitly telling `tabulate()` the strata, it creates the tables with each dimension corresponding to a variable in the order they are entered. For instance, if we want a table of `age` (in the rows) and `male` (in the columns), we would write
+
 ```{r}
 tabulate(mri$age, mri$male)
 ```
 
 By default, `tabulate()` gives us the count in each combination of the strata, and gives us the overall $\chi^2$ test statistic, degrees of freedom, and p-value. We can add in other arguments as well. Let's say that we are interested in an odds ratio or a risk ratio - `tabulate()` can supply these, if we set `dispRatios = TRUE`. This is where our use of the `Exact` package comes in, because this package contains some very useful functions for calculating these ratios. However, we supply both the odds ratio and the risk ratio, even though in some cases only one is appropriate. Thus it is up to the user to know which they can use. To display these ratios for `male` versus `chf` (an indicator variable of whether the patient had been diagnosed with congestive heart failure prior to MRI), we type
+
 ```{r}
 tabulate(mri$male, mri$chf, dispRatios = TRUE)
 ```
@@ -182,16 +191,19 @@ This boxplot breaks down diabetes by race, again showing the mean and standard d
 
 ## Scatterplots
 Scatterplots are a very common way to view data. They plot all of the data in one window, which allows the user to get a good overall view. However, many times the data is clumped together in some spots, and it is hard to see all of the points. Thus, similar to our approach in `bplot()`, our `scatter()` function jitters the data slightly by default. To illustrate this difference, we consider the distribution of cerebral atrophy by age group. In the base R scatterplot,
+
 ```{r}
 plot(mri$age, mri$atrophy)
 ```
 
 we see that a lot of the values sit on top of each other. In our version (which again uses the Y followed by X convention),
+
 ```{r}
 scatter(mri$atrophy, mri$age)
 ```
 
 the jittered data allows us to see where all of the points lie much better. Also notice that `scatter()` displayes a loess curve by default. We can also display a line of best fit calculated by least squares by adding `plotLSfit = TRUE`. Last, we can stratify, which is particularly useful if we want to see differences across a third variable, and `scatter()` will automatically color the data appropriately:
+
 <a id = "stratscatter"></a>
 ```{r echo = FALSE}
 figCount <- incCount(figCount, "stratscatter")
@@ -205,7 +217,8 @@ scatter(mri$atrophy, mri$age, strata = mri$race)
 In many cases (especially in regression, which we will cover in section 7), it is more useful to model a transformation of a variable than the raw data itself. We present three functions to easily transform a variable. In each case, the function returns a list of: a matrix with the new transformed variable, the type of transformation performed, a vector describing how the variable was created, the name of the created variable, and the original data.
 
 ## Dummy Variables
-Dummy variables are a convenient way of creating indicator variables against some reference. For example, in the `mri` data, if we wanted to create a dummy variable for `race`, this would create 3 indicator variables (since there are four levels of race). By default, our `dummy()` function creates these indicators using the smallest value as the reference. 
+Dummy variables are a convenient way of creating indicator variables against some reference. For example, in the `mri` data, if we wanted to create a dummy variable for `race`, this would create 3 indicator variables (since there are four levels of race). By default, our `dummy()` function creates these indicators using the smallest value as the reference.
+
 ```{r}
 dummy.race <- dummy(mri$race)
 head(dummy.race, n = 10)
@@ -220,6 +233,7 @@ Linear splines create a piecewise linear fit between user specified "knot" point
 The second parameterization is denoted by us as "change". This uses the change between knots to specify the slopes. Under this parameterization, we would see, for a value of 115, `115 45 0`, which corresponds to: 115 units between the minimum and the value, 45 units between knot 1 (at 70) and the value, and zero units between knot 2 (at 150) and the value. We do not show negative units.
 
 These two parameterizations can be accessed via
+
 ```{r}
 lspline.ldl <- lspline(mri$ldl, knots = c(70, 150))
 head(lspline.ldl, n = 10)
@@ -230,6 +244,7 @@ head(lsplineD.ldl, n = 10)
 ## Polynomials
 
 Last we come to polynomials. This function creates a polynomial of the specified degree simply by multiplying the variable by itself the correct number of times. If we wanted to create a parabola in `age`, we type
+
 ```{r}
 age.parabola <- polynomial(mri$age, degree = 2)
 head(age.parabola, n = 10)
@@ -244,6 +259,7 @@ Many of our analyses boil down to one-sample or two-sample problems; What is the
 ## Correlation
 
 While correlation is not an excellent source of inference, since it is inherently a feature of the dataset collected, sometimes it is important to know when variables are correlated. In the base R package, there are a few functions to calculate correlation: `cor()`, `var()`, `cov()`, and `cov2cor()`. Our function, `correlate()`, computes the correlation matrix between an arbitrary number of variables, and optionally also does this within a stratification variable. This is the real advantage of `correlate()`, since in base R we would have to manually subset the data into each stratum. If we want to examine the correlation between sex and diabetes, (and then stratify by race), we get
+
 ```{r}
 ## Base R - returns only one number!
 cor(mri$male, mri$diabetes)
@@ -348,6 +364,7 @@ Note that in the output of `wilcoxon()}` we have displayed the data calculated b
 Regression is one of the most widely used and easily understood methods of statistical analysis. The base R package has many different functions to perform regression: `lm()` for linear regression, `glm()` for generalized linear regression (which allows you to perform logistic regression, for example), `coxph()` for proportional hazards regression, and `geeglm()` as (one) method for correlated data regression. Each function has slightly different options, and remembering all of these is a chore. Part of the motivation for `regress()` is to alleviate this problem. This function provides one interface through which all types of regression can be performed. We also print the output from the regression in a much more understandable manner. Also, as we did in `ttest()`, we allow the user to calculate and use robust standard error estimates (using the Huber-White sandwich estimator), which adds flexibility. The `regress()` function does all of this while keeping the same formula syntax as its predecessors: `y~x1+x2*x3` still produces a linear model with coefficients for `x1`, `x2`, `x3`, and the interaction between `x2` and `x3`. The next four subsections deal with aspects of `regress()` in more detail.
 
 ## Basics of `regress()`
+
 ```{r echo = FALSE}
 tableCount <- incCount(tableCount, "fnctl")
 ```
@@ -440,6 +457,7 @@ notice that the coefficients for each dummy variable are presented in the usual 
 We also see that after the coefficients table, `regress()` tells us how the dummy variables were computed. 
 
 Now for the user-defined multiple-partial F-tests, we need to be a bit careful. If entered in a call to `regress()`, the `U()` function takes in a formula, which can be named, and returns the specified multiple-partial F-test to the regression output. It also adds any new variables to the regression model. As an example of the `U()` function, if we wanted to add age and male to our model, and we wanted to have a multiple-partial F-test of these two variables, we could add
+
 ```{r echo = FALSE}
 attach(mri)
 ```

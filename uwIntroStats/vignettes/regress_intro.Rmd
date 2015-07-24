@@ -4,8 +4,8 @@ author: "Brian D. Williamson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Regression in uwIntroStats}
-  %\VignetteEngine{knitr::rmarkdown}
+  \VignetteIndexEntry{Regression in uwIntroStats}
+  \VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
