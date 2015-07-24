@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Brian D. Williamson" />
+
+<meta name="date" content="2015-07-24" />
+
+<title>Regression in uwIntroStats</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0A%7D%0Apre%20%7B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div id="header">
+<h1 class="title">Regression in uwIntroStats</h1>
+<h4 class="author"><em>Brian D. Williamson</em></h4>
+<h4 class="date"><em>2015-07-24</em></h4>
+</div>
+
+
+<p>In the <code>uwIntroStats</code> package, we have set out to make regression and analysis easier by:</p>
+<ul>
+<li>allowing the user to specify any type of regression from one function</li>
+<li>allowing the user to specify multiple-partial F-tests</li>
+<li>displaying output in a more intuitive fashion than base R</li>
+</ul>
+<p>This function is <code>regress()</code>. The basic arguments to this function, which unlock all of its potential, are</p>
+<ul>
+<li><code>fnctl</code> - the functional</li>
+<li><code>formula</code> - the formula for the linear model</li>
+<li><code>data</code> - the data to use for the model</li>
+<li><code>id</code> - the identification variable in data with repeated measurements</li>
+</ul>
+<p>We use the concept of a <em>functional</em> to handle our first goal. A functional takes a function as its argument and returns a number - hence the mean is a functional, because it takes a distribution as its argument and returns a single number. The allowed functionals to <code>regress()</code> are</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Functional</th>
+<th align="left">Type of Regression</th>
+<th align="left">Previous command (package)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>&quot;mean&quot;</code></td>
+<td align="left">Linear Regression</td>
+<td align="left"><code>lm()</code> (<code>stats</code> - base R)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>&quot;geometric mean&quot;</code></td>
+<td align="left">Linear Regression on logarithmically transformed Y</td>
+<td align="left"><code>lm()</code>, with Y log transformed (<code>stats</code> - base R)</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>&quot;odds&quot;</code></td>
+<td align="left">Logistic Regression</td>
+<td align="left"><code>glm(family = binomial)</code> (<code>stats</code> - base R)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>&quot;rate&quot;</code></td>
+<td align="left">Poisson Regression</td>
+<td align="left"><code>glm(family = poisson)</code> (<code>stats</code> - base R)</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>&quot;hazard&quot;</code></td>
+<td align="left">Proportional Hazards Regression</td>
+<td align="left"><code>coxph()</code> (<code>survival</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>The <em>formula</em> to <code>regress()</code> is the same as a formula given to <code>lm()</code> or any of the other regression commands from base R, <code>survival</code>, or <code>geepack</code>, but with one small addition. To address our second goal of allowing the user to specify multiple-partial F-tests, we have added a special function - <code>U()</code> - which can be added to the formula. The <code>U()</code> function is documented more fully in <a href="u_intro.html">“User Specified Multiple-Partial F-tests in Regression”</a>.</p>
+<p>The <em>data</em> argument is exactly the same as that in <code>lm()</code> or any of the other regression commands.</p>
+<p>Last, <em>id</em> allows the user to fit a generalized estimating equations (GEE) model while using the same syntax as any of the functionals to <code>regress()</code>. The GEE framework is a useful way to model correlated data, which often comes in the form of repeated measurements.</p>
+<div id="linear-regression" class="section level1">
+<h1>Linear Regression</h1>
+<p>As a first example, we run a linear regression analysis of atrophy on age and male, from the <code>mri</code> data. This dataset is included in the <code>uwIntroStats</code> package, and its documentation can be found on Scott Emerson’s website <a href="http://www.emersonstatistics.com/datasets/mri.pdf">here</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Preparing our R session
+<span class="kw">library</span>(uwIntroStats)</code></pre></div>
+<pre><code>## 
+## Attaching package: 'uwIntroStats'
+## 
+## The following object is masked from 'package:base':
+## 
+##     tabulate</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mri)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, atrophy ~<span class="st"> </span>age +<span class="st"> </span>male, <span class="dt">data =</span> mri)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = atrophy ~ age + male, data = mri)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -33.765  -8.582  -0.356   7.344  52.100 
+## 
+## Coefficients:
+##                  Estimate  Naive SE  Robust SE    95%L      95%H     
+## [1] Intercept     -17.83     6.081     6.557       -30.70    -4.959  
+## [2] age            0.6819   0.08129   0.08769       0.5097    0.8540 
+## [3] male           5.964     0.8857    0.8845       4.227     7.700  
+##                     F stat    df Pr(&gt;F)   
+## [1] Intercept            7.40 1    0.0067 
+## [2] age                 60.47 1  &lt; 0.00005
+## [3] male                45.46 1  &lt; 0.00005
+## 
+## Residual standard error: 12 on 732 degrees of freedom
+## Multiple R-squared:   0.14,  Adjusted R-squared:  0.1376 
+## F-statistic: 52.18 on 2 and 732 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>This call automatically prints the coefficients table. First, notice that by default robust standard error estimates (calculated using the <code>sandwich</code> package) are returned, in addition to the naive estimates. The robust estimates are also used to perform the inference - thus the confidence intervals, statistics, and p-values use these estimates of the standard error.</p>
+<p>If we did not use robust standard error estimates, then in the case of linear regression we would be assuming that all groups have the same variance. Then any inference we make could be on the fact that the variances are different, rather than just on the means - which is usually what we want in linear regression.</p>
+<p>F-statistics are also displayed by default. This allows us to display multiple-partial F-tests within the coefficients table, and is more in line with teaching philosophy at the University of Washington.</p>
+<p>All of the usual inferential statements apply to our output. Thus we would say:</p>
+<blockquote>
+<p>We analyzed the association between cerebral atrophy, age, and sex by running a linear regression of cerebral atrophy modeled as a continuous variable on age - modeled as a continuous variable - and sex - modeled as a binary variable. We allowed for unequal variances among groups by computing robust standard error estimates using the Huber-White procedure. We calculated 95% confidence intervals and p-values using these same robust standard error estimates.</p>
+</blockquote>
+<blockquote>
+<p>Based on this linear regression analysis, we estimate that for each one year increase in age, the mean cerebral atrophy score increases by 0.682 units. Based on a 95% confidence interval, the data suggest that this estimate is not unreasonable if the true coefficient for age was in the interval from 0.509 to 0.854. We also estimate that males have an average cerebral atrophy score of 5.96 units higher than females. Based on a 95% confidence interval, the data suggest that this estimate is not unreasonable if the true coefficient for sex was in the interval from 4.227 to 7.700.</p>
+</blockquote>
+<p>However, in this case we did not adjust for multiple comparisons in calculating the individual p-values. If we wanted to make inferential claims using these, we would have to use a correction. We could also use a multiple-partial F-test to test both coefficients simultaneously.</p>
+<div id="regression-on-the-geometric-mean" class="section level2">
+<h2>Regression on the Geometric Mean</h2>
+<p>In normal linear regression, we are comparing the mean of the response variable across groups defined by the predictors. However, if we were to log transform the response, we would be comparing the geometric mean across groups. In <code>regress()</code>, we simply have to use the <code>&quot;geometric mean&quot;</code> functional.</p>
+</div>
+</div>
+<div id="generalized-linear-regression" class="section level1">
+<h1>Generalized Linear Regression</h1>
+<p>Using the same function, and the same syntax, we can also run generalized linear regression. For example, if we wanted to examine the odds of having diabetes between males and females, we would run a logistic regression.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">regress</span>(<span class="st">&quot;odds&quot;</span>, diabetes ~<span class="st"> </span>male, <span class="dt">data =</span> mri)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;odds&quot;, formula = diabetes ~ male, data = mri)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -0.5593  -0.5593  -0.3823  -0.3823   2.3034  
+## 
+## Coefficients:
+## 
+## Raw Model:
+##                  Estimate  Naive SE  Robust SE       F stat    df
+## [1] Intercept     -2.580     0.2034    0.2037           160.39 1 
+## [2] male           0.8037    0.2519    0.2522            10.15 1 
+##                  Pr(&gt;F)   
+## [1] Intercept    &lt; 0.00005
+## [2] male           0.0015 
+## 
+## Transformed Model:
+##                  e(Est)    e(95%L)   e(95%H)         F stat    df
+## [1] Intercept     0.07580   0.05082    0.1131           160.39 1 
+## [2] male           2.234     1.361     3.665             10.15 1 
+##                  Pr(&gt;F)   
+## [1] Intercept    &lt; 0.00005
+## [2] male           0.0015 
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 501.59  on 734  degrees of freedom
+## Residual deviance: 490.82  on 733  degrees of freedom
+## AIC: 494.82
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>In all of the generalized linear regression output (and in the output from regression on the geometric mean), by default we see two tables. The <code>Raw Model</code> table displays coefficients and standard errors for the model after we have transformed the response variable, but we have not transformed back. Recall that in most generalized linear regression cases, we need to back-transform our results to get them in the original units. This is due to using a link function to model the regression. If you want to suppress printing this table, set <code>suppress = TRUE</code>.</p>
+<p>The <code>Transformed Model</code> table does the back-transform for you. It exponentiates all of the coefficients and the confidence intervals so that they are in the original units.</p>
+<p>If we were doing survival analysis, we would perhaps want to look at the relationship between time to death, age, and atrophy. First, we need to create a <code>Surv</code> variable to reflect time to death, because some observations have been censored - we didn’t observe their death due to the end of the study or because we lost them to followup. To create a survival variable we have to load the appropriate package first.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(survival)
+mri$ttodth &lt;-<span class="st"> </span><span class="kw">Surv</span>(mri$obstime, mri$death)</code></pre></div>
+<p>Now that we have our time to death variable, we can examine our relationship of interest.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">regress</span>(<span class="st">&quot;hazard&quot;</span>, ttodth ~<span class="st"> </span>age +<span class="st"> </span>atrophy, <span class="dt">data =</span> mri)</code></pre></div>
+<pre><code>## Call:
+## regress(fnctl = &quot;hazard&quot;, formula = ttodth ~ age + atrophy, data = mri)
+## 
+##   n= 735, number of events= 133 
+## 
+## Raw Model:
+##                Estimate  Naive SE  Robust SE       F stat    df Pr(&gt;F)   
+## [1] age          0.0492    0.0143    0.0156             9.95 1    0.0017 
+## [2] atrophy      0.0227   0.00665   0.00692            10.73 1    0.0011 
+## 
+## Transformed Model:
+##                e(Est)    e(95%L)   e(95%H)         F stat    df Pr(&gt;F)   
+## [1] age           1.05      1.02      1.08              9.95 1    0.0017 
+## [2] atrophy       1.02      1.01      1.04             10.73 1    0.0011 
+## 
+## Concordance= 0.638  (se = 0.026 )
+## Rsquare= 0.045   (max possible= 0.902 )
+## Likelihood ratio test= 33.52  on 2 df,   p=5.273e-08
+## Wald test            = 38.96  on 2 df,   p=3.469e-09
+## Score (logrank) test = 38.38  on 2 df,   p=4.636e-09</code></pre>
+<p>We can analyze the results from the <code>Transformed Model</code> table similar to the results in the Linear Regression section, because this table returns us to the original units.</p>
+</div>
+<div id="accounting-for-correlated-data" class="section level1">
+<h1>Accounting for Correlated Data</h1>
+<p>A common way to account for correlated data - for example longitudinal data, where we have multiple measurements on the same subjects over time - is to use the Generalized Estimating Equations (GEE) framework. We chose to use this framework in our <code>regress()</code> function because it gives flexibility and uses common conventions. To make use of this functionality, as we mentioned above, you simply need to specify the <code>id</code> argument in <code>regress()</code>.</p>
+<p>For an example, we turn to the <code>salary</code> data, again hosted at Scott Emerson’s <a href="http://www.emersonstatistics.com/datasets/salary.txt">website</a>. More information can be found in the <a href="http://www.emersonstatistics.com/datasets/salary.doc">documentation</a>, but these data essentially deal with university level faculty. In 1995, a survey was run asking the faculty to recall their salaries from the past. Each faculty member had records dating either to their starting year at the university or 1976, whichever was more recent. Thus we have repeated measurements on these individuals, and the variable of interest (salary) is highly correlated across measurements.</p>
+<p>One interesting question to ask of these data involves discrimination based on sex. We will not model these data in the most sophisticated way (we leave that to the enterprising reader), but we can regress salary on sex and year, and involve their interaction.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">salary &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;http://www.emersonstatistics.com/datasets/salary.txt&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+
+## create an indicator variable
+salary$female &lt;-<span class="st"> </span><span class="kw">ifelse</span>(salary$sex ==<span class="st"> &quot;F&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</code></pre></div>
+<p>Now that the data is read in, we can run the regression. First we run a regular linear regression which does not properly account for the correlated data, and then we run the GEE based regression.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## linear regression
+<span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, salary ~<span class="st"> </span>female*year, <span class="dt">data =</span> salary)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = salary ~ female * year, data = salary)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3727.9  -907.4  -230.0   719.2  7605.5 
+## 
+## Coefficients:
+##                    Estimate  Naive SE  Robust SE    95%L      95%H     
+## [1] Intercept       -17417     176.5     167.6       -17745    -17088  
+## [2] female            4102     420.7     299.5         3515      4689  
+## [3] year             255.5     2.021     2.005        251.6     259.5  
+## [4] female:year     -57.88     4.757     3.541       -64.82    -50.94  
+##                       F stat    df Pr(&gt;F)   
+## [1] Intercept          10802.86 1  &lt; 0.00005
+## [2] female               187.59 1  &lt; 0.00005
+## [3] year               16235.87 1  &lt; 0.00005
+## [4] female:year          267.10 1  &lt; 0.00005
+## 
+## Residual standard error: 1423 on 19788 degrees of freedom
+## Multiple R-squared:  0.487,  Adjusted R-squared:  0.4869 
+## F-statistic:  7166 on 3 and 19788 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>From this call to regress, we would think that we had 19792 unique data points, which is quite a lot of faculty to have at a university. If we compare to the results from the GEE based regression, we will see how far off we are.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## GEE
+<span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, salary ~<span class="st"> </span>female*year, <span class="dt">id =</span> id, <span class="dt">data =</span> salary)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = salary ~ female * year, data = salary, 
+##     id = id)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3727.9   -907.4   -230.0    719.2   7605.5  
+## 
+## Coefficients:
+##                    Estimate  Std Err   95%L         95%H         Wald     
+## [1] Intercept       -17417     283.6    -17973       -16861        3771.66
+## [2] female            4102     528.7      3065         5138          60.20
+## [3] year             255.5     3.536     248.6        262.5        5222.05
+## [4] female:year     -57.88     6.370    -70.36       -45.39          82.56
+##                    df Pr(&gt;|W|) 
+## [1] Intercept      1  &lt; 0.00005
+## [2] female         1  &lt; 0.00005
+## [3] year           1  &lt; 0.00005
+## [4] female:year    1  &lt; 0.00005
+## 
+##  Estimated Scale Parameters: 
+##             Estimate  Std.err
+## (Intercept)  2024610 77997.57
+## 
+##  Correlation: Structure =  independence 
+## 
+##  Number of Clusters:  1597 
+## 
+##  Maximum Cluster Size:  20</code></pre>
+<p>Now <code>regress()</code> tells us that we only have 1597 faculty members, which is much more reasonable. Also, it tells us that the “maximum cluster size” - i.e. the largest number of observations on any one id - is 20. This makes sense due to the sampling scheme, where some faculty have been at the university for 20 years by the time the survey was taken.</p>
+<p>While our estimates of the coefficients are the same between the two calls to <code>regress()</code>, it is our standard error estimates and inference which are drastically different. When we overestimate how many unique samples we have (in the naive linear regression), our standard error is much smaller than it should be, and thus we have much larger F statistics and smaller p-values. While in this case our inference would be the same, since the p-values are on the same order of magnitude in both cases, failing to account for the correlation in these data is still a mistake.</p>
+</div>
+<div id="re-parameterizations-of-a-variable" class="section level1">
+<h1>Re-parameterizations of a Variable</h1>
+<p>There are three special functions in <code>uwIntroStats</code> which allow us to re-parameterize variables:</p>
+<ul>
+<li><code>dummy</code> - create dummy variables</li>
+<li><code>lspline</code> - create linear splines</li>
+<li><code>polynomial</code> - create a polynomial</li>
+</ul>
+<p>Each of these three functions is used to great effect in <code>regress()</code>. Also, each will give a multiple-partial F-test of the entire variable. This allows you to determine if the variable should be included in the model, rather than having only the coefficient estimates.</p>
+<p>For example, we can model race as dummy variables to examine the differences in the odds of having diabetes between races. This allows us to better make comparisons, because modeling as dummy variables essentially creates indicator variables against a reference group.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">regress</span>(<span class="st">&quot;odds&quot;</span>, diabetes ~<span class="st"> </span><span class="kw">dummy</span>(race), <span class="dt">data =</span> mri)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;odds&quot;, formula = diabetes ~ dummy(race), data = mri)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -0.6165  -0.4539  -0.4539  -0.4539   2.3459  
+## 
+## Coefficients:
+## 
+## Raw Model:
+##                    Estimate  Naive SE  Robust SE       F stat    df
+## [1] Intercept       -2.221     0.1407    0.1411           247.78 1 
+##     dummy(race)                                             2.11 3 
+## [2]    race.2        0.6568    0.2949    0.2957             4.93 1 
+## [3]    race.3       -0.4648    0.6131    0.6147             0.57 1 
+## [4]    race.4        0.6113    0.7873    0.7894             0.60 1 
+##                    Pr(&gt;F)   
+## [1] Intercept      &lt; 0.00005
+##     dummy(race)      0.0977 
+## [2]    race.2        0.0267 
+## [3]    race.3        0.4498 
+## [4]    race.4        0.4390 
+## 
+## Transformed Model:
+##                    e(Est)    e(95%L)   e(95%H)         F stat    df
+## [1] Intercept        0.1085   0.08227    0.1432           247.78 1 
+##     dummy(race)                                             2.11 3 
+## [2]    race.2        1.929     1.079     3.446              4.93 1 
+## [3]    race.3        0.6282    0.1879    2.100              0.57 1 
+## [4]    race.4        1.843     0.3912    8.681              0.60 1 
+##                    Pr(&gt;F)   
+## [1] Intercept      &lt; 0.00005
+##     dummy(race)      0.0977 
+## [2]    race.2        0.0267 
+## [3]    race.3        0.4498 
+## [4]    race.4        0.4390 
+## 
+##  Dummy terms calculated from race, reference = 1 
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 501.59  on 734  degrees of freedom
+## Residual deviance: 495.55  on 731  degrees of freedom
+## AIC: 503.55
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>First, notice that below the table <code>regress()</code> tells us how the dummy variables were calculated. In this case the reference was 1, corresponding to <code>white</code> in this data set. Next we see the multiple-partial F-test, which is on its own line for <code>dummy(race)</code>. The coefficient estimates are nested beneath this line to indicate that these coefficients all come from the same variable (<code>race</code>) but we have modeled them as three variables.</p>
+</div>
+<div id="user-specified-multiple-partial-f-tests" class="section level1">
+<h1>User-specified Multiple-partial F-tests</h1>
+<p>As we mentioned above, the <em>formula</em> in <code>regress()</code> allows you to specify multiple-partial F-tests. This comes in handy if you want to test a subset of variables all at once in your regression.</p>
+<p>For example, say that we are interested in the relationship between atrophy, age, sex, and race. However, we also want to include the sex-age interaction and the sex-race interaction. We also want to model race as dummy variables. Last, we want to determine if all of the variables involved in the sex-age interaction (<code>male</code>, <code>age</code>, and the interaction) should be in the model, and similar for the sex-race interaction. We use the <code>U()</code> function to accomplish this goal.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, atrophy ~<span class="st"> </span><span class="kw">U</span>(<span class="dt">ma =</span> ~male*age) +<span class="st"> </span><span class="kw">U</span>(<span class="dt">mr =</span> ~male*<span class="kw">dummy</span>(race)), <span class="dt">data =</span> mri)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = atrophy ~ U(ma = ~male * age) + 
+##     U(mr = ~male * dummy(race)), data = mri)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -32.682  -8.236  -0.236   7.158  52.546 
+## 
+## Coefficients:
+##                            Estimate  Naive SE  Robust SE    95%L     
+## [1]  Intercept              -8.448     8.881     9.005       -26.13  
+##      ma                                                              
+## [2]    male                 -11.40     12.19     12.88       -36.69  
+## [3]    age                   0.5558    0.1193    0.1208       0.3187 
+## [4]    male:age              0.2414    0.1632    0.1730     -0.09826 
+##      mr                                                              
+##        male                 -11.40     12.19     12.88       -36.69  
+##        dummy(race)                                                   
+## [5]       race.2            -1.003     1.796     1.825       -4.585  
+## [6]       race.3             1.713     2.463     2.067       -2.345  
+## [7]       race.4             2.070     6.040     8.518       -14.65  
+##        male:dummy(race)                                              
+## [8]       male:race.2       -2.202     2.560     2.488       -7.086  
+## [9]       male:race.3       -2.883     3.664     3.688       -10.12  
+## [10]      male:race.4       -7.558     7.415     9.366       -25.95  
+##                            95%H         F stat    df Pr(&gt;F)   
+## [1]  Intercept               9.231           0.88 1    0.3485 
+##      ma                                     34.35 3  &lt; 0.00005
+## [2]    male                  13.89           0.78 1    0.3764 
+## [3]    age                   0.7929         21.18 1  &lt; 0.00005
+## [4]    male:age              0.5811          1.95 1    0.1634 
+##      mr                                      1.04 7    0.4038 
+##        male                  13.89           0.78 1    0.3764 
+##        dummy(race)                           0.40 3    0.7539 
+## [5]       race.2             2.579           0.30 1    0.5826 
+## [6]       race.3             5.770           0.69 1    0.4076 
+## [7]       race.4             18.79           0.06 1    0.8081 
+##        male:dummy(race)                      0.61 3    0.6084 
+## [8]       male:race.2        2.682           0.78 1    0.3764 
+## [9]       male:race.3        4.357           0.61 1    0.4346 
+## [10]      male:race.4        10.83           0.65 1    0.4200 
+## 
+##  Dummy terms calculated from race, reference = 1 
+## 
+## Residual standard error: 12 on 725 degrees of freedom
+## Multiple R-squared:  0.1488, Adjusted R-squared:  0.1382 
+## F-statistic: 12.15 on 9 and 725 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>We have also made use of functionality in <code>U()</code> which allows us to name the groups for the multiple-partial F-tests. Thus we can see that the F-statistic for simultaneously testing whether <code>male</code>, <code>age</code>, and the interaction <code>male:age</code> are equal to zero is 34.35, with the correct degrees of freedom for the test (3) and a small p-value. We would conclude (without adjusting for multiple comparisons) that (some of) these variables should be in the model. On the other hand, we see that the F-statistic for simultaneously testing whether <code>male</code>, <code>race</code>, and the interaction are equal to zero is 1.04. We would conclude (again without adjusting for multiple comparisons) that we cannot reject the null hypothesis that these are all equal to zero.</p>
+<p>We also get individual coefficient estimates for each, where we have again nested the estimates within their corresponding groups defined by calls to <code>U()</code>. Note that we have repeated the line for <code>male</code> since it appears in both groups. Other than that, the coefficients table is the same as it would be if we had run the formula <code>atrophy ~ male*age + male*dummy(race)</code>.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
