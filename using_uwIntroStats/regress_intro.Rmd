@@ -27,7 +27,7 @@ We use the concept of a *functional* to handle our first goal. A functional take
 |`"rate"` | Poisson Regression | `glm(family = poisson)` (`stats` - base R) |
 |`"hazard"` | Proportional Hazards Regression | `coxph()` (`survival`)|
 
-The *formula* to `regress()` is the same as a formula given to `lm()` or any of the other regression commands from base R, `survival`, or `geepack`, but with one small addition. To address our second goal of allowing the user to specify multiple-partial F-tests, we have added a special function - `U()` - which can be added to the formula. The `U()` function is documented more fully in ["User Specified Multiple-Partial F-tests in Regression"](u_intro.html).
+The *formula* to `regress()` is the same as a formula given to `lm()` or any of the other regression commands from base R, `survival`, or `geepack`, but with one small addition. To address our second goal of allowing the user to specify multiple-partial F-tests, we have added a special function - `U()` - which can be added to the formula. The `U()` function is documented more fully in ["User Specified Multiple-Partial F-tests in Regression"](u_intro.html). 
 
 The *data* argument is exactly the same as that in `lm()` or any of the other regression commands.
 

@@ -582,19 +582,62 @@ summary(diabetes.glm)
 
 Quick view of functions:
 
-STATA | R (base) 
+|STATA | R (base)|
+|---|---|
+|`lincom` | |
+|`predict`| `predict()`|
 
+Post-estimation - for the most part - deals with analyzing combinations of coefficients or predicting new values. Once you have run a regression analysis, these functions can supply additional insight into the relationship of interest.
+
+In STATA, the main command for analyzing combinations of coefficients is `lincom`. This command computes point estimates, t-statistics, confidence intervals, and p-values for the analysis of a linear combination of the regression coefficients against some null hypothesis. For example, if we were exploring the relationship between atrophy, age, and sex in the `mri` data, we could test if the coefficients for `age` and `male` summed to zero. In base R there is no function to do this. However, in the `uwIntroStats` package, the `lincom()` function does this.
 
 _Example 1_
 
-Goal:
+Goal: Using the results from a linear regression model modeling `atrophy` on `age` and `male`, test whether the coefficient estimates of these two variables sum to zero.
 
-Data:
+Data: `mri`
 
 _STATA Code and Output_
 ```
+lincom age+male
+
+ ( 1)  age + male = 0
+
+------------------------------------------------------------------------------
+     atrophy |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         (1) |   6.645784   .8870476     7.49   0.000     4.904324    8.387245
+------------------------------------------------------------------------------
+
 ```
 
 _R Code and Output_
 ```{r}
 ```
+
+Next, suppose we wish to predict the atrophy score for a new participant who is 70 years old and female. We need to use the `predict` command in STATA or the `predict()` function in base R. Regardless of the type of regression we have run, both of these functions will work.
+
+_Example 2_
+
+Goal: Using the results from a linear regression model modeling `atrophy` on `age` and `male`, predict the atrophy score of a 70 year old female.
+
+Data: `mri`
+
+_STATA Code and Output_
+```
+predict preds
+list preds in 1/10
+```
+Now we have to match the correct predictions to the age and sex combinations, which is a bit tedious.
+_R Code and Output_
+```{r}
+reg <- regress("mean", atrophy ~ age + male, data = mri)
+newdata <- c(70, 0)
+newdata <- as.data.frame(newdata)
+## we need to switch the rows and columns to make this work
+newdata <- as.data.frame(t(newdata))
+colnames(newdata) <- c("age", "male")
+predict(reg, newdata)
+```
+
+While we have had to do some extra work in R to create a data frame, once we have this data frame the prediction is quite simple. As is the case in STATA, the new data must have the same column names as the variables used to build the regression model.
