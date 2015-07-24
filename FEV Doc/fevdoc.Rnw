@@ -204,7 +204,7 @@ bplot(age, strata=male, sd=FALSE, main="Age by Sex", xlab="Sex (0 denotes Female
 \end{figure}
 \clearpage
 <<heightbplot2, echo=false, include=false, fig=true, width=11, height=8.5>>=
-bplot(height, strata=male, sd=FALSE, main="Height by Sex", xlab="Sex (0 denotes Female, 1 denotes Male)")
+bplot(age, strata=male, sd=FALSE, main="Age by Sex", xlab="Sex (0 denotes Female, 1 denotes Male)")
 @
 \begin{figure}[h]
 \centering

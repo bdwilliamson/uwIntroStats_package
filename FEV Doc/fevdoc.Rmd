@@ -1,6 +1,6 @@
 ---
 title: 'Example Data Analysis: FEV'
-subtitle: "University of washington Department of Biostatistics"
+subtitle: "University of Washington Department of Biostatistics"
 author: "Brian D. Williamson and Scott S. Emerson, MD"
 date: "23 July 2015"
 output: 
@@ -38,10 +38,12 @@ We want to load the `fev` dataset into R for our analysis.
 
 _Functions:_
 We will be working with the `fev` dataset. To prepare that (we will see why we name this `fevDat` later):
+
 ```{r}
 fevDat <- read.table("http://www.emersonstatistics.com/Datasets/fev.txt", header = TRUE)
 attach(fevDat)
 ```
+
 We use the `read.table()` function, the `attach()` function, and the `View()` function.
 _Interpretation:_
 We have now loaded the data into R, and can use it in an analysis.
@@ -57,6 +59,7 @@ The `descrip()` function will do all of this for us.
 
 _Interpretation:_
 If we wanted to na\"ively get a description of the whole dataset, we could type
+
 ```{r}
 descrip(fevDat)
 ```
@@ -72,6 +75,7 @@ cnt
 We already knew that there were 654 observations, and now that we know `cnt` is 654, we know that all of the observations are unique (in other words, no subject was counted twice). Notice that here we typed two different things to display `cnt`. This illustrates that when we type `cnt` into R, it actuall calls `print(cnt)`. That is why R is called a *functional* language.
 
 We might also want to check for outliers within the distribution of a single variable. Look at the distribution of `age`:
+
 ```{r}
 descrip(age)
 ```
@@ -81,16 +85,19 @@ $$ \frac{1}{n}\sum_{i=1}^n X_i, $$
 where the $X_i$ are each person's age in this example, is heavily influenced by a single point. If we made one age 100, then the mean would be pulled to the right. The median, however, is robust to outliers. The middle value will not change if we add in an age of 100. 
 
 Now let's look closer at `sex` and `smoke`.
+
 ```{r}
 descrip(sex, smoke)
 ```
 
 Each of these variables takes on either a 1 or a 2. Notice that the mean of `sex` is 1.486. The interpretation of this value is that 48.6% of the values in `sex` are 2. Similarly, 90.1% of the values in `smoke` are 2. This is easy to see, because if all of the values were 1 then the mean would be 1, and if one value is 2 it pulls the mean up. However, having the values coded as 1's and 2's is not very useful to us, because we have to remember the documentation each time we look at the data to remember whether `sex = 1` denotes a male or a female. Thus good practice is to create *indicator variables* to reflect the actual data. Usually we say that a 1 is the trait that we want (i.e. if we make a variable called `male`, then a 1 will reflect a male) while a 0 reflects the opposite. Now in the FEV dataset, we know from the documentation that `sex` is coded with 1 = male, so we can recode as follows:
+
 ```{r}
 male <- ifelse(sex == 1, 1, 0)
 ```
 
 which is simply saying that if `sex` is a 1 at a given position, set `male` at that position equal to 1. If `sex = 2`, set `male = 0`. We want to create a similar indicator variable out of `smoke`. In this case we want to know if someone smokes or not, so our indicator variable will take on a 1 if they smoke and a 0 if not. In this data, `smoke = 2` for a nonsmoker, so we have to be careful when recoding:
+
 ```{r}
 smoker <- ifelse(smoke == 2, 0, 1)
 ```
@@ -112,6 +119,7 @@ We use histograms, which plot the frequency of each unique value in the data (or
 
 _Interpretation:_
 We can add the arguments `main="maintitle"`, `xlab="x label"`, and `ylab="y label"` to the `hist()` function to set a title, x-axis label, and y-axis label, respectively. By default R will set the x and y-axis labels to the variable(s) entered. Notice that we are allowed to use the name `fev` here because we have named the dataset `fevDat`. If we had named it `fev`, we would be in trouble because R would attempt to create a histogram of the whole dataset.
+
 ```{r}
 hist(age, main = "Age")
 hist(height, main = "Height")
@@ -128,6 +136,7 @@ _Function(s):_
 The `descrip()` function allows us to do this easily. We can stratify on any number of variables by adding them to the `strata` argument.
 
 _Interpretation:_
+
 ```{r}
 descrip(age, height, strata = male)
 ```
@@ -143,6 +152,7 @@ The `bplot()` function builds on the base R function `boxplot()`. Now we can ove
 
 _Interpretation_
 First, the na\"ive box plot for both age and height by sex - which means use the `male` variable (we only present code for the last plot, with the default values):
+
 ```{r echo = FALSE}
 bplot(age, strata = male, xjitter = FALSE, yjitter = FALSE, sd = FALSE, main = "Age by Sex")
 ```
@@ -154,7 +164,7 @@ However, we can add jittered data to make this plot more informative. Jittered d
 
 ```{r echo = FALSE}
 bplot(age, strata = male, sd = FALSE, main = "Age by Sex", xlab = "Sex (0 denotes Female, 1 denotes Male)")
-bplot(age, strata = male, sd = FALSE, main = "Age by Sex", xlab = "Sex (0 denotes Female, 1 denotes Male)")
+bplot(height, strata = male, sd = FALSE, main = "Age by Sex", xlab = "Sex (0 denotes Female, 1 denotes Male)")
 ```
 
 We can also add the mean and standard deviation onto our box plot (`bplot()` does this by default as well) to get the maximum information from the plot:
@@ -166,21 +176,25 @@ bplot(height, strata = male, main = "Height by Sex", xlab = "Sex (0 denotes Fema
 
 ## Scatterplots
 Similar to the `bplot()` function, the `scatter()` function defaults to include some useful information. However, we will go through the derivation of the default values, so the only code shown will be the last (with defaults). The most basic version of the scatterplot does not differentiate between ties in the data (and thus we see much less than the 654 points on the plot):
+
 ```{r echo = FALSE}
 scatter(height, age, xJitter = FALSE, yJitter = FALSE, plotLowess = FALSE)
 ```
 
 However, we like to jitter the data so that we can see all of the points:
+
 ```{r echo = FALSE}
 scatter(height, age, yJitter = FALSE, plotLowess = FALSE)
 ```
 
 This allows us to break the ties - the places where multiple data points lie on the same *(x,y)* coordinate point - and see all of the data, but still see the discreteness in the sampling. If we wanted to see a line of best fit, we could create one with the `plotLsfit` argument to our `scatter()` function:
+
 ```{r echo = FALSE}
 scatter(height, age, plotLSfit = TRUE, plotLowess = FALSE)
 ```
 
 If we look closely at the graph, the data doesn't look quite linear. We can solve this issue by plotting a lowess smooth, which will draw attention to the curves in the data:
+
 ```{r}
 scatter(height, age)
 ```
@@ -194,6 +208,7 @@ scatter(height, age, strata = smoker, main = "Height vs Age by Smoking Status")
 ```
 
 The legend gives us the color and type of point plotted for each stratum. Now if we wanted to see the lowess smooths for males and females, we can add them as a stratification variable: 
+
 ```{r}
 scatter(height, age, strata = cbind(smoker, male), main = "Height vs Age by Smoking Status")
 ```
@@ -203,32 +218,38 @@ Now notice that we can compare groups both across sex (`sex 1` is male and `sex 
 ## Trends and Transforming the Data
 
 Convinced that smoking is not too much of a confounder, we now look at age vs fev. If we do so first with no lowess smooth, it is hard to tell what the trend in the data is:
+
 ```{r}
 scatter(fev, age, plotLowess = FALSE, main = "FEV vs Age")
 ```
 
 Any pattern is incredibly hard to find. We might think that the data is linear, but putting a lowess smooth on the plot shows us differently:
+
 ```{r}
 scatter(fev, age, main = "FEV vs Age")
 ```
 
 Now we can see a hint of an S-shaped trend in the data. We believe this, because if we believe that FEV is actually best predicted by height, then at young ages height is roughly linear with age but at older ages height is flat. In order to really understand what is going on, we must look at the relationship between FEV and height:
+
 ```{r}
 scatter(fev, height, main = "FEV vs Height")
 ```
 
 This is definitely not a linear relationship. In fact, it looks like a cubic relationship. Now if we look at the plot stratified by sex, we don't see too much of a sex effect:
+
 ```{r}
 scatter(fev, height, strata = male, main = "FEV vs Height by Sex")
 ```
 
 If we create a new variable called `htcub` (for height cubed) we can see that there is more of a straight line relationship between cubed height and FEV:
+
 ```{r}
 htcub <- height ^ 3
 scatter(fev, htcub, main = "FEV by Cubed Height")
 ```
 
 There is still heteroscedasticity, however. To remedy this, we can try plotting the cube root of FEV vs Height:
+
 ```{r}
 cubrtfev <- fev ^ (1/3)
 scatter(cubrtfev, height, main = "Cube Root of FEV by Height")
@@ -243,6 +264,7 @@ Read in the `fev` dataset and make it ready for use and analysis.
 
 _Function(s):_
 We first read in the dataset, renaming it as `fevDat` because we know that one of the variables in the data is named `fev` and we don't want confusion when we attach the data:
+
 ```{r}
 fevDat <- read.table("http://www.emersonstatistics.com/Datasets/fev.txt", header = TRUE)
 attach(fevDat)
@@ -254,6 +276,7 @@ View(fevDat)
 ```
 
 After noticing that `sex` and `smoke` are not coded as indicator variables, we recode them (using the documentation online for reference):
+
 ```{r}
 male <- ifelse(sex == 1, 1, 0)
 smoker <- ifelse(smoke == 2, 0, 1)
