@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Brian D. Williamson and Scott S. Emerson, MD PhD" />
+
+<meta name="date" content="2015-07-24" />
+
+<title>Using the uwIntroStats Package</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0A%7D%0Apre%20%7B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div id="header">
+<h1 class="title">Using the <code>uwIntroStats</code> Package</h1>
+<h3 class="subtitle"><em>University of Washington Department of Biostatistics</em></h3>
+<h4 class="author"><em>Brian D. Williamson and Scott S. Emerson, MD PhD</em></h4>
+<h4 class="date"><em>2015-07-24</em></h4>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a><ul>
+<li><a href="#preparing-uwintrostats">Preparing <code>uwIntroStats</code></a></li>
+</ul></li>
+<li><a href="#descriptive-statistics">Descriptive Statistics</a><ul>
+<li><a href="#the-basics-descrip">The basics: <code>descrip()</code></a></li>
+<li><a href="#tablestat-and-tabulate-flexible-functions"><code>tableStat()</code> and <code>tabulate()</code>: Flexible Functions</a></li>
+</ul></li>
+<li><a href="#plotting">Plotting</a><ul>
+<li><a href="#boxplots">Boxplots</a></li>
+<li><a href="#scatterplots">Scatterplots</a></li>
+</ul></li>
+<li><a href="#transformations-of-a-variable">Transformations of a Variable</a><ul>
+<li><a href="#dummy-variables">Dummy Variables</a></li>
+<li><a href="#linear-splines">Linear Splines</a></li>
+<li><a href="#polynomials">Polynomials</a></li>
+</ul></li>
+<li><a href="#one-and-two-sample-functions">One and Two Sample Functions</a><ul>
+<li><a href="#correlation">Correlation</a></li>
+<li><a href="#point-estimates-and-inference">Point Estimates and Inference</a></li>
+</ul></li>
+<li><a href="#regression">Regression</a><ul>
+<li><a href="#basics-of-regress">Basics of <code>regress()</code></a></li>
+<li><a href="#regression-on-different-functionals">Regression on different functionals</a></li>
+<li><a href="#correlated-data-regression">Correlated data regression</a></li>
+<li><a href="#multiple-partial-f-tests">Multiple-partial F-tests</a></li>
+</ul></li>
+<li><a href="#post-estimation">Post Estimation</a><ul>
+<li><a href="#linear-combinations-of-regression-coefficients">Linear Combinations of Regression Coefficients</a></li>
+<li><a href="#prediction">Prediction</a></li>
+</ul></li>
+<li><a href="#diagnostics">Diagnostics</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<div id="preparing-uwintrostats" class="section level2">
+<h2>Preparing <code>uwIntroStats</code></h2>
+<p>Before we can dive in and run any analyses, we first need to install the package. This is done via</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;uwIntroStats&quot;</span>)</code></pre></div>
+<p>Regardless of the graphical user interface (GUI) that you are using, R will prompt you to select a CRAN mirror. It is essentially asking you where you want to download the package files from. Select the mirror closest to you - for us at the University of Washington it is <code>WA(1)</code> or the Fred Hutchinson Cancer Research Center (FHCRC) - and the package will download and say that it has installed. Now each time we open a new R session (whether that is at the command line, a new RGui window, or a new RStudio window) we need to load the package for use.</p>
+<p>Five other packages provide a few key functions that the <code>uwIntroStats</code> package uses or adds functionality to. We must install these packages like we did above if we have not installed them previously, and then load <code>uwIntroStats</code>. While the packages do not need to be loaded every time (in fact, some are only used for specific functions) it is good practice to load them for the R session where you need to use <code>uwIntroStats</code>. This makes sure that we can use their other functions while doing analyses.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(Exact)
+<span class="kw">library</span>(geepack)
+<span class="kw">library</span>(plyr)
+<span class="kw">library</span>(sandwich)
+<span class="kw">library</span>(survival)
+<span class="kw">library</span>(uwIntroStats)</code></pre></div>
+<pre><code>## 
+## Attaching package: 'uwIntroStats'
+## 
+## The following object is masked from 'package:base':
+## 
+##     tabulate</code></pre>
+<p>Don’t worry about the warning message for now; that will be covered in section 3.2. Last, we load the data, <code>mri</code> that we will be using throughout this document. Information about the dataset can be found at <a href="http://www.emersonstatistics.com/datasets/mri.pdf">mri.pdf</a>. Since the data is part of the package, we can load it via</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(mri)</code></pre></div>
+<p>The <code>uwIntroStats</code> package should be used for descriptive statistics, basic plotting (like scatterplots and boxplots), and regression analyses. The following sections will go through examples of these tasks, in addition to pointing out how our package differs from base R and other existing packages. We will assume familiarity with basic data manipulation and statistical tasks (for a refresher, see <a href="http://www.emersonstatistics.com/GeneralMaterials/R/IntroToR.pdf">“An Introduction to R”</a>.</p>
+</div>
+</div>
+<div id="descriptive-statistics" class="section level1">
+<h1>Descriptive Statistics</h1>
+<p>Descriptive statistics are an important part of any analysis. Often, they are just as important for the statistician or data analysist as they are for the scientific collaborators on a project. For example, descriptive statistics can help identify errors in the data, like observations that are particularly unusual (usually far out of the expected or observed range). They can also help to identify patterns of missing data, examine the study population, and identify aspects of the data that might lead to statistical issues. Descriptive statistics can also unearth relationships that had not previously been considered for analysis, thereby generating new studies. More information on this, and an outline of an approach to analysing a dataset, <a href="http://www.emersonstatistics.com/GeneralMaterials/analysis.pdf">“Organizing Your Approach to a Data Analysis”</a>, was written by Scott Emerson for this purpose.</p>
+<div id="the-basics-descrip" class="section level2">
+<h2>The basics: <code>descrip()</code></h2>
+<p>The <code>uwIntroStats</code> package was designed with descriptive statistics in mind. The basic function for descriptive statistics is <code>descrip()</code>. This function takes in an arbitrary number of variables, and by default calculates the number of observations, the number of missing values, the mean, standard deviation, mininum value, maximum value, and the 25th, 50th, and 75th percentiles of each variable. For instance, if we wanted a quick glance at the <code>mri</code> data, we could type</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">descrip</span>(mri)</code></pre></div>
+<pre><code>##             N     Msng  Mean      Std Dev    Min       25%       Mdn     
+##     ptid:     735     0   368.0     212.3     1.000     184.5     368.0  
+##  mridate:     735     0   76423     31896     10192     66642     80992  
+##      age:     735     0   74.57     5.451     65.00     71.00     74.00  
+##     male:     735     0   0.4980    0.5003    0.0000    0.0000    0.0000 
+##     race:     735     0   1.318     0.6659    1.000     1.000     1.000  
+##   weight:     735     0   159.9     30.74     74.00     138.5     158.0  
+##   height:     735     0   165.8     9.710     139.0     158.0     165.9  
+##  packyrs:     735     1   19.60     27.11     0.0000    0.0000    6.500  
+##  yrsquit:     735     0   9.661     14.10     0.0000    0.0000    0.0000 
+##    alcoh:     735     0   2.109     4.852     0.0000    0.0000   0.01920 
+##  physact:     735     0   1.922     2.052     0.0000    0.5538    1.312  
+##      chf:     735     0  0.05578    0.2297    0.0000    0.0000    0.0000 
+##      chd:     735     0   0.3347    0.6862    0.0000    0.0000    0.0000 
+##   stroke:     735     0   0.2367    0.6207    0.0000    0.0000    0.0000 
+## diabetes:     735     0   0.1075    0.3099    0.0000    0.0000    0.0000 
+##  genhlth:     735     0   2.588     0.9382    1.000     2.000     3.000  
+##      ldl:     735    10   125.8     33.60     11.00     102.0     125.0  
+##      alb:     735     2   3.994     0.2690    3.200     3.800     4.000  
+##      crt:     735     2   1.064     0.3030    0.5000    0.9000    1.000  
+##      plt:     735     7   246.0     65.80     92.00     201.8     239.0  
+##      sbp:     735     0   131.1     19.66     78.00     118.0     130.0  
+##      aai:     735     9   1.103     0.1828    0.3171    1.027     1.112  
+##      fev:     735    10   2.207     0.6875    0.4083    1.745     2.158  
+##     dsst:     735    12   41.06     12.71     0.0000    32.00     40.00  
+##  atrophy:     735     0   35.98     12.92     5.000     27.00     35.00  
+##    whgrd:     735     1   2.007     1.410     0.0000    1.000     2.000  
+##   numinf:     735     0   0.6109    0.9895    0.0000    0.0000    0.0000 
+##   volinf:     735     1   3.223     17.36     0.0000    0.0000    0.0000 
+##  obstime:     735     0    1804     392.3     68.00      1837      1879  
+##    death:     735     0   0.1810    0.3852    0.0000    0.0000    0.0000 
+##              75%       Max      
+##     ptid:     551.5      735.0  
+##  mridate:     91392    1.232e+05
+##      age:     78.00      99.00  
+##     male:     1.000      1.000  
+##     race:     1.000      4.000  
+##   weight:     179.0      264.0  
+##   height:     173.2      190.5  
+##  packyrs:     33.75      240.0  
+##  yrsquit:     18.50      56.00  
+##    alcoh:     1.144      35.00  
+##  physact:     2.513      13.81  
+##      chf:     0.0000     1.000  
+##      chd:     0.0000     2.000  
+##   stroke:     0.0000     2.000  
+## diabetes:     0.0000     1.000  
+##  genhlth:     3.000      5.000  
+##      ldl:     147.0      247.0  
+##      alb:     4.200      5.000  
+##      crt:     1.200      4.000  
+##      plt:     285.0      539.0  
+##      sbp:     142.0      210.0  
+##      aai:     1.207      1.728  
+##      fev:     2.649      4.471  
+##     dsst:     50.00      82.00  
+##  atrophy:     44.00      84.00  
+##    whgrd:     3.000      9.000  
+##   numinf:     1.000      5.000  
+##   volinf:    0.09420     197.0  
+##  obstime:      2044      2159   
+##    death:     0.0000     1.000</code></pre>
+<p>This call gives us a quick look at the distribution of each variable in the sample, and can be easily exported to a word processing software. This is important, because displaying raw R output in a publication is not usually ideal, and taking the time to format the output is a pain.</p>
+<p>Notice that there are a lot of variables measured in these data, and that some interesting phenomena are measured by multiple variables. For instance, smoking is measured by <code>packyrs</code> and <code>yrsquit</code> - if someone has zero pack-years (that is, they have never smoked) then they will also have zero years quit. Similarly, a current smoker of any amount of packs per year will have zero years quit. We can also look at the variables measured through blood samples, like LDL cholesterol (<code>ldl</code>) and get an idea of the range in our sample population. Last, in the variables like <code>male</code> which consist of only two values (sex was measured as male or female in this dataset), the mean tells us the proportion of our sample who was male (or for other binary variables, it will tell us the proportion which is coded as 1). The <code>descrip()</code> function works similarly to <code>summary()</code> in base R, but gives more information and returns it in a format that, as we described above, is easier to export from R.</p>
+<p>Another powerful feature of <code>descrip()</code> is its ability to present stratified summaries, or summaries on a subset of the data. For instance, let’s calculate descriptive statistics on the <code>age</code> variable within males and females:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">descrip</span>(mri$age, <span class="dt">strata =</span> mri$male)</code></pre></div>
+<pre><code>##                    N     Msng  Mean      Std Dev    Min       25%     
+## mri$age:  All        735     0   74.57     5.451     65.00     71.00  
+## mri$age:    Str  0   369     0   74.41     5.258     65.00     71.00  
+## mri$age:    Str  1   366     0   74.73     5.642     66.00     71.00  
+##                     Mdn       75%       Max     
+## mri$age:  All        74.00     78.00     99.00  
+## mri$age:    Str  0   73.00     78.00     91.00  
+## mri$age:    Str  1   74.00     78.00     99.00</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Call the summary function, to compare
+<span class="kw">summary</span>(mri$age)</code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   65.00   71.00   74.00   74.57   78.00   99.00</code></pre>
+<p>Here the row for <code>Str 0</code> corresponds to females (since they are coded as 0 for <code>male</code>), and males are <code>Str 1</code>. If we further wanted to restrict to only those people who were over 75 years old, we could use the <code>subset</code> argument:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">descrip</span>(mri$age, <span class="dt">strata =</span> mri$male, <span class="dt">subset =</span> mri$age &gt;<span class="st"> </span><span class="dv">75</span>)</code></pre></div>
+<pre><code>##                    N     Msng  Mean      Std Dev    Min       25%     
+## mri$age:  All        260     0   80.59     4.111     76.00     77.75  
+## mri$age:    Str  0   127     0   80.44     3.572     76.00     78.00  
+## mri$age:    Str  1   133     0   80.73     4.576     76.00     77.00  
+##                     Mdn       75%       Max     
+## mri$age:  All        79.00     83.00     99.00  
+## mri$age:    Str  0   79.00     83.00     91.00  
+## mri$age:    Str  1   79.00     83.00     99.00</code></pre>
+<p>However, the <code>descrip()</code> function can only give us a fixed number of summaries (mean, count, etc). Oftentimes we need only a subset of these, or perhaps different summary measures. For this, we turn to more powerful functions.</p>
+</div>
+<div id="tablestat-and-tabulate-flexible-functions" class="section level2">
+<h2><code>tableStat()</code> and <code>tabulate()</code>: Flexible Functions</h2>
+<p>The main draw of <code>tableStat()</code> and <code>tabulate()</code> is their ability to supply only a subset of the summary measures from <code>descrip()</code>. These functions focus on display and flexibility. The user supplies the format for the summary statistics to be displayed in, which makes exporting results from a call to <code>tablestat()</code> or <code>tabulate()</code> even easier than it was for <code>descrip()</code>. Of the two, <code>tableStat()</code> is the base, and <code>tabulate()</code> adds some additional formatting and options. For example, let’s say that we want the same summary statistics as we would get from <code>descrip()</code>, but we want to control the printout. For this, we use the <code>stat</code> argument to <code>tableStat()</code>. The options are presented in below.</p>
+<p><a id="stattable"></a></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Summary Measure</th>
+<th align="left">Name</th>
+<th align="left">Summary Measure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>&quot;count&quot;</code></td>
+<td align="left">Number of observations on a variable</td>
+<td align="left"><code>&quot;sd&quot;</code></td>
+<td align="left">Standard Deviation</td>
+</tr>
+<tr class="even">
+<td align="left"><code>&quot;missing&quot;</code></td>
+<td align="left">Number of missing observations</td>
+<td align="left"><code>&quot;variance&quot;</code></td>
+<td align="left">Variance</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>&quot;mean&quot;</code></td>
+<td align="left">Arithmetic mean</td>
+<td align="left"><code>&quot;min&quot;</code></td>
+<td align="left">Minimum value</td>
+</tr>
+<tr class="even">
+<td align="left"><code>&quot;geometric mean&quot;</code></td>
+<td align="left">Geometric mean</td>
+<td align="left"><code>&quot;max&quot;</code></td>
+<td align="left">Maximum value</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>&quot;median&quot;</code></td>
+<td align="left">50th percentile</td>
+<td align="left"><code>&quot;quantiles&quot;</code></td>
+<td align="left">Display quantiles</td>
+</tr>
+<tr class="even">
+<td align="left"><code>&quot;probabilities&quot;</code></td>
+<td align="left">Display percentiles</td>
+<td align="left"><code>&quot;mn(sd)&quot;</code></td>
+<td align="left">Display Mean (SD) format</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>&quot;range&quot;</code></td>
+<td align="left">Maximum value - minimum value</td>
+<td align="left"><code>&quot;iqr&quot;</code></td>
+<td align="left">Interquartile range (75th - 25th percentiles)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>&quot;all&quot;</code></td>
+<td align="left">Display all summary measures</td>
+<td align="left"><code>&quot;row%&quot;</code></td>
+<td align="left">Display row percentages</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>&quot;col%&quot;</code></td>
+<td align="left">Display column percentages</td>
+<td align="left"><code>&quot;tot%&quot;</code></td>
+<td align="left">Display percentage of total</td>
+</tr>
+</tbody>
+</table>
+<p>The following gets us close to results we could display in a table for a puplication. We want to have <span class="math display">\[
+N: \ n; \ Mean \ (SD): \ mn \ (sd); \ Range: \ max - min,
+\]</span> which we get via:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tableStat</span>(mri$age, <span class="dt">stat =</span> <span class="st">&quot;N: @count@; Mean (SD): @mean@ (@sd@); Range: @max@ - @min@&quot;</span>)</code></pre></div>
+<pre><code>## Tabled descriptive statistics by strata
+## Call:
+##       tableStat(variable = mri$age, stat = &quot;N: @count@; Mean (SD): @mean@ (@sd@); Range: @max@ - @min@&quot;) 
+##             - NaN denotes strata with no observations
+##             - NA arises from missing or censored data
+## 
+## Format:  N: Cnt; Mean (SD): Mean (SD); Range: Max - Min 
+## 
+##                                                     .ALL 
+## N: 735.0; Mean (SD): 74.57 (5.451); Range: 99.00 - 65.00</code></pre>
+<p>Note that all of the values enclosed in  symbols are from Table  and are run by , while the other values in the string are used for formatting. This function can also take stratification variables; if we want to see the above stratified by sex, we use</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tableStat</span>(mri$age, <span class="dt">strata =</span> mri$male, <span class="dt">stat =</span> <span class="st">&quot;N: @count@; Mean (SD): @mean@ (@sd@); Range: @min@ - @max@&quot;</span>)</code></pre></div>
+<pre><code>## Tabled descriptive statistics by strata
+## Call:
+##       tableStat(variable = mri$age, strata = mri$male, stat = &quot;N: @count@; Mean (SD): @mean@ (@sd@); Range: @min@ - @max@&quot;) 
+##             - NaN denotes strata with no observations
+##             - NA arises from missing or censored data
+## 
+## Format:  N: Cnt; Mean (SD): Mean (SD); Range: Min - Max 
+## 
+##                                                 strata.0 
+## N: 369.0; Mean (SD): 74.41 (5.258); Range: 65.00 - 91.00 
+##                                                 strata.1 
+## N: 366.0; Mean (SD): 74.73 (5.642); Range: 66.00 - 99.00 
+##                                               strata.ALL 
+## N: 735.0; Mean (SD): 74.57 (5.451); Range: 65.00 - 99.00</code></pre>
+<p>Now if we wanted to see this in table form, in perhaps a nicer layout, we could use the <code>tabulate()</code> function. When we loaded the <code>uwIntroStats</code> package at the beginning of this document, recall that we got a warning message from R saying</p>
+<pre><code>The following object is masked from ‘package:base’:
+
+    tabulate</code></pre>
+<p>This means that our function <code>tabulate()</code> overwrites the function called <code>tabulatte()</code> in the base R package, which takes a numeric vector and counts the number of times each integer occurs in it. Our function does a similar task, but on combinations of strata. The syntax is very similar to the syntax for <code>tableStat()</code>, but rather than explicitly telling <code>tabulate()</code> the strata, it creates the tables with each dimension corresponding to a variable in the order they are entered. For instance, if we want a table of <code>age</code> (in the rows) and <code>male</code> (in the columns), we would write</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tabulate</span>(mri$age, mri$male)</code></pre></div>
+<pre><code>## 
+## Call:
+## tabulate(mri$age, mri$male)
+##             mri$male.0 mri$male.1 mri$male.ALL
+## mri$age.65    2          0          2         
+## mri$age.66    2          1          3         
+## mri$age.67   18         15         33         
+## mri$age.68   20         21         41         
+## mri$age.69   19         19         38         
+## mri$age.70   30         30         60         
+## mri$age.71   37         39         76         
+## mri$age.72   31         28         59         
+## mri$age.73   27         28         55         
+## mri$age.74   29         26         55         
+## mri$age.75   27         26         53         
+## mri$age.76   11         17         28         
+## mri$age.77   18         19         37         
+## mri$age.78   18         19         37         
+## mri$age.79   19         13         32         
+## mri$age.80    8         15         23         
+## mri$age.81   10         10         20         
+## mri$age.82   10          5         15         
+## mri$age.83   10          2         12         
+## mri$age.84    5          6         11         
+## mri$age.85    3          6          9         
+## mri$age.86    5          5         10         
+## mri$age.87    4          4          8         
+## mri$age.88    2          1          3         
+## mri$age.89    2          3          5         
+## mri$age.90    0          4          4         
+## mri$age.91    2          0          2         
+## mri$age.92    0          1          1         
+## mri$age.94    0          1          1         
+## mri$age.95    0          1          1         
+## mri$age.99    0          1          1         
+## mri$age.ALL 369        366        735         
+##             Point Estimate Test Statistic df 95% CI p-value Warnings
+## Chi-squared                26.244         30        0.66262</code></pre>
+<p>By default, <code>tabulate()</code> gives us the count in each combination of the strata, and gives us the overall <span class="math inline">\(\chi^2\)</span> test statistic, degrees of freedom, and p-value. We can add in other arguments as well. Let’s say that we are interested in an odds ratio or a risk ratio - <code>tabulate()</code> can supply these, if we set <code>dispRatios = TRUE</code>. This is where our use of the <code>Exact</code> package comes in, because this package contains some very useful functions for calculating these ratios. However, we supply both the odds ratio and the risk ratio, even though in some cases only one is appropriate. Thus it is up to the user to know which they can use. To display these ratios for <code>male</code> versus <code>chf</code> (an indicator variable of whether the patient had been diagnosed with congestive heart failure prior to MRI), we type</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tabulate</span>(mri$male, mri$chf, <span class="dt">dispRatios =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## 
+## Call:
+## tabulate(mri$male, mri$chf, dispRatios = TRUE)
+##              mri$chf.0 mri$chf.1 mri$chf.ALL
+## mri$male.0   354        15       369        
+## mri$male.1   340        26       366        
+## mri$male.ALL 694        41       735        
+##             Point Estimate Test Statistic df 95% CI           p-value 
+## Chi-squared                3.2214         1                   0.072679
+## Odds Ratio  1.8047                           [0.9396, 3.4663]         
+## Risk Ratio  1.2944                           [1.0136, 1.6531]         
+##             Warnings
+## Chi-squared         
+## Odds Ratio          
+## Risk Ratio</code></pre>
+<p>Now we are given a point estimate and a 95% confidence interval for both the odds and risk ratio, in addition to the <span class="math inline">\(\chi^2\)</span> estimate.</p>
+<p>Last, similar to <code>tableStat()</code>, we can identify different statistics to display. The syntax is exactly the same, and the same statistics from <a href="#stattable">Table 1</a> are valid in <code>tabulate()</code>.</p>
+</div>
+</div>
+<div id="plotting" class="section level1">
+<h1>Plotting</h1>
+<p>Plots and descriptive statistics together lead to a much better understanding of the data. In our package, we have implemented two types of plots: boxplots and scatterplots. In doing so, we have attempted to address some concerns with both types of plots.</p>
+<div id="boxplots" class="section level2">
+<h2>Boxplots</h2>
+<p>Boxplots reduce the data down to four summary measures: minimum, maximum, median, and the interquartile range (25th to 75th quantile). They also show “outliers” in the data. We put this in quotes because the definition of “outlier” depends on the function you call, and the software you are running. Even in the base R version, <code>boxplot()</code>, the boxplots can be constructed so that no outliers are shown.</p>
+<p>Much of the criticism of boxplots lies both in this determination of outliers and in the dramatic reduction of the data. In our version, <code>bplot()</code>, we have added jittered data onto the boxplots (jittering allows us to see the data, but randomly adds noise so that we can see individual points better), and we have added the mean and standard deviation onto the plot. We can also produce stratified boxplots. For our function, the variable on the y-axis comes first, followed by the variable on the x-axis. This convention, while at odds with base R, is an attempt to make our functions match up with the regression scheme of response followed by predictors.</p>
+<p>For our first example, let’s create a boxplot showing the age distribution of the <code>diabetes</code> variable:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Base R boxplot
+<span class="kw">boxplot</span>(mri$age ~<span class="st"> </span>mri$diabetes)</code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAQlBMVEUAAAAAADoAAGYAOpAAZrY6AAA6ADo6AGY6kNtmAABmtv+QOgCQ2/+2ZgC2///bkDrb////tmb/25D//7b//9v////ed2O8AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAFEUlEQVR4nO2d3XKbMBQGSZr+pKnjOqnf/1VrwJnxhWENHFnmsHuRyYXyHbwjJFlAaI4ySlP7AB4dBQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAgIFtSshvsKml73/Fch1edwZ0Gz4pr48tOKxzYMj2tK1J9YPbJheJyCbmqqoPG2jkGjjbPNYp+vv04/D6fP9fweEFeVcoL23/62v/1eHleVYoLOajpNC+OqUkzQx/dO0GHgJFOQPWiEz9f229bL8Wu4XhiXbxY7do6e/pwmsgE/roMC4za1kp6z3ZFS0L+3XsPAKmhiD2p95hL08ePPaQI7zfC7oaX0tsegf2/d2Lw7/dy9LI5L2IMu1kABC8WEY9BXD3rpz7OFcQkFHfenNVA3EH2+Lj/FEo5B/VbH04ifmivpaWkrWCgGM7E/bk7Q1BFtFYIiT7GMgkIH6YSCgqf5fGNQ9Eo63SzWfZ5qW2YKourhDcdTZu0HpfuyGhu3qR40J05B2NRT7IamChpvm227Y2Fc1J2nQ+FhBzqnYYm40O2gaXmbE5Twy2pscQXdFJVNUHTldGPQwlpL5sQtCFpUex2CYos/sqCZa73tCJoZp6D7Fi9SWkFRDavElWOLghKOQRVrFxL0dRNn0NM+6Wax/dcN5IN3km9b0PkWvJaYZzWyCbp4SizmaZ9s0/yD96AypSeOQecuFDQGVaTQLNY/ENU0A/3Haf7eceVqu90R1XjaMe6a5qVbLA497rNxQe3ctWufyYx5JDOdoG6aP7SPIzjNX6VbKPZLRBeK1wjvQRUpPAZdrKnH4ujKVezdHvXHoMmz2ML+tEJBE+MUBHHBgiJP2JyCAtMUBGkKgjQFQZqCIO0xtjsUFHUUt4QpCMJcB0GYgiAspaDIj5RyDFIQHIWCgo7iljAFQZiCIExBEJZSkIP0sriJxRVEzQP742Nsdzww6+hBFVEQsA5BscUnpSkoqrGCIlOj47IJCn91TUpBvrpmGF88AvjqGiC8B+Ubg9pvW3Gvrkkn6Bj76pqUgmLjtiPoxu2OiTuINxedkVZIUPtGlo/v3T/+j4irSBlBnZ/29TUuFK/SzV39S2tcKF6j7TfnhxBcKF6le2nNeA9aDUUEfb4+v1888rOYitN8qdRDr3/ozTVli981rWxqleIKumta2dQqxRV017SyqVWKK+iuaWVTqxRPKGgNKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQUA9QYeRK9hz+Pg5dOPkIqoJaq8cBV096mgvSYWFXVBLUH+Fdhd0/ajrj7kE9fc67qM+1KH5NXQ1fCHVBLU3iQxe4p9DMkH98BM5CCmIEnMJ8hQDggfpYzpB0dN8OkHhC8V0go774K8a6QStBAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAg4D+Bb/jM2pvsjgAAAABJRU5ErkJggg==" alt /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Our version of boxplot
+<span class="kw">bplot</span>(mri$age, mri$diabetes)</code></pre></div>
+<p><img src="data:image/png;base64,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" alt /></p>
+<p>In comparing the two, see that our plot displays the mean line and <span class="math inline">\(\pm\)</span> standard deviation box in blue and overlays the jittered data on top of the boxplots produced by the base R function. Now if we also wanted to stratify by race, we write</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bplot</span>(mri$age, mri$diabetes, <span class="dt">strata =</span> mri$race)</code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAABC1BMVEUAAAAAAAYAABcAABkAACgAACoAADEAADoAAFgAAGYABkIAGYoAOpAAZpAAZrYGAAAGQv8NAAANUbwXAAAXZtsYdM0ZAAAZiv8oAAAogf8okNs6AAA6ADo6AGY6OgA6Ojo6fHs6kJw6kLY6kNs6nP9CBgBC//9JAABJtv9NTU1Ytv9mAABmABdmADpmOpBmZjpmgWZmkJBmnJBmtrZmtttmtv+KGQCK//+QOgCQkGaQtpCQ29uQ2/+ckDqd//+2WAC2ZgC2Zma225C2/7a2/9u2///bfCHbkDrb25Db/7bb/9vb////Qgb/ihn/nTr/tkn/tmb/vFH/22b/25D//0L//4r//7b//9v///+8Iy0jAAAACXBIWXMAAA7DAAAOwwHHb6hkAAARbUlEQVR4nO2di58cRRHHB0XjRVyI8Xh4QdE16HiCIG48IOpKOBdMgosHd/P//yX2e3pmqruqe7uznaR+fLjczXb14zvVr5rZmW5gRdUduwKtiwEhYkCIGBAiBoSIASFiQIgYECIGhIgBIWJAiBgQIgaEiAEhYkCIGBAiBoSIASFiQIgYECIGhIgBIWJAiBgQIgaEiAEhYkCIGBAiBoSIASFiQIheekBX9x5GPw8D2nVCrz3Wf/zrMpBKfHBzoZJtRfKfXTiLibbdyaWXq58zohsgR1eZMdtkmXyvz7GqhACJDLQ2g8wmUBH1gS5rLxP/lg6I2LYlIK8yBwO6OkNPVgjQzm9HsCLeB7vuVthXIUDdGm8GBMgr8wBALoMv7n12prwgoBCgrWqv9KON6jyiKgKByEscVtzlx/qDL2Ub1K+3PjfNkX+tbEYiqQ9I/ybyWJl/NSrxizAVBYrPRfJH5/rcWEAu3dbzPpNO26ns9rK+HlTRhVZ71Q92usqDaYWqqUi4vrr3ubJdtk5nFwakKiFSr0dA2h332gFEHgFAqmO79k07lAdoPTiHku3ZyWaoBup8dRGmsWO6KSCXuclXVXsKyJNMYlrxHwNoZQfpZetM/gFAuxGjpbXTDdEnSzfQq89ubI46Kqq2VqdgpQpadjGZl3abnfINafv1uR3vRXpl68YKl27Sxczot5IpNtphhjmg9eB8aO23QudoWwm0bi8NsEF6MwHk+uquMy0HAGk0+pxqS3FkCWgz+qn+R9Tq1+7M2U895CbdBJBJrtKtTA/zdX1uXFpTXrtW6Hx1K03Xg1sXnub3o1taQBq2ZRcCZKYGWbAdGgKDtD3Vu9Gj117ync5BdYUx3XKQVofN+VhMebIC+qcFpMoaszQna9k6nSS6UNz7HLysRY66TBDQvnOAdKopIP2bcir7sTnxV2emkia5PGx9ckw3ATRyk33M+G4KILFQ/HPn6j9pnT67AUBmDJ14tclCfxQBdDVOmzduVpsDGt3DtlDXzU+e5EGyOculBgXQw70e5eeti3qQHNw29kRPAenTHRmk7fkemzAZg/RvIuXYWJf/p24qJ45B3kgmzH+1WPLFAckjAtDV2Qho0Tp0oWjWCA99D1Ln1H0AzGKiED0wRmax+ewkV0YaW3wW89zES+etlObroDAgWdxn98QqbQW2TmWMbjVky/adWSg+9D9ZmQ++nAMyi49xKdFBgOzcYbLSS0S9fvSMpuug1WArYwGNmct6Oe+kAbJbDe/0+62LroPsLGZHImHuj/PyLz2/2dWhB8gbTXQhG2AWMwdUFTeDWXSYXrNV1L31ipfOVMb8ZlfSpsIre3KJgLzNKtS62Er6qMrbYy0WQSTlhzuOqCxAuo8m62UBpPoKKT6QqBcJUA0+bQJqSQwIEQNCxIAQMSBEDAgRA0LEgBAxIEQMCBEDQsSAEDEgRAwIEQNCxIAQMSBEDAgRA0LEgBAxIEQMCBEDQsSAEDEgRAwIEQNCVBhQ99zo2QIKltv3fZECiusZAwpmx4Di2fV9q4RaACQ6nALU5DzQAiDjQG26EANC1ASgvm+XUBVA373+U/HziRhbXnmfmF2T449UPUAPfvg3+dsbh2d3VFUDZNAoTAdmd1RVA/S0U4CeBDoZA0r0oBbHZ6VKgORu6/Zgh2s8uzZnMKla07xk9JaYyAJ8GFBadq0ugoZnDigQ7nj5AH3/psYQWAXBK+mkEp6V6gB6Ksaf4YGY4e+HltIvN6Dv31Rj833x8/5tPLuWt2K1pnm3BqItFNvlU9eDbut+hmcHelAbwOqMQQ/kGCQHou9eJ3SxAexijbhUpVlMhjpifAjhjhcbUGp2y3h0K6NSG4AAFq2M260CMqPS8Z9n0AQgeIgmulBlL8sBpJ7Xsj3sy+eUlTSpbrX7YQag/a2HO/nwn4MIQSvpnLpVH6jSAd1crIedfIrLQc9upGw1qIDyCREs0wFdn28UoH0pQH0IEEGHzXUU03wP2hKfQjvNBYwHZROydpmTXR1AZgza5TyDBy4334UOCwOQTDNnsW7xGLlEwYD6YBpQh3ROahSqoXXQorKEIg/g0zEgkilmnDOLuYH2gFGoSBcLNZIKrNIYtFdPcNrL53TmrxWLraQBUV2q0iB9c6GfsSdnspyZflku7AdENwCSJQEqPwbJhaKUWCgesFZEARFb2S9vbaSOSrUGablQlJIeVBhQPz1IyScECL8DvNogPY5BtrPlCANEdANohCZObPUA6XlMPm73gN0YuBfzKpsCCIwk0SzxpC2sg0J8yK0EDtHpVvCgEioKCFggFBulMwDZlWL5cIerLNUNgqnKDUIZgLZi+pKvX8hZR0PhDngwSOADpCN1MVLrc9ZB62EvI4r5q8Qh4EHD/CCeD5yOaExR3kLx6t1L9X+JcoEeNqRO1uDRA2oHVpSaUC4Urz94WAxQeBmUPUpT6SZWlJpQrp+368pdTH2AZ3MYIMoXsHKm+e3Kf79DnrAuRotFRMZ32hifUtFSCZOzi7QSzwdGQavsMQHZmzgp3/aJuQFaEHWwCpmiqZIBbe3bK2LLoAf2BvLgneTEWSx/JYSrDqCdvJqxV+8QChMyt+BJkb6rsWwmueH5hIh2iYCuz1c2phi5cOh9S4x0E2cEUN5mo1y8LBXQdvJQglBIOtGDln0M7HWQ4GQJo3vpiKKK0+/1y3gi66AH9hZ7whgUbmUKofnBuFVCutQxaCtfVKVfLRS7pKG/ENV1Af+hLBRpgE61kldQrgQsUfosZl9VWewGKhgQrZP1pyrJ6XKji1fBsKVXtFDCeC5guMO6wXI7j3YwAFBPargApE2xGqP5pCZUut91t9ViMfR1n8kYBLkB6fxKtr36scgOBdQfE5Ccu+7L72RSvpLpuYE3z9tjsWJ6CFBPBrRkG68oJaGYxdy1+fBuVU3zT+TXESjT/NhK34Xw8yvrMJp6vfZ0IAACnS9e0UIJB7NQ1EtEwkLRA+QlMMeQGvmtHAGdIpbTUuPp8q+sRpTkQT3oQYTqdzO2M0DxhvfwaYlVFNHi2nxMbgzy1tRwdurZQWA/SfMgA0j1fQMo8gCySe+MX6XOufRMCJWRZ7GQG/RUQOY/C0h+YAD14dbpUs1/cQgH3EBV5LpYN+ti2YB6B6hPBNQXBlRGUw9y59L2Ewct8qQ+aypSntosjQcNBm0YUO+bNg4I6icOWqToMKDhNG45Ny0MqOilZ7+qI6B+4VVgFqMbOOeTH2hAEcu6HnRzcdD1nll2U0D9xIOQZnbeNs5maboYDsiaDuUBUaZ5enawB1EBDTFA6CDtTEt7UInXlM5mMbObtx7UL6DBWYymwwwQNov19QCh7/SN5jIPd/huMPWgacvhGp2OAgCF5+/OleksgzUmN839Zl4tXnKQjgCKetBIyFso4mhVCSOf4l0s/9bNZXZTNzBdrPPO72l4HaR2FdZSJ/MPhS3jyaZ7s+MP0v1Io3eAer/6YUALjgCzgOm4kFh+eQ2qKLlFxQdpoJ/4LhQF5O0XUj0IBDT2ukVFyS06bJBeZDd1A/3VQWj0hbPwN1TTFUKPDdLgXuxUx0H6SdLEFpXerE7cwAJKWknPN6uDBDSQthozQB0QhMrwoCKCAXWd30oU0HLL5gDR9mLzcIfyvGkM7eiAJudy6gZ+3wGzWDoaGdAk3m9GL9PbxzMVyyLYokIiAwoX3c0Cy95C0UaSkK2GDdONgNymsDFAs7ip/IDiQcugvTuGAvJDclMPmgah2gI0CwvG44JQMg8QYTc/6WLyuDfNtwNoGXKdtjw4WU/i/Z1bB/UWUFrQPrS2OD4gsIvB13MWCl9SQy/nzK/dTlasQ6uAegBQJKYeuLhFAtQ7QL2rUAOAluGObtLFTD/xj0UuW/VeK+dXraeHINtxA2hqttjZqePkplETJmc3P5fmGHrZR6Wb9hMt0rV58L42WZ5ZhAMVjeuZAOoXx+K5zN1A65Ryd0ffA4QEoG44eLNaRGN205DreAxwjYXAVg7LLXnc2Lccur41QODNdpPLFTEBfKg3+AK36snpfeZ8TQHKv0+6FCAXl4IqGlfNLragAXcdQLD3JbH1K9Utn5lTBVDaq2tiHoQWBSfsEkyRg/UAkV9dE3UhrCg4XUrnhG8+hioaVyog+otHol0MKQlKCPSTqGk8WTVA9FfXQF2MWv2IA6FbjSMDInuQ38OAaSxeErGfxCyL36NIUNqrayBAxOrDiYhwaao1zae8uibcTFrNCqEI5F48YXJ2sLPQXeCFAgR9mQV0ITMTYc+R6uzarkjtwBKKJ1SSb2R5Kmv/VmZ29FGk4HgDqQ4gzeetA95xSB9nn0dAau7SL62p/o7DolMWoEqA3rBfQuB3HIJSL62Je9BzoyqAvnv9lfe9r/xkZk8sEkhGrewBpocaPtH4Q2+uIWX/QgMqkT0DQrJnQEj2DAjJngEh2TMgJHsGhGTPgF4oMSBEDAgRA0LEgBAxIEQMCBEDQsSAEDEgRAwIEQNCxIAQ1QS0z3+n5HFMIVUEJB+eu8+r63FMQdUDpL+Iv815nsNxTGHVA6SfbZ71MrfjmMKqCEg9qCDrdYDHMYVVD5AeCLKGg+OYwmJAiLiLIeJBGhFP84h4oYio5lZjl7/oP44pJN6sImJAiBgQIgaEiAEhYkCIGgN0/WGBZzYXVSuA9INAt533djOx3Js8HhR4ed6+xNND42oFkNL25NGHXzkM8/XwElCZx6vG1RIgQUB0MfcGuJcZ0NXZJ+eiM8knNG+G6w8+7U4eyVdNK0AqgdwvfGq7mOx4G2n08ZnpgTvVFaW5fH236Zfqec/FiR0LkPCOnXwq6u7k8vpctFKiEL98rQFtxSf7zgCSW/OdeoGn+rG2f621B9k/lIPtixM6FqC1+7FRL1hUbZU+sBpsZ9pqQPIN3eqISq+Jyl/28pfN4P4oGCTzdSxAm/GHYmOGE/nI3bUJCHqz2F72HY1NHNWDk7H0/qhCqDVAYpA+udxNAIkx5uQL6UEqmip+7s134jQg+8dwc/EijUFhQJKAD8ilnXnQoI2mc922ZChIqSVAksiHj8VPE1jWgBStfefGoNceu9ldj0G+05Sf+FsCpGaxr8/NpGVnMZlMDE1rPYupaUq9mVqN4evxj719XXVZtQRIjyIq3u6vg1QMdSv96uMzM8jIpY90rK1dB2kvKxts1WppJT3wZvU5FANCxIAQMSBEDAgRA0JUE9ABc3a+aelCqwACAsyort69zDJVi8t1VqHuKn7MtJ4HTQPMmCbBigTTmwsVerO3u6QUKmMG3tYkYFoN0CzAjGjvv3QpxXR6w1SKpdrIja+dC5kWAIQEmNWRSxtY1vuolfn3vdH0o5NHSaZ3/EL/9IO8Qjc3F68ihRYBFA0wqyMusKx+yJOnQ8l3nOmropoJpt/e+bFX6O9v/SOr0JO//+gMKbQIoGiAWR+xgWUdQjZHh2+6XzpTASjB9OrsJ5eu0P92P88q9Juu+w1WaBFA0QCzi2F5gWUbuPn2zjvOVDk62fTq7K4LNn6kOkNWoX+96P4YN60KSAWY9R/TwPLgQskhQARTB0i4QW6hwvl+FzetDEhUzfjvJLA8jBcjgoDipqPlv7tf5Be6+d/dd+Km1QC5ALM64gLL43CwCQKimDrLXXc3r9C/nG2UB/0hbloNkAswu/aowLKaGuTqQ00R/5QOvgBEMb16W01Ioo3v5Ra6fe0rMQbdRUzrdTEbYHZ9WgWWp0uSW2+DXYxiKs+8sNzpUUVN46mFyqXOJ1ihvFlFTDncgYgBIWJAiBgQIgaEqG1ADVxobRRQTtC2jhoFpJQWtK2khgGlBW1rqQlABwRtq/fARgDlB21rE2oEUHbQttLNv6MaAZQdtAW+4VJWjQMiRV6rqnlASPy0uhoGRIqfVlfDgEjx0/J3js/UMCBS/LT2JNYGoKB4s9q+GBAiBoSIASH6P6Ja8AL/4gE0AAAAAElFTkSuQmCC" alt /></p>
+<p>This boxplot breaks down diabetes by race, again showing the mean and standard deviation bars. Note that like normal plots, we can define the axis labels and title by hand.</p>
+</div>
+<div id="scatterplots" class="section level2">
+<h2>Scatterplots</h2>
+<p>Scatterplots are a very common way to view data. They plot all of the data in one window, which allows the user to get a good overall view. However, many times the data is clumped together in some spots, and it is hard to see all of the points. Thus, similar to our approach in <code>bplot()</code>, our <code>scatter()</code> function jitters the data slightly by default. To illustrate this difference, we consider the distribution of cerebral atrophy by age group. In the base R scatterplot,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mri$age, mri$atrophy)</code></pre></div>
+<p><img src="data:image/png;base64,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" alt /></p>
+<p>we see that a lot of the values sit on top of each other. In our version (which again uses the Y followed by X convention),</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scatter</span>(mri$atrophy, mri$age)</code></pre></div>
+<p><img src="data:image/png;base64,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" alt /></p>
+<p>the jittered data allows us to see where all of the points lie much better. Also notice that <code>scatter()</code> displayes a loess curve by default. We can also display a line of best fit calculated by least squares by adding <code>plotLSfit = TRUE</code>. Last, we can stratify, which is particularly useful if we want to see differences across a third variable, and <code>scatter()</code> will automatically color the data appropriately:</p>
+<p><a id="stratscatter"></a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scatter</span>(mri$atrophy, mri$age, <span class="dt">strata =</span> mri$race)</code></pre></div>
+<p><img src="data:image/png;base64,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" alt /></p>
+</div>
+</div>
+<div id="transformations-of-a-variable" class="section level1">
+<h1>Transformations of a Variable</h1>
+<p>In many cases (especially in regression, which we will cover in section 7), it is more useful to model a transformation of a variable than the raw data itself. We present three functions to easily transform a variable. In each case, the function returns a list of: a matrix with the new transformed variable, the type of transformation performed, a vector describing how the variable was created, the name of the created variable, and the original data.</p>
+<div id="dummy-variables" class="section level2">
+<h2>Dummy Variables</h2>
+<p>Dummy variables are a convenient way of creating indicator variables against some reference. For example, in the <code>mri</code> data, if we wanted to create a dummy variable for <code>race</code>, this would create 3 indicator variables (since there are four levels of race). By default, our <code>dummy()</code> function creates these indicators using the smallest value as the reference.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dummy.race &lt;-<span class="st"> </span><span class="kw">dummy</span>(mri$race)
+<span class="kw">head</span>(dummy.race, <span class="dt">n =</span> <span class="dv">10</span>)</code></pre></div>
+<pre><code>##       2 vs 1 3 vs 1 4 vs 1
+##  [1,]      1      0      0
+##  [2,]      1      0      0
+##  [3,]      1      0      0
+##  [4,]      0      0      0
+##  [5,]      0      0      0
+##  [6,]      0      0      1
+##  [7,]      0      0      0
+##  [8,]      1      0      0
+##  [9,]      0      0      0
+## [10,]      0      0      0</code></pre>
+<p>Thus the set of dummy variables for race created above has: an indicator of whether the patient is black or white, an indicator of whether the patient is Asian or white, and an indicator of whether the patient is listed as ``other’’ or white. These variables would allow us, in a regression, to compare each of the races against the white reference group.</p>
+</div>
+<div id="linear-splines" class="section level2">
+<h2>Linear Splines</h2>
+<p>Linear splines create a piecewise linear fit between user specified “knot” points; these are the points in the variable that we allow the slope of the line to change. There are two major ways to parameterize linear splines, and we have implemented both in this package. The first is based on the absolute slope between knots - that is, if we had a variable (like <code>ldl</code> in the <code>mri</code> dataset) that took on values between 11 and 247 and we placed knots at 70 and 150, we would see three columns: the first would show the minimum of 70 and the value of <code>ldl</code>; the second would show the minimum of <code>ldl</code> - 70 and 80; and the last column would show the remaining part of <code>ldl</code>. For example, if <code>ldl</code> = 71 for one patient, we would see <code>70 1 0</code>. If  = 247, we would see <code>70 80 97</code>.</p>
+<p>The second parameterization is denoted by us as “change”. This uses the change between knots to specify the slopes. Under this parameterization, we would see, for a value of 115, <code>115 45 0</code>, which corresponds to: 115 units between the minimum and the value, 45 units between knot 1 (at 70) and the value, and zero units between knot 2 (at 150) and the value. We do not show negative units.</p>
+<p>These two parameterizations can be accessed via</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lspline.ldl &lt;-<span class="st"> </span><span class="kw">lspline</span>(mri$ldl, <span class="dt">knots =</span> <span class="kw">c</span>(<span class="dv">70</span>, <span class="dv">150</span>))
+<span class="kw">head</span>(lspline.ldl, <span class="dt">n =</span> <span class="dv">10</span>)</code></pre></div>
+<pre><code>##   $ mri ldl
+##  70  65   0
+##  70  14   0
+##  70  45   0
+##  61   0   0
+##  70  78   0
+##  70  80  13
+##  70  31   0
+##  70  46   0
+##  70  54   0
+##  70  40   0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lsplineD.ldl &lt;-<span class="st"> </span><span class="kw">lsplineD</span>(mri$ldl, <span class="dt">knots =</span> <span class="kw">c</span>(<span class="dv">70</span>, <span class="dv">150</span>))
+<span class="kw">head</span>(lsplineD.ldl, <span class="dt">n =</span> <span class="dv">10</span>)</code></pre></div>
+<pre><code>##  x:min x: 70 x:150
+##    135    65     0
+##     84    14     0
+##    115    45     0
+##     61     0     0
+##    148    78     0
+##    163    93    13
+##    101    31     0
+##    116    46     0
+##    124    54     0
+##    110    40     0</code></pre>
+</div>
+<div id="polynomials" class="section level2">
+<h2>Polynomials</h2>
+<p>Last we come to polynomials. This function creates a polynomial of the specified degree simply by multiplying the variable by itself the correct number of times. If we wanted to create a parabola in <code>age</code>, we type</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">age.parabola &lt;-<span class="st"> </span><span class="kw">polynomial</span>(mri$age, <span class="dt">degree =</span> <span class="dv">2</span>)
+<span class="kw">head</span>(age.parabola, <span class="dt">n =</span> <span class="dv">10</span>)</code></pre></div>
+<pre><code>##       Linear(ctr) Square(ctr)
+##  [1,]  -2.5659864   6.5842862
+##  [2,]   6.4340136  41.3965311
+##  [3,]  15.4340136 238.2087760
+##  [4,]  -2.5659864   6.5842862
+##  [5,]  -4.5659864  20.8482318
+##  [6,]  -2.5659864   6.5842862
+##  [7,]   0.4340136   0.1883678
+##  [8,]   0.4340136   0.1883678
+##  [9,]  -7.5659864  57.2441501
+## [10,]  -4.5659864  20.8482318</code></pre>
+<p>The “(ctr)” after each term tells us that <code>polynomial()</code> has automatically centered each term, and by default it centers at the mean of the variable.</p>
+</div>
+</div>
+<div id="one-and-two-sample-functions" class="section level1">
+<h1>One and Two Sample Functions</h1>
+<p>Many of our analyses boil down to one-sample or two-sample problems; What is the mean time to death? What is the median home price in Seattle? What is the difference in mean time to death between control and the treatment group? The list goes on. There are many methods of analyzing one-sample relationships, and in our package we have implemented three.</p>
+<div id="correlation" class="section level2">
+<h2>Correlation</h2>
+<p>While correlation is not an excellent source of inference, since it is inherently a feature of the dataset collected, sometimes it is important to know when variables are correlated. In the base R package, there are a few functions to calculate correlation: <code>cor()</code>, <code>var()</code>, <code>cov()</code>, and <code>cov2cor()</code>. Our function, <code>correlate()</code>, computes the correlation matrix between an arbitrary number of variables, and optionally also does this within a stratification variable. This is the real advantage of <code>correlate()</code>, since in base R we would have to manually subset the data into each stratum. If we want to examine the correlation between sex and diabetes, (and then stratify by race), we get</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Base R - returns only one number!
+<span class="kw">cor</span>(mri$male, mri$diabetes)</code></pre></div>
+<pre><code>## [1] 0.1200211</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## uwIntroStats version
+<span class="kw">correlate</span>(mri$male, mri$diabetes)</code></pre></div>
+<pre><code>## Tabled correlation statistics by strata
+## Call:
+##       correlate(mri$male, mri$diabetes) 
+##      Method:  Pearson 
+##      Data  :  Pairwise Complete 
+##             - NaN denotes strata with no observations
+##             - NA arises from missing data
+## 
+## ##### ALL DATA
+##    ##  Estimated Correlation Coefficients 
+##                    mri$male:  mri$diabetes: 
+##     mri$male:  1.0000         0.1200        
+## mri$diabetes:  0.1200         1.0000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Stratify on race
+<span class="kw">correlate</span>(mri$male, mri$diabetes, <span class="dt">strata =</span> mri$race)</code></pre></div>
+<pre><code>## Tabled correlation statistics by strata
+## Call:
+##       correlate(mri$male, mri$diabetes, strata = mri$race) 
+##      Method:  Pearson 
+##      Data  :  Pairwise Complete 
+##             - NaN denotes strata with no observations
+##             - NA arises from missing data
+## 
+## ##### Stratum   1 
+##    ##  Estimated Correlation Coefficients 
+##                    mri$male:  mri$diabetes: 
+##     mri$male:  1.0000         0.0941        
+## mri$diabetes:  0.0941         1.0000        
+## 
+## ##### Stratum   2 
+##    ##  Estimated Correlation Coefficients 
+##                    mri$male:  mri$diabetes: 
+##     mri$male:  1.0000         0.2122        
+## mri$diabetes:  0.2122         1.0000        
+## 
+## ##### Stratum   3 
+##    ##  Estimated Correlation Coefficients 
+##                    mri$male:  mri$diabetes: 
+##     mri$male:  1.0000         0.1155        
+## mri$diabetes:  0.1155         1.0000        
+## 
+## ##### Stratum   4 
+##    ##  Estimated Correlation Coefficients 
+##                    mri$male:  mri$diabetes: 
+##     mri$male:  1.0000         0.3162        
+## mri$diabetes:  0.3162         1.0000        
+## 
+## ##### ALL DATA
+##    ##  Estimated Correlation Coefficients 
+##                    mri$male:  mri$diabetes: 
+##     mri$male:  1.0000         0.1200        
+## mri$diabetes:  0.1200         1.0000</code></pre>
+<p>Our function takes the pain out of calculating multiple correlations within stratum variables. We also return a correlation matrix rather than a single number, which allows the user to go straight to a covariance matrix by squaring. We also allow calculation of Spearman or Pearson (default) correlation.</p>
+</div>
+<div id="point-estimates-and-inference" class="section level2">
+<h2>Point Estimates and Inference</h2>
+<p>As mentioned above, since correlation is a function of the data gathered, we usually need other methods for our inference. One of the most common tests is the t-test, since we are often interested in the mean and making comparisons between means. Perhaps less common are the Wilcoxon and Mann-Whitney, which use the ``rank’’ of the variables compared.</p>
+<div id="t-tests" class="section level3">
+<h3>T-tests</h3>
+<p>In the base R package, the <code>t.test()</code> function performs a t-test as you would expect. Our function <code>ttest()</code> improves on this by allowing stratification, calculation of the geometric mean, allowing for presuming unequal variances between samples, and making a cleaner output. For example, a t-test of whether the mean of the <code>ldl</code> variable is equal to 125 yields, in base R and <code>uwIntroStats</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## base R
+<span class="kw">t.test</span>(mri$ldl, <span class="dt">mu =</span> <span class="dv">125</span>)</code></pre></div>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  mri$ldl
+## t = 0.64326, df = 724, p-value = 0.5203
+## alternative hypothesis: true mean is not equal to 125
+## 95 percent confidence interval:
+##  123.3527 128.2528
+## sample estimates:
+## mean of x 
+##  125.8028</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## uwIntroStats
+<span class="kw">ttest</span>(mri$ldl, <span class="dt">null.hypoth =</span> <span class="dv">125</span>)</code></pre></div>
+<pre><code>## 
+## Call:
+## ttest(var1 = mri$ldl, null.hypoth = 125)
+## 
+## One-sample t-test :
+##  
+## Summary:
+##  Variable Obs Missing Mean Std. Err. Std. Dev.     95% CI
+##   mri$ldl 735      10  126      1.25      33.6 [123, 128]
+## 
+##  Ho:  mean = 125 ; 
+##  Ha:  mean != 125 
+##  t = 0.6433 , df = 724 
+##  Pr(|T| &gt; t) =  0.520256</code></pre>
+<p>If instead we wanted a two-sample t-test of whether the difference in mean LDL between males and females were zero, we would get</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## base R
+<span class="kw">t.test</span>(mri$ldl[mri$male ==<span class="st"> </span><span class="dv">0</span>], mri$ldl[mri$male ==<span class="st"> </span><span class="dv">1</span>])</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  mri$ldl[mri$male == 0] and mri$ldl[mri$male == 1]
+## t = 4.1938, df = 721.23, p-value = 3.084e-05
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##   5.502342 15.188221
+## sample estimates:
+## mean of x mean of y 
+##  130.9397  120.5944</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## uwIntroStats
+<span class="kw">ttest</span>(mri$ldl, <span class="dt">by =</span> mri$male)</code></pre></div>
+<pre><code>## 
+## Call:
+## ttest(var1 = mri$ldl, by = mri$male)
+## 
+## Two-sample t-test allowing for unequal variances :
+##  
+## Summary:
+##           Group Obs Missing  Mean Std. Err. Std. Dev.         95% CI
+##    mri$male = 1 369       4 130.9      1.79      34.3 [127.4, 134.5]
+##    mri$male = 0 366       6 120.6      1.69      32.1 [117.3, 123.9]
+##      Difference 735      10  10.3      2.47      &lt;NA&gt;    [5.5, 15.2]
+## 
+##  Ho: difference in  means = 0 ; 
+##  Ha: difference in  means != 0 
+##  t = 4.194 , df = 721 
+##  Pr(|T| &gt; t) =  3.08428e-05</code></pre>
+<p>Note that in our package, the default is to presume unequal variances between samples, which the authors believe to usually be the correct course. Also, we don’t have to subset the data manually. We also run two-sided tests by default, but others can be specified.</p>
+</div>
+<div id="generic-inference" class="section level3">
+<h3>Generic Inference</h3>
+<p>Until now, all of the methods in this section work on multiple samples. However, if we want to produce point estimates, interval estimates, and p-values for an arbitrary functional (mean, geometric mean, proportion, median, quantile, odds) of a variable, we can use the <code>oneSample()</code> function. Base R does not have a function which performs this general inference all in one spot. In the following tests, we will run one- and two-sample t-tests and an exact binomial test, all on the LDL variable. The t-tests run by <code>oneSample()</code> are an alternative to <code>ttest()</code> as described above. The output is not as verbose, but all of the information is the same:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## base R
+<span class="kw">t.test</span>(mri$ldl, <span class="dt">mu =</span> <span class="dv">125</span>)</code></pre></div>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  mri$ldl
+## t = 0.64326, df = 724, p-value = 0.5203
+## alternative hypothesis: true mean is not equal to 125
+## 95 percent confidence interval:
+##  123.3527 128.2528
+## sample estimates:
+## mean of x 
+##  125.8028</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## ttest
+<span class="kw">ttest</span>(mri$ldl, <span class="dt">null.hypoth =</span> <span class="dv">125</span>)</code></pre></div>
+<pre><code>## 
+## Call:
+## ttest(var1 = mri$ldl, null.hypoth = 125)
+## 
+## One-sample t-test :
+##  
+## Summary:
+##  Variable Obs Missing Mean Std. Err. Std. Dev.     95% CI
+##   mri$ldl 735      10  126      1.25      33.6 [123, 128]
+## 
+##  Ho:  mean = 125 ; 
+##  Ha:  mean != 125 
+##  t = 0.6433 , df = 724 
+##  Pr(|T| &gt; t) =  0.520256</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## oneSample
+<span class="kw">oneSample</span>(<span class="st">&quot;mean&quot;</span>, mri$ldl, <span class="dt">null.hypothesis =</span> <span class="dv">125</span>)</code></pre></div>
+<pre><code>## Hypothesis test of two-sided alternative that Mean &lt;&gt; 125 
+## Method: One sample t test 
+## 10 observations deleted due to missing values
+##     n       Mean    95% CIlo  95% CIhi  Null Hyp   P two   
+##    725      125.8     123.4     128.3     125.0     0.5203</code></pre>
+<p>However, the true flexibility of the <code>oneSample()</code> function comes into play when we ask about different functionals. If we want inference on the geometric mean (which might make sense since LDL is a biological variable that may exhibit extreme values due to illness), in base R or with <code>ttest()</code> we have to logarithmically transform our variable and then run the t-test. With <code>oneSample()</code>, we simply run on <code>&quot;geometric mean&quot;</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## base R
+<span class="kw">t.test</span>(<span class="kw">log</span>(mri$ldl), <span class="dt">mu =</span> <span class="kw">log</span>(<span class="dv">125</span>))</code></pre></div>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  log(mri$ldl)
+## t = -3.0054, df = 724, p-value = 0.002744
+## alternative hypothesis: true mean is not equal to 4.828314
+## 95 percent confidence interval:
+##  4.774290 4.816983
+## sample estimates:
+## mean of x 
+##  4.795636</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## ttest
+<span class="kw">ttest</span>(<span class="kw">log</span>(mri$ldl), <span class="dt">null.hypoth =</span> <span class="kw">log</span>(<span class="dv">125</span>))</code></pre></div>
+<pre><code>## 
+## Call:
+## ttest(var1 = log(mri$ldl), null.hypoth = log(125))
+## 
+## One-sample t-test :
+##  
+## Summary:
+##      Variable Obs Missing Mean Std. Err. Std. Dev.       95% CI
+##  log(mri$ldl) 735      10  4.8    0.0109     0.293 [4.77, 4.82]
+## 
+##  Ho:  mean = 4.8283137373023 ; 
+##  Ha:  mean != 4.8283137373023 
+##  t = -3.005 , df = 724 
+##  Pr(|T| &gt; t) =  0.00274401</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## oneSample
+<span class="kw">oneSample</span>(<span class="st">&quot;geometric mean&quot;</span>, mri$ldl, <span class="dt">null.hypothesis =</span> <span class="dv">125</span>)</code></pre></div>
+<pre><code>## Hypothesis test of two-sided alternative that GeomMn &lt;&gt; 125 
+## Method: One sample t test on log transformed data 
+## 10 observations deleted due to missing values
+##     n      GeomMn   95% CIlo  95% CIhi  Null Hyp   P two    
+##    725      121.0     118.4     123.6     125.0    2.744e-03</code></pre>
+<p>We can also compute an exact binomial test of the proportion of LDL values that are greater than 128:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## base R
+<span class="kw">binom.test</span>(<span class="kw">sum</span>(mri$ldl &gt;<span class="st"> </span><span class="dv">128</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">n =</span> <span class="kw">sum</span>(!<span class="kw">is.na</span>(mri$ldl)))</code></pre></div>
+<pre><code>## 
+##  Exact binomial test
+## 
+## data:  sum(mri$ldl &gt; 128, na.rm = TRUE) and sum(!is.na(mri$ldl))
+## number of successes = 336, number of trials = 725, p-value =
+## 0.05338
+## alternative hypothesis: true probability of success is not equal to 0.5
+## 95 percent confidence interval:
+##  0.4266728 0.5005223
+## sample estimates:
+## probability of success 
+##              0.4634483</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## oneSample
+<span class="kw">oneSample</span>(<span class="st">&quot;prop&quot;</span>, mri$ldl &gt;<span class="st"> </span><span class="dv">128</span>, <span class="dt">null.hypothesis =</span> <span class="fl">0.5</span>)</code></pre></div>
+<pre><code>## Hypothesis test of two-sided alternative that Pr(Event) &lt;&gt; 0.5 
+## Method: One sample inference for binomial proportions using exact distribution (LR ordering) 
+## 10 observations deleted due to missing values
+##      n     Pr(Event) 95% CIlo  95% CIhi  Null Hyp    P two  
+##    725       0.4634    0.4267    0.5005    0.5000   0.05338</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">oneSample</span>(<span class="st">&quot;prop&quot;</span>, mri$ldl, <span class="dt">above =</span> <span class="dv">128</span>, <span class="dt">null.hypothesis =</span> <span class="fl">0.5</span>)</code></pre></div>
+<pre><code>## Hypothesis test of two-sided alternative that Pr&gt;128 &lt;&gt; 0.5 
+## Method: One sample inference for binomial proportions using exact distribution (LR ordering) 
+## 10 observations deleted due to missing values
+##     n      Pr&gt;128   95% CIlo  95% CIhi  Null Hyp   P two   
+##    725      0.4634    0.4267    0.5005    0.5000   0.05338</code></pre>
+<p>The syntax for <code>oneSample()</code> is much more intuitive; we simply enter that we want to test a proportion, and then give the logical value to test or specify the threshold. Also, rather than having to count successes, the total, and dealing with missing values by hand, we can let <code>oneSample()</code> handle everything for us and give output that is clearer to read.</p>
+</div>
+<div id="wilcoxon-and-mann-whitney" class="section level3">
+<h3>Wilcoxon and Mann-Whitney</h3>
+<p>The most similar function between our package and the base R package is the function to perform Wilcoxon Signed Rank tests and Mann-Whitney-Wilcoxon Ranked Sum tests. Our function, <code>wilcoxon()</code>, adds formatting and variances, and prints the z-score and p-value in addition to the test statistic and p-value. Otherwise, the functions are the same, though we follow our usual syntax of Y followed by X. For example, if we want to test diseased versus healthy (in a made-up dataset), we can get</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## create the data
+cf &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1153</span>, <span class="dv">1132</span>, <span class="dv">1165</span>, <span class="dv">1460</span>, <span class="dv">1162</span>, <span class="dv">1493</span>, <span class="dv">1358</span>, <span class="dv">1453</span>, <span class="dv">1185</span>, <span class="dv">1824</span>, <span class="dv">1793</span>, <span class="dv">1930</span>, <span class="dv">2075</span>)
+healthy &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">996</span>, <span class="dv">1080</span>, <span class="dv">1182</span>, <span class="dv">1452</span>, <span class="dv">1634</span>, <span class="dv">1619</span>, <span class="dv">1140</span>, <span class="dv">1123</span>, <span class="dv">1113</span>, <span class="dv">1463</span>, <span class="dv">1632</span>, <span class="dv">1614</span>, <span class="dv">1836</span>)
+
+## base R
+<span class="kw">wilcox.test</span>(healthy, cf, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## 
+##  Wilcoxon signed rank test
+## 
+## data:  healthy and cf
+## V = 20, p-value = 0.08032
+## alternative hypothesis: true location shift is not equal to 0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## uwIntroStats
+<span class="kw">wilcoxon</span>(cf, healthy, <span class="dt">paired =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## 
+##  Wilcoxon signed rank test 
+##          obs sum ranks expected
+## positive  10        71     45.5
+## negative   3        20     45.5
+## zero       0         0      0.0
+## all       13        91     91.0
+##                             
+## unadjusted variance   204.75
+## adjustment for ties     0.00
+## adjustment for zeroes   0.00
+## adjusted variance     204.75
+##                     H0 Ha       
+## Hypothesized Median 0  two.sided
+##   Test Statistic p-value 
+## V 71             0.080322
+## Z 1.7821         0.037368</code></pre>
+<p>Note that in the output of <code>wilcoxon()}</code> we have displayed the data calculated by the signed rank test, and given both the test statistic (V) and the z-score (Z).</p>
+</div>
+</div>
+</div>
+<div id="regression" class="section level1">
+<h1>Regression</h1>
+<p>Regression is one of the most widely used and easily understood methods of statistical analysis. The base R package has many different functions to perform regression: <code>lm()</code> for linear regression, <code>glm()</code> for generalized linear regression (which allows you to perform logistic regression, for example), <code>coxph()</code> for proportional hazards regression, and <code>geeglm()</code> as (one) method for correlated data regression. Each function has slightly different options, and remembering all of these is a chore. Part of the motivation for <code>regress()</code> is to alleviate this problem. This function provides one interface through which all types of regression can be performed. We also print the output from the regression in a much more understandable manner. Also, as we did in <code>ttest()</code>, we allow the user to calculate and use robust standard error estimates (using the Huber-White sandwich estimator), which adds flexibility. The <code>regress()</code> function does all of this while keeping the same formula syntax as its predecessors: <code>y~x1+x2*x3</code> still produces a linear model with coefficients for <code>x1</code>, <code>x2</code>, <code>x3</code>, and the interaction between <code>x2</code> and <code>x3</code>. The next four subsections deal with aspects of <code>regress()</code> in more detail.</p>
+<div id="basics-of-regress" class="section level2">
+<h2>Basics of <code>regress()</code></h2>
+<p>The minimum we need to enter into <code>regress()</code> is a functional, a formula, and a dataset. A functional takes an object and returns a value; for instance, the mean is a functional because it takes a distribution and returns the mean. The allowed functionals are displayed in <a href="#fnctl">Table 2</a>. Once we have a functional in mind (for now we choose the mean), we need to decide if we want to use robust standard error estimates. The default in <code>regress()</code> is to use these estimates, since we usually believe that the variances are not truly equal between groups compared in a regression analysis. The base R functions do presume equal variances between groups, which can lead to conservative (or anti-conservative) inference in some situations. The last change we have made to the usual regression output is displaying F-statistics rather than t-statistics for the test of each variable. We decided to use the F-distribution to make our results line up more easily with classical ANOVA tables. In most cases, the F-statistic is simply the square of the t-statistic. The inference is the same. To see <code>regress()</code> in action, consider testing the association between age and atrophy. The syntax for this computation is the same as that for any of the previous commands you might have used.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## base R
+<span class="kw">summary</span>(<span class="kw">lm</span>(atrophy ~<span class="st"> </span>age, <span class="dt">data =</span> mri))</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = atrophy ~ age, data = mri)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -36.870  -8.589  -0.870   7.666  51.203 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -16.06213    6.25619  -2.567   0.0104 *  
+## age           0.69798    0.08368   8.341 3.64e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 12.36 on 733 degrees of freedom
+## Multiple R-squared:  0.08669,    Adjusted R-squared:  0.08545 
+## F-statistic: 69.58 on 1 and 733 DF,  p-value: 3.635e-16</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## uwIntroStats
+<span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, atrophy ~<span class="st"> </span>age, <span class="dt">data =</span> mri)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = atrophy ~ age, data = mri)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -36.870  -8.589  -0.870   7.666  51.203 
+## 
+## Coefficients:
+##                  Estimate  Naive SE  Robust SE    95%L      95%H     
+## [1] Intercept     -16.06     6.256     6.701       -29.22    -2.907  
+## [2] age            0.6980   0.08368   0.09002       0.5213    0.8747 
+##                     F stat    df Pr(&gt;F)   
+## [1] Intercept            5.75 1    0.0168 
+## [2] age                 60.12 1  &lt; 0.00005
+## 
+## Residual standard error: 12.36 on 733 degrees of freedom
+## Multiple R-squared:  0.08669,    Adjusted R-squared:  0.08545 
+## F-statistic: 60.12 on 1 and 733 DF,  p-value: 2.988e-14</code></pre>
+<p>Note that by default, our output is printed in a table, rather than having to call <code>summary.lm()</code>. The inference on the individual coefficients is different because we have used the F-distribution and are using robust standard error estimates, but we get approximately the same p-values. Also, the overall F-statistic is different in our version because we are using the robust standard error estimates. The numbers next to the coefficients tell us which to specify in any post-testing commands we run (see section 8).</p>
+</div>
+<div id="regression-on-different-functionals" class="section level2">
+<h2>Regression on different functionals</h2>
+<p>As mentioned above, part of the motivation for the <code>regress()</code> function was to have all types of regression in one function. Thus the other functionals we allow, and their corresponding commands in base R, are displayed in <a href="#fnctl">Table 2</a>. Note that we only display the options which lead to a certain type of regression, not the rest of the syntax.</p>
+<p><a id="fnctl"></a></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Functional</th>
+<th align="left">Type of Regression</th>
+<th align="left">Previous command (package)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>&quot;mean&quot;</code></td>
+<td align="left">Linear Regression</td>
+<td align="left"><code>lm()</code> (<code>stats</code> - base R)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>&quot;geometric mean&quot;</code></td>
+<td align="left">Linear Regression on logarithmically transformed Y</td>
+<td align="left"><code>lm()</code>, with Y log transformed (<code>stats</code> - base R)</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>&quot;odds&quot;</code></td>
+<td align="left">Logistic Regression</td>
+<td align="left"><code>glm(family = binomial)</code> (<code>stats</code> - base R)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>&quot;rate&quot;</code></td>
+<td align="left">Poisson Regression</td>
+<td align="left"><code>glm(family = poisson)</code> (<code>stats</code> - base R)</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>&quot;hazard&quot;</code></td>
+<td align="left">Proportional Hazards Regression</td>
+<td align="left"><code>coxph()</code> (<code>survival</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>If we enter a functional other than the mean, there is usually a transformation that needs to be applied to the data within the <code>regress()</code> function. In all of the cases listed in <a href="#fnctl">Table 2</a>, the transformation is the logarithm. For example, sometimes the logistic regression model is taught as having a “log link”, or the poisson regression model is taught as having the “logit link”. These both refer to the function of the parameter having logarithms, so that the model is linear in the coefficients on the predictors. Therefore, in each case, we back-transform - by using the <code>exp(x)</code> function, which is equivalent to <span class="math inline">\(e^x\)</span> - the output of the regression by default, but also display the output that has not been back-transformed. This allows the user to easily see the results in the correct units, while also retaining the ability to compare with other software or handle the un-exponentiated results. If we want to examine the association between LDL and age, but want to use the geometric mean, we get</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">regress</span>(<span class="st">&quot;geom&quot;</span>, ldl ~<span class="st"> </span>age, <span class="dt">data =</span> mri)</code></pre></div>
+<pre><code>## ( 10  cases deleted due to missing values)
+## 
+## 
+## Call:
+## regress(fnctl = &quot;geom&quot;, formula = ldl ~ age, data = mri)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.39512 -0.17020  0.03572  0.19342  0.70883 
+## 
+## Coefficients:
+## 
+## Raw Model:
+##                  Estimate   Naive SE   Robust SE        F stat    df
+## [1] Intercept       4.876     0.1494     0.1437           1150.70 1 
+## [2] age          -1.077e-03  1.999e-03  1.932e-03            0.31 1 
+##                  Pr(&gt;F)   
+## [1] Intercept    &lt; 0.00005
+## [2] age            0.5771 
+## 
+## Transformed Model:
+##                  e(Est)    e(95%L)   e(95%H)         F stat    df
+## [1] Intercept      131.1     98.87     173.8           1150.70 1 
+## [2] age            0.9989    0.9951    1.003              0.31 1 
+##                  Pr(&gt;F)   
+## [1] Intercept    &lt; 0.00005
+## [2] age            0.5771 
+## 
+## Residual standard error: 0.2929 on 723 degrees of freedom
+##   (10 observations deleted due to missingness)
+## Multiple R-squared:  0.0004018,  Adjusted R-squared:  -0.0009808 
+## F-statistic: 0.3112 on 1 and 723 DF,  p-value: 0.5771</code></pre>
+<p>In the transformed table, we do not display the standard error estimates, since they do not scale appropriately with the transformation. We could compare this to the base R function by log-transforming the <code>ldl</code> variable, running <code>lm()</code>, and back-transforming the results ourselves:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## transform the ldl variable
+logldl &lt;-<span class="st"> </span><span class="kw">log</span>(mri$ldl)
+## create the model
+mod &lt;-<span class="st"> </span><span class="kw">lm</span>(logldl ~<span class="st"> </span>age, <span class="dt">data =</span> mri)
+## view the coefficients (untransformed)
+<span class="kw">summary</span>(mod)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = logldl ~ age, data = mri)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.39512 -0.17020  0.03572  0.19342  0.70883 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  4.875983   0.149445  32.627   &lt;2e-16 ***
+## age         -0.001077   0.001999  -0.539     0.59    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.2929 on 723 degrees of freedom
+##   (10 observations deleted due to missingness)
+## Multiple R-squared:  0.0004018,  Adjusted R-squared:  -0.0009808 
+## F-statistic: 0.2906 on 1 and 723 DF,  p-value: 0.59</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## back-transform the coefficients and CI
+mod.sum &lt;-<span class="st"> </span><span class="kw">summary</span>(mod)
+## this gives the coefficients
+<span class="kw">exp</span>(mod.sum$coefficients[,<span class="dv">1</span>])</code></pre></div>
+<pre><code>## (Intercept)         age 
+## 131.1029250   0.9989231</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## this gives the CI
+<span class="kw">exp</span>(mod.sum$coefficients[,<span class="dv">1</span>] -<span class="st"> </span><span class="fl">1.96</span>*mod.sum$coefficients[,<span class="dv">2</span>])</code></pre></div>
+<pre><code>## (Intercept)         age 
+##  97.8143254   0.9950173</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">exp</span>(mod.sum$coefficients[,<span class="dv">1</span>] +<span class="st"> </span><span class="fl">1.96</span>*mod.sum$coefficients[,<span class="dv">2</span>])</code></pre></div>
+<pre><code>## (Intercept)         age 
+##  175.720447    1.002844</code></pre>
+<p>First, this is much more work, and requires thought for how to calculate the confidence interval - should we use the convenient approximation of 1.96, or should we use the <code>qnorm()</code> function? Second, we again lose the option of using robust standard error estimates. To use these, we would have to manually code a few more lines, which would increase the likelihood of a small mistake in the code. Our <code>regress()</code> function pulls all of this together in a simple format, leading to much fewer mistakes.</p>
+</div>
+<div id="correlated-data-regression" class="section level2">
+<h2>Correlated data regression</h2>
+<p>This section does not serve as a primer for when to account for correlated data in your regression model; rather, if you know that you have correlated data, it gives you a method to accounting for it. We will not use the <code>mri</code> data for this example. Instead, we will use the <code>salary</code> data, available as a text file <a href="http://www.emersonstatistics.com/datasets/salary.txt">“salary.txt”</a>. The documentation for this file is at <a href="http://www.emersonstatistics.com/datasets/salary.doc">“salary.doc”</a>. These data deal with salaries at the University of Washington, and have multiple records on most participants. In fact, for any current faculty member in 1995 who had been employed by the university for more than one year, there were yearly records dating back to when the faculty member was hired. Thus by nature these data are correlated - in the simplest sense, we expect that the salary for a single faculty member will rise (or at least stay constant) each year. Therefore, we need to use the correlated data apparatus built into <code>regress()</code>. This functionality uses the <code>geeglm()</code> function from the package <code>geepack</code>, but frames the output consistently with the rest of the <code>regress()</code> options and uses the same syntax.</p>
+<p>First, let’s create the data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">salary &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;http://www.emersonstatistics.com/datasets/salary.txt&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+salary$female &lt;-<span class="st"> </span><span class="kw">ifelse</span>(salary$sex ==<span class="st"> &quot;F&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</code></pre></div>
+<p>This code makes sure that the header in the text file is read as variable names, and that the string variables do not get converted to factor variables. We also create an indicator variable of whether the person is female or not. Next, suppose we are interested in the mean salary for females as opposed to males. Since raises are usually calculated as a percentage of current salary, and starting salaries can vary by year, we decide that the year in which a person started is important in determining their salary. For a more in-depth look at this thought process, see any document on determining potential confounding variables (for one, see parts of <a href="http://www.emersonstatistics.com/GeneralMaterials/analysis.pdf">“Organizing Your Approach to a Data Analysis”</a>). By adding the <code>id</code> argument to <code>regress()</code>, we can account for the correlated data. In the <code>salary</code> dataset, the ID column is named <code>id</code>, and thus we have:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## adjusting for correlated data
+<span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>,salary ~<span class="st"> </span>female*year, <span class="dt">id =</span> id, <span class="dt">data =</span> salary)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = salary ~ female * year, data = salary, 
+##     id = id)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3727.9   -907.4   -230.0    719.2   7605.5  
+## 
+## Coefficients:
+##                    Estimate  Std Err   95%L         95%H         Wald     
+## [1] Intercept       -17417     283.6    -17973       -16861        3771.66
+## [2] female            4102     528.7      3065         5138          60.20
+## [3] year             255.5     3.536     248.6        262.5        5222.05
+## [4] female:year     -57.88     6.370    -70.36       -45.39          82.56
+##                    df Pr(&gt;|W|) 
+## [1] Intercept      1  &lt; 0.00005
+## [2] female         1  &lt; 0.00005
+## [3] year           1  &lt; 0.00005
+## [4] female:year    1  &lt; 0.00005
+## 
+##  Estimated Scale Parameters: 
+##             Estimate  Std.err
+## (Intercept)  2024610 77997.57
+## 
+##  Correlation: Structure =  independence 
+## 
+##  Number of Clusters:  1597 
+## 
+##  Maximum Cluster Size:  20</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## without adjusting
+<span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, salary ~<span class="st"> </span>female*year, <span class="dt">data =</span> salary)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = salary ~ female * year, data = salary)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3727.9  -907.4  -230.0   719.2  7605.5 
+## 
+## Coefficients:
+##                    Estimate  Naive SE  Robust SE    95%L      95%H     
+## [1] Intercept       -17417     176.5     167.6       -17745    -17088  
+## [2] female            4102     420.7     299.5         3515      4689  
+## [3] year             255.5     2.021     2.005        251.6     259.5  
+## [4] female:year     -57.88     4.757     3.541       -64.82    -50.94  
+##                       F stat    df Pr(&gt;F)   
+## [1] Intercept          10802.86 1  &lt; 0.00005
+## [2] female               187.59 1  &lt; 0.00005
+## [3] year               16235.87 1  &lt; 0.00005
+## [4] female:year          267.10 1  &lt; 0.00005
+## 
+## Residual standard error: 1423 on 19788 degrees of freedom
+## Multiple R-squared:  0.487,  Adjusted R-squared:  0.4869 
+## F-statistic:  7166 on 3 and 19788 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Notice that we get some extra information in the output where we adjusted - we see that there are 1597 unique faculty members in the data, and that the longest we have data for is 20 years. Therefore treating the data as independent, like we do in the second call to <code>regress()</code>, will lead to invalid standard error estimates and therefore invalid confidence intervals and inference.</p>
+</div>
+<div id="multiple-partial-f-tests" class="section level2">
+<h2>Multiple-partial F-tests</h2>
+<p>The major added functionality that <code>regress()</code> brings to the table is the ability to perform multiple-partial F-tests. Some of these are done automatically when certain dummy variables, polynomial variables, or linear splines are entered - if created in a manner similar to our functions above. Others must be specified by the user, using a special function called <code>U()</code>.</p>
+<p>As an example of the automatic multiple-partial F-test calculation, let’s say we run a regression of atrophy on race, modeled as dummy variables. Recall from our work above that the dummy variables created by <code>race</code> have three levels, and each is in reference to the level coded as <code>white</code>. When we run this regression,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, atrophy ~<span class="st"> </span><span class="kw">dummy</span>(race), <span class="dt">data =</span> mri)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = atrophy ~ dummy(race), data = mri)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -31.243  -9.243  -0.462   7.757  47.757 
+## 
+## Coefficients:
+##                    Estimate  Naive SE  Robust SE    95%L      95%H     
+## [1] Intercept        36.24     0.5408    0.5438       35.18     37.31  
+##     dummy(race)                                                        
+## [2]    race.2       -1.781     1.379     1.334       -4.401     0.8381 
+## [3]    race.3        0.2676    1.962     1.904       -3.470     4.005  
+## [4]    race.4       -1.493     3.772     4.422       -10.17     7.189  
+##                       F stat    df Pr(&gt;F)   
+## [1] Intercept           4441.94 1  &lt; 0.00005
+##     dummy(race)            0.65 3    0.5832 
+## [2]    race.2              1.78 1    0.1823 
+## [3]    race.3              0.02 1    0.8882 
+## [4]    race.4              0.11 1    0.7357 
+## 
+##  Dummy terms calculated from race, reference = 1 
+## 
+## Residual standard error: 12.93 on 731 degrees of freedom
+## Multiple R-squared:  0.002535,   Adjusted R-squared:  -0.001559 
+## F-statistic: 0.6499 on 3 and 731 DF,  p-value: 0.5832</code></pre>
+<p>notice that the coefficients for each dummy variable are presented in the usual way (though it is up to you to remember what <code>race.2</code> stands for). However, there is a new line above all of the dummy variable coefficients. First we see that this line does not get a coefficient number - that’s because this line is only for the multiple partial F-test. Also, note that the regression coefficients are indented beneath it. This denotes that these dummy variables all belong to the same original variable (race). The test has three degrees of freedom, because there are three dummy variables that it is simultaneously testing. Recall that in an F-test, and in the t-test of normal linear regression in <code>lm()</code>, the null hypothesis for each of the p-values presented in the regression table is that the regression coefficient is equal to zero. The multiple partial F-test simulataneously tests that <em>all three</em> coefficients are equal to zero. It allows us to declare that there is no significant association between race and atrophy at the 0.05 level, since we have tested all race variables simultaneoudly and returned a p-value of 0.58.</p>
+<p>We also see that after the coefficients table, <code>regress()</code> tells us how the dummy variables were computed.</p>
+<p>Now for the user-defined multiple-partial F-tests, we need to be a bit careful. If entered in a call to <code>regress()</code>, the <code>U()</code> function takes in a formula, which can be named, and returns the specified multiple-partial F-test to the regression output. It also adds any new variables to the regression model. As an example of the <code>U()</code> function, if we wanted to add age and male to our model, and we wanted to have a multiple-partial F-test of these two variables, we could add</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">U</span>(~age +<span class="st"> </span>male)</code></pre></div>
+<p>to the model above.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, atrophy ~<span class="st"> </span><span class="kw">dummy</span>(race) +<span class="st"> </span><span class="kw">U</span>(~age +<span class="st"> </span>male), <span class="dt">data =</span> mri)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = atrophy ~ dummy(race) + U(~age + 
+##     male), data = mri)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -34.120  -8.331  -0.434   7.325  53.915 
+## 
+## Coefficients:
+##                      Estimate  Naive SE  Robust SE    95%L      95%H     
+## [1] Intercept         -17.87     6.079     6.589       -30.81    -4.933  
+##     dummy(race)                                                          
+## [2]    race.2         -2.109     1.280     1.246       -4.554     0.3370 
+## [3]    race.3          0.2664    1.822     1.780       -3.228     3.761  
+## [4]    race.4         -2.812     3.503     3.812       -10.30     4.671  
+##     U(age + male)                                                        
+## [5]   age              0.6866   0.08134   0.08836       0.5132    0.8601 
+## [6]   male             5.988     0.8867    0.8895       4.242     7.734  
+##                         F stat    df Pr(&gt;F)   
+## [1] Intercept                7.35 1    0.0068 
+##     dummy(race)              1.14 3    0.3315 
+## [2]    race.2                2.87 1    0.0909 
+## [3]    race.3                0.02 1    0.8810 
+## [4]    race.4                0.54 1    0.4609 
+##     U(age + male)           52.66 2  &lt; 0.00005
+## [5]   age                   60.38 1  &lt; 0.00005
+## [6]   male                  45.32 1  &lt; 0.00005
+## 
+##  Dummy terms calculated from race, reference = 1 
+## 
+## Residual standard error: 12 on 729 degrees of freedom
+## Multiple R-squared:  0.1439, Adjusted R-squared:  0.138 
+## F-statistic: 21.32 on 5 and 729 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Note that again the multiple-partial F-test line is not a coefficient, but that the variables specified in the <code>U()</code> forumla are part of the regression model. If we wanted to make this output a bit more readable, we could give the second multiple-partial F-test a name by adding <code>testnm =</code> within our call to <code>U()</code>, before the formula.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, atrophy ~<span class="st"> </span><span class="kw">dummy</span>(race) +<span class="st"> </span><span class="kw">U</span>(<span class="dt">ma =</span> ~age +<span class="st"> </span>male), <span class="dt">data =</span> mri)</code></pre></div>
+<pre><code>## 
+## Call:
+## regress(fnctl = &quot;mean&quot;, formula = atrophy ~ dummy(race) + U(ma = ~age + 
+##     male), data = mri)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -34.120  -8.331  -0.434   7.325  53.915 
+## 
+## Coefficients:
+##                    Estimate  Naive SE  Robust SE    95%L      95%H     
+## [1] Intercept       -17.87     6.079     6.589       -30.81    -4.933  
+##     dummy(race)                                                        
+## [2]    race.2       -2.109     1.280     1.246       -4.554     0.3370 
+## [3]    race.3        0.2664    1.822     1.780       -3.228     3.761  
+## [4]    race.4       -2.812     3.503     3.812       -10.30     4.671  
+##     ma                                                                 
+## [5]   age            0.6866   0.08134   0.08836       0.5132    0.8601 
+## [6]   male           5.988     0.8867    0.8895       4.242     7.734  
+##                       F stat    df Pr(&gt;F)   
+## [1] Intercept              7.35 1    0.0068 
+##     dummy(race)            1.14 3    0.3315 
+## [2]    race.2              2.87 1    0.0909 
+## [3]    race.3              0.02 1    0.8810 
+## [4]    race.4              0.54 1    0.4609 
+##     ma                    52.66 2  &lt; 0.00005
+## [5]   age                 60.38 1  &lt; 0.00005
+## [6]   male                45.32 1  &lt; 0.00005
+## 
+##  Dummy terms calculated from race, reference = 1 
+## 
+## Residual standard error: 12 on 729 degrees of freedom
+## Multiple R-squared:  0.1439, Adjusted R-squared:  0.138 
+## F-statistic: 21.32 on 5 and 729 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Other than the new name, the output is exactly the same as our original call.</p>
+</div>
+</div>
+<div id="post-estimation" class="section level1">
+<h1>Post Estimation</h1>
+<p>After we have created a regression model and run the test, sometimes we want to check parts of our model. Usually, this comes in the form of an ANOVA table testing whether a combination of our coefficients are simultaneously equal to zero. As we saw in the previous section, <code>regress()</code> allows us to run these types of commands within the regression call. However, to check these results - or to avoid using <code>U()</code> within a call to <code>regress()</code> - we can use post estimation commands.</p>
+<p>Also, it is sometimes of interest to predict on a new data set. The object created by a call to <code>regress()</code> is like all other regression objects (from calls to <code>lm()</code>, <code>glm()</code>, etc) in that it allows predictions.</p>
+<div id="linear-combinations-of-regression-coefficients" class="section level2">
+<h2>Linear Combinations of Regression Coefficients</h2>
+<p>A very useful function in STATA is the <code>lincom</code> function. This is a post-testing function which allows the user to specify a linear combination of the regression coefficients to simultaneously test. We have recreated this function in R, and it follows a similar syntax. Recall that the <code>regress()</code> function displays a number next to each coefficient in the coefficients table. These numbers refer to the position of each variable in the call to <code>lincom()</code>. The default null hypothesis is that the linear combination is equal to zero.</p>
+<p>This function can take either a vector or a matrix determining the linear combination to test. To have a better idea of how this works, we provide an example. In the previous section, when we introduced multiple-partial F-tests, we ran a regression of atrophy on race (modeled as dummy variables), male, and age. We can perform the same test using <code>lincom()</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## get the model
+mod &lt;-<span class="st"> </span><span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, atrophy ~<span class="st"> </span><span class="kw">dummy</span>(race) +<span class="st"> </span>age +<span class="st"> </span>male, <span class="dt">data =</span> mri)
+
+## get the test of age and male
+<span class="kw">lincom</span>(mod, <span class="dt">comb =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<pre><code>## 
+## H0: 1*age+1*male   =  0 
+## Ha: 1*age+1*male  !=  0 
+##    Estimate   Std. Err.           T Pr(T &gt; |t|)        95%L        95%H 
+##      6.6744      0.8942      7.4645      1.0000      4.9190      8.4299</code></pre>
+<p>This test gives us the same inference as before - that the probability of seeing this event is extrememly small if the null hypothesis is true. Now in some cases we might be interested in combinations that aren’t just the raw data. If we want, for example, twice the male coefficient, we can get this easily:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lincom</span>(mod, <span class="dt">comb =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>))</code></pre></div>
+<pre><code>## 
+## H0: 1*age+2*male   =  0 
+## Ha: 1*age+2*male  !=  0 
+##    Estimate   Std. Err.           T Pr(T &gt; |t|)        95%L        95%H 
+##     12.6622      1.7814      7.1079      1.0000      9.1649     16.1596</code></pre>
+</div>
+<div id="prediction" class="section level2">
+<h2>Prediction</h2>
+<p>Prediction with a <code>uRegress</code> object (which is created by a call to <code>regress()</code>) follows the same syntax as prediction for any other regression object. Say we have split the mri data into a training and test set to learn our linear regression model on. First we set a seed, so that our random number generator will always start in the same place and we are guaranteed reproducible results.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">47</span>)
+samp &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(mri), <span class="kw">nrow</span>(mri)/<span class="dv">2</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)
+mri.train &lt;-<span class="st"> </span>mri[samp, ]
+mri.test &lt;-<span class="st"> </span>mri[-samp,]
+
+modlm &lt;-<span class="st"> </span><span class="kw">lm</span>(atrophy ~<span class="st"> </span>age +<span class="st"> </span>male +<span class="st"> </span><span class="kw">dummy</span>(race), <span class="dt">data =</span> mri.train)
+modreg &lt;-<span class="st"> </span><span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, atrophy ~<span class="st"> </span>age +<span class="st"> </span>male +<span class="st"> </span><span class="kw">dummy</span>(race), <span class="dt">data =</span> mri.train)
+
+predslm &lt;-<span class="st"> </span><span class="kw">predict</span>(modlm, <span class="dt">data =</span> mri.test)
+predsreg &lt;-<span class="st"> </span><span class="kw">predict</span>(modreg, <span class="dt">data =</span> mri.test)
+
+<span class="kw">head</span>(predslm, <span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
+<pre><code>##      719      275      559      603      420 
+## 34.67201 46.44437 31.99498 38.41326 38.41326</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(predsreg, <span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
+<pre><code>##      719      275      559      603      420 
+## 34.67201 46.44437 31.99498 38.41326 38.41326</code></pre>
+<p>The above code reassures us that the predictions given on a <code>uRegress</code> object are the same as the predictions given on a <code>lm</code> object. The same is true for all of the other types of regression possible with <code>regress()</code>.</p>
+</div>
+</div>
+<div id="diagnostics" class="section level1">
+<h1>Diagnostics</h1>
+<p>Besides the other tools we have already covered that can double as diagnostic tools - scatterplots, boxplots - sometimes it is useful to look at residuals calculated from a regression model. Objects of class <code>uRegress</code>, like all other regression objects, have a function to extract residuals. The function we use is <code>uresiduals()</code>, which can return unstandardized, standardized, studentized, or jackknifed residuals. If we want the residuals from the model regressing age on ldl, it is easy to get both studentized and jackknifed residuals.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ldlReg &lt;-<span class="st"> </span><span class="kw">regress</span>(<span class="st">&quot;mean&quot;</span>, age ~<span class="st"> </span>ldl, <span class="dt">data =</span> mri)
+
+student.resid &lt;-<span class="st"> </span><span class="kw">uResiduals</span>(ldlReg, <span class="st">&quot;studentized&quot;</span>)
+jack.resid &lt;-<span class="st"> </span><span class="kw">uResiduals</span>(ldlReg, <span class="st">&quot;jackknife&quot;</span>)
+
+<span class="kw">head</span>(student.resid, <span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -0.4676531  1.1641617  2.8293373 -0.5011149 -0.8294973</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(jack.resid, <span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
+<pre><code>##          1          2          3          4          5 
+## -0.4674003  1.1644483  2.8431637 -0.5008553 -0.8293181</code></pre>
+<p>As with prediction, the residuals can be returned from any regression type allowed by <code>regress()</code>.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -15,6 +15,7 @@
 * checking whether package 'uwIntroStats' can be installed ... OK
 * checking installed package size ... OK
 * checking package directory ... OK
+* checking 'build' directory ... OK
 * checking DESCRIPTION meta-information ... OK
 * checking top-level files ... OK
 * checking for left-over files ... OK
@@ -43,7 +44,13 @@
 * checking contents of 'data' directory ... OK
 * checking data for non-ASCII characters ... OK
 * checking data for ASCII and uncompressed saves ... OK
+* checking installed files from 'inst/doc' ... OK
+* checking files in 'vignettes' ... OK
 * checking examples ... OK
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes in 'inst/doc' ... OK
+* checking running R code from vignettes ... OK
+* checking re-building of vignette outputs ... OK
 * checking PDF version of manual ... OK
 * DONE
 Status: OK

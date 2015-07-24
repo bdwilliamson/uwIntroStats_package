@@ -62,11 +62,14 @@ bplot <-
           for (i in 2:length(strata)) tmp <- paste(tmp,snms[i],format(strata[[i]]))
         }
       } else {
-        snms <- dimnames(strata)[[2]]
+        if(is.null(dim(strata))){
+          snms <- deparse(cl$strata)
+        } else {
+          snms <- dimnames(strata)[[2]]
+        }
+        
         strata <- as.matrix(strata, drop=FALSE)
         maxStrat <- max(unique(strata[,1]))
-        #snms <- dimnames(strata)[[2]]
-        #if (is.null(snms)) snms <- rep("",dim(strata)[2])
         if(is.null(snms)){
           snms <- c() # the vector with the names of the strata
           if(stratanm){
@@ -128,64 +131,51 @@ bplot <-
     
     ## first set limits for the plot
     ylim <- c(min(y), max(y))
+
     if(!legend){
-      xlim <- c(.5, length(unique(x))+.5)
+      if(min(x) > 0){
+        if(length(unique(x)) == 1){
+          xlim <- c(.5, l*(length(unique(x)))+.5)
+        } else{
+          xlim <- c(.5, l*(length(unique(x)))+.5)
+        }
+      } else {
+        if(max(x) > 1){
+          if(length(unique(x)) == 1){
+            xlim <- c(.5, l*(length(unique(x)))+.5)
+          } else{
+            xlim <- c(.5, l*(length(unique(x)))+.5)
+          }
+          if(l > 2){
+            if(length(unique(x)) == 1){
+              xlim <- c(.5, l*(length(unique(x))))
+            } else{
+              xlim <- c(.5, l*(length(unique(x))))
+            }
+          }
+        } else {
+          if(length(unique(x)) == 1){
+            xlim <- c(.5, l*(length(unique(x)))+.5)
+          } else{
+            xlim <- c(.5, l*(length(unique(x)))+.5)
+          }
+          
+        }
+      }
     } else {
-      xlim <- c(-.25, length(unique(x))+.5)
+      if(min(x) > 0){
+        xlim <- c(-.25, l*(length(unique(x)))+.5)
+      } else {
+        if(max(x) > 1){
+          xlim <- c(-.25, l*(length(unique(x)))+.5)
+          if(l > 2){
+            xlim <- c(-.25, l*(length(unique(x))))
+          }
+        } else {
+          xlim <- c(-.25, l*(length(unique(x)))+.5)
+        }
+      }
     }
-    if(l > 1){
-      xlim[2] <- (xlim[2])*l
-    } 
-    if(max(unique(x))==1){
-      xlim[2] <- xlim[2] + l/2
-    }
-    if(maxStrat==1 & l>1){
-      xlim[2] <- xlim[2] + 1
-    }
-#     if(!legend){
-#       if(min(x) > 0){
-#         if(length(unique(x)) == 1){
-#           xlim <- c(.5, l*(length(unique(x)))+.5)
-#         } else{
-#           xlim <- c(.5, l*(length(unique(x)))+.5)
-#         }
-#       } else {
-#         if(max(x) > 1){
-#           if(length(unique(x)) == 1){
-#             xlim <- c(.5, l*(length(unique(x)))+.5)
-#           } else{
-#             xlim <- c(.5, l*(length(unique(x)))+.5)
-#           }
-#           if(l > 2){
-#             if(length(unique(x)) == 1){
-#               xlim <- c(.5, l*(length(unique(x))))
-#             } else{
-#               xlim <- c(.5, l*(length(unique(x))))
-#             }
-#           }
-#         } else {
-#           if(length(unique(x)) == 1){
-#             xlim <- c(.5, l*(length(unique(x)))+.5)
-#           } else{
-#             xlim <- c(.5, l*(length(unique(x)))+.5)
-#           }
-#           
-#         }
-#       }
-#     } else {
-#       if(min(x) > 0){
-#         xlim <- c(-.25, l*(length(unique(x)))+.5)
-#       } else {
-#         if(max(x) > 1){
-#           xlim <- c(-.25, l*(length(unique(x)))+.5)
-#           if(l > 2){
-#             xlim <- c(-.25, l*(length(unique(x))))
-#           }
-#         } else {
-#           xlim <- c(-.25, l*(length(unique(x)))+.5)
-#         }
-#       }
-#     }
     addOn <- 0
     leftRange <- 0
     rightRange <- 0
