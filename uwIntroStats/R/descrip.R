@@ -2,17 +2,17 @@
 ## Updated 14 July 2014 by Brian Williamson
 
 descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomInclude=FALSE, replaceZeroes=FALSE,
-                     restriction=Inf, above=NULL, below=NULL, labove=NULL, rbelow=NULL, lbetween=NULL, rbetween=NULL, 
+                     restriction=Inf, above=NULL, below=NULL, labove=NULL, rbelow=NULL, lbetween=NULL, rbetween=NULL,
                      interval=NULL, linterval=NULL, rinterval=NULL, lrinterval=NULL, version=FALSE) {
-  
+
   vrsn <- "20140714"
   if (version) return(vrsn)
-  
-  
+
+
   #
   # subset defines a subsetting criterion applied to every vector
   # strata defines a matrix or data frame of vectors whose unique combinations define strata
-  # probs defines the quantiles to be estimated 
+  # probs defines the quantiles to be estimated
   #     - 0 and 1 will be appended in order to get min and max
   #     - if the variable is censored, a potentially censored min and max will be returned
   # restriction defines the bounds for a restricted mean when using censored time to event data
@@ -26,9 +26,9 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
   #             x <= rbelow[j]
   #             lbetween[j] <= x < lbetween[j+1], where -Inf and Inf are appended and sorted unique values used
   #             rbetween[j] < x <= rbetween[j+1], where -Inf and Inf are appended and sorted unique values used
-  #             interval[j,1] < x < interval[j,2]  
-  #             linterval[j,1] <= x < linterval[j,2]  
-  #             rinterval[j,1] < x <= rinterval[j,2]  
+  #             interval[j,1] < x < interval[j,2]
+  #             linterval[j,1] <= x < linterval[j,2]
+  #             rinterval[j,1] < x <= rinterval[j,2]
   #             lrinterval[j,1] <= x <= lrinterval[j,2]
   #
   # The value returned will be a matrix having columns corresponding to
@@ -45,18 +45,18 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
   #      restriction      the limit used for restricted means (Inf for noncensored data)
   #      firstEvent       the lowest value at which an observation is uncensored
   #      lastEvent        the highest value at which an observation is uncensored
-  #                  
-  
+  #
+
   is.Date <- function (x) inherits(x,"Date")
-  
+
   vDescrip <- function (x, probs, thresholds, geometricMean, geomInclude, replaceZeroes) {
     if (is.factor(x) | is.logical(x)) {
       x <- as.numeric(x)
     }
     if(!geomInclude){
       geometricMean <- geomInclude
-    } 
-    ntholds <- ifelse(is.null(thresholds), 0, dim(thresholds)[1]) 
+    }
+    ntholds <- ifelse(is.null(thresholds), 0, dim(thresholds)[1])
     probs <- sort(unique(c(probs,0,1)))
     rslt <- length(x)
     if (rslt==0) {
@@ -73,10 +73,10 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
         }
       } else {
         if(geomInclude){
-          rslt <- c(rslt, mean(x), sd(x), 
+          rslt <- c(rslt, mean(x), sd(x),
                     ifelse1 (geometricMean, exp(mean(log(ifelse(x==0,replaceZeroes,x)))), NA), quantile(x, probs))
         } else{
-          rslt <- c(rslt, mean(x), sd(x), 
+          rslt <- c(rslt, mean(x), sd(x),
                     quantile(x, probs))
         }
         if (ntholds>0) {
@@ -123,16 +123,16 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
     # }
     rslt
   }
-  
+
   sDescrip <- function (x, probs, thresholds, geomInclude, geometricMean, replaceZeroes, restriction) {
-    
+
     KM <- function (x) {
-      if (!is.Surv(x)) stop("x must be a Surv object")
+      if (!survival::is.Surv(x)) stop("x must be a Surv object")
       x <- x[!is.na(x)]
       obs <- x[,1]
       ev <- x[,2]
       ce <- 1 - ev
-      if (length(obs) == 0) stop("No data to estimate survival curve")  
+      if (length(obs) == 0) stop("No data to estimate survival curve")
       N <- length (obs)
       if (!any(obs==0)) {
         obs <- c(0,obs)
@@ -160,7 +160,7 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
       class(rslt) <- c("KM","data.frame")
       rslt
     }
-    
+
     sKM <- function (x, times, rightCtsCDF=T) {
       if (!inherits(x,"KM")) stop("x must be a KM object")
       if (rightCtsCDF) {
@@ -169,11 +169,11 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
       if (x$S[length(x$S)] > 0) rslt[times > x$t[length(x$t)]] <- NA
       c(1,x$S)[rslt]
     }
-    
+
     pKM <- function (x, times, rightCtsCDF=T) {
       1 - sKM (x, times, rightCtsCDF)
     }
-    
+
     qKM <- function (x, probs) {
       rslt <- length(probs)
       for (i in 1:length(probs)) {
@@ -194,7 +194,7 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
       }
       rslt
     }
-    
+
     meanKM <- function (x, restriction) {
       if (length(restriction)==1) restriction <- c(x$t[1]-1,restriction)
       if (restriction[2]==Inf) restriction[2] <- x$t[length(x$t)]
@@ -214,8 +214,8 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
       attr(rslt,"restriction") <- restriction
       rslt
     }
-    if (!is.Surv(x)) stop("x must be a Surv object")
-    ntholds <- if (is.null(thresholds)) 0 else dim(thresholds)[1] 
+    if (!survival::is.Surv(x)) stop("x must be a Surv object")
+    ntholds <- if (is.null(thresholds)) 0 else dim(thresholds)[1]
     probs <- sort(unique(c(probs,0,1)))
     rslt <- dim(x)[1]
     if (rslt==0) {
@@ -247,10 +247,10 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
           lastEvent <- - Inf
         }
         if(geomInclude){
-          rslt <- c(rslt, tmp1, tmp2, tmp3, min(x[,1]), qKM(z, probs[-c(1,length(probs))]), max(x[,1])) 
+          rslt <- c(rslt, tmp1, tmp2, tmp3, min(x[,1]), qKM(z, probs[-c(1,length(probs))]), max(x[,1]))
         } else {
-          rslt <- c(rslt, tmp1, tmp2, min(x[,1]), qKM(z, probs[-c(1,length(probs))]), max(x[,1])) 
-          
+          rslt <- c(rslt, tmp1, tmp2, min(x[,1]), qKM(z, probs[-c(1,length(probs))]), max(x[,1]))
+
         }
         if (ntholds>0) {
           for (j in 1:ntholds) {
@@ -289,7 +289,7 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
     }
     rslt
   }
-  
+
   vStrdescr <- function (x, stratav, subsetv, probs, thresholds, geomInclude, replaceZeroes) {
     if (is.null(subsetv)) subsetv <- rep(T,length(x))
     if (length(x) != length(subsetv)) stop("length of variables must match length of subset")
@@ -297,13 +297,13 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
     if (length(x) != length(stratav)) stop("length of variables must match length of strata")
     x <- x[subsetv]
     if (is.factor(x) | all(x[!is.na(x)] %in% c(0,1))) {
-      geometricMean <- FALSE 
+      geometricMean <- FALSE
       } else {
         geometricMean <- !any(x[!is.na(x)]<0)
       }
     if (is.logical(replaceZeroes)) {
       if (!replaceZeroes | is.factor(x) | all(x[!is.na(x)] %in% c(0,1))) {
-        replaceZeroes <- NA 
+        replaceZeroes <- NA
       } else {
         replaceZeroes <- min(x[!is.na(x) & x > 0]) / 2
       }
@@ -312,17 +312,17 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
     s <- sort(unique(stratav))
     rslt <- vDescrip(x, probs, thresholds, geometricMean, geomInclude, replaceZeroes)
     if (length(s) > 1) {
-      for (i in s) rslt <- rbind(rslt, 
+      for (i in s) rslt <- rbind(rslt,
                                  vDescrip(x[stratav==i & !is.na(stratav)], probs, thresholds, geometricMean, geomInclude, replaceZeroes))
       if (any(is.na(stratav))) {
-        rslt <- rbind(rslt, 
+        rslt <- rbind(rslt,
                       vDescrip(x[is.na(stratav)], probs, thresholds, geometricMean, geomInclude, replaceZeroes))
         dimnames(rslt)[[1]]<- format(c("All",paste("  Str",format(c(format(s),"NA")))))
       } else dimnames(rslt)[[1]]<- format(c("All",paste("  Str",format(s))))
-    }    
+    }
     rslt
-  }  
-  
+  }
+
   dStrdescr <- function (x, stratad, subsetd, probs, threshholds, geomInclude, replaceZeroes) {
     if (!is.Date(x)) stop("x must be a Date object")
     xi <- as.integer(x)
@@ -330,9 +330,9 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
     rslt[,"isDate"] <- 1
     rslt
   }
-  
+
   sStrdescr <- function (x, stratas, subsets, probs, thresholds, geomInclude, replaceZeroes, restriction) {
-    if  (!is.Surv(x)) stop("x must be a Surv object")
+    if  (!survival::is.Surv(x)) stop("x must be a Surv object")
     n <- dim(x)[1]
     if (is.null(subsets)) subsets <- rep(T,n)
     if (n != length(subsets)) stop("length of variables must match length of subset")
@@ -351,17 +351,17 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
     s <- sort(unique(stratas))
     rslt <- sDescrip(x, probs, thresholds, geomInclude, geometricMean, replaceZeroes, restriction)
     if (length(s) > 1) {
-      for (i in s) rslt <- rbind(rslt, 
+      for (i in s) rslt <- rbind(rslt,
                                  sDescrip(x[stratas==i & !is.na(stratas)], probs, thresholds, geomInclude, geometricMean, replaceZeroes, restriction))
       if (any(is.na(stratas))) {
-        rslt <- rbind(rslt, 
+        rslt <- rbind(rslt,
                       sDescrip(x[is.na(stratas)], probs, thresholds, geomInclude, geometricMean, replaceZeroes, restriction))
         dimnames(rslt)[[1]]<- format(c("All",paste("  Str",format(c(format(s),"NA")))))
       } else dimnames(rslt)[[1]]<- format(c("All",paste("  Str",format(s))))
-    }		
+    }
     rslt
-  }	
-  
+  }
+
   mStrdescr <- function (x, stratam, subsetm, probs, thresholds, geomInclude, replaceZeroes) {
     if  (!is.matrix(x)) stop("x must be a matrix")
     p <- dim(x)[2]
@@ -374,8 +374,8 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
     }
     dimnames(rslt)[[1]] <- paste(format(rep(nms,each=(dim(rslt)[1])/p)),dimnames(rslt)[[1]])
     rslt
-  }	
-  
+  }
+
   lStrdescr <- function (x, stratal, subsetl, probs, thresholds, geomInclude, replaceZeroes, restriction) {
     if  (!is.list(x)) stop("x must be a list")
     p <- length(x)
@@ -383,18 +383,18 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
     if (is.null(nms)) nms <- paste("V",1:p,sep="")
     rslt <- NULL
     for (i in 1:p) {
-      if(is.Surv(x[[i]])) {
+      if(survival::is.Surv(x[[i]])) {
         rslt <- rbind(rslt, sStrdescr(x[[i]], stratal, subsetl, probs, thresholds, geomInclude, replaceZeroes, restriction))
       } else if (is.Date(x[[i]])) {
-        rslt <- rbind(rslt, dStrdescr(x[[i]], stratal, subsetl, probs, thresholds, geomInclude, replaceZeroes))				
+        rslt <- rbind(rslt, dStrdescr(x[[i]], stratal, subsetl, probs, thresholds, geomInclude, replaceZeroes))
       } else {
         rslt <- rbind(rslt, vStrdescr(x[[i]], stratal, subsetl, probs, thresholds, geomInclude, replaceZeroes))
       }
     }
     dimnames(rslt)[[1]] <- paste(format(rep(nms,each=(dim(rslt)[1])/p)),dimnames(rslt)[[1]])
     rslt
-  }	
-  
+  }
+
   L <- list(...)
   names(L) <- unlist(match.call(expand.dots=F)$...)
   p <- length(L)
@@ -405,14 +405,14 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
       if (is.null(names(x))) {
         nms <- c(nms,paste(names(L)[i],".V",1:length(x),sep=""))
       } else nms <- c(nms,names(x))
-    } else if (is.matrix(x) & !is.Surv(x)) {
+    } else if (is.matrix(x) & !survival::is.Surv(x)) {
       if (is.null(dimnames(x)[[2]])) {
         nms <- c(nms,paste(names(L)[i],".V",1:(dim(x)[2]),sep=""))
       } else nms <- c(nms, dimnames(x)[[2]])
     } else nms <- c(nms,names(L)[i])
   }
   nms <- paste(format(nms, justify="right"),": ",sep="")
-  
+
   if (!is.null(strata)) {
     if (is.list(strata)) {
       for (i in 1:length(strata)) {
@@ -441,7 +441,7 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
     }
     strata <- tmp
   }
-  
+
   thresholds <- NULL
   if (length(above)>0) thresholds <- rbind(thresholds,cbind(0,above,0,Inf))
   if (length(labove)>0) thresholds <- rbind(thresholds,cbind(1,labove,0,Inf))
@@ -459,23 +459,23 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
     if (length(interval)==2) interval <- matrix(interval,ncol=2)
     if (dim(interval)[2]!=2) stop("intervals must be specified in a 2 column matrix")
     thresholds <- rbind(thresholds,cbind(0,interval[,1],0,interval[,2]))
-  }		
+  }
   if (!is.null(linterval)) {
     if (length(linterval)==2) linterval <- matrix(linterval,ncol=2)
     if (dim(linterval)[2]!=2) stop("intervals must be specified in a 2 column matrix")
     thresholds <- rbind(thresholds,cbind(1,linterval[,1],0,linterval[,2]))
-  }		
+  }
   if (!is.null(rinterval)) {
     if (length(rinterval)==2) rinterval <- matrix(rinterval,ncol=2)
     if (dim(rinterval)[2]!=2) stop("intervals must be specified in a 2 column matrix")
     thresholds <- rbind(thresholds,cbind(0,rinterval[,1],1,rinterval[,2]))
-  }		
+  }
   if (!is.null(lrinterval)) {
     if (length(lrinterval)==2) lrinterval <- matrix(lrinterval,ncol=2)
     if (dim(lrinterval)[2]!=2) stop("intervals must be specified in a 2 column matrix")
     thresholds <- rbind(thresholds,cbind(1,lrinterval[,1],1,lrinterval[,2]))
-  }		
-  
+  }
+
   rslt <- NULL
   nV <- 0
   for (i in 1:p) {
@@ -484,11 +484,11 @@ descrip <- function (..., strata=NULL, subset=NULL, probs= c(.25,.50,.75), geomI
       names(x) <- nms[nV + (1:length(x))]
       nV <- nV + length(x)
       rslt <- rbind(rslt, lStrdescr(x, strata, subset, probs, thresholds, geomInclude, replaceZeroes, restriction))
-    } else if (is.matrix(x) & !is.Surv(x)) {
+    } else if (is.matrix(x) & !survival::is.Surv(x)) {
       dimnames(x) <- list(NULL,nms[nV + (1:(dim(x)[2]))])
       nV <- nV + dim(x)[2]
       rslt <- rbind(rslt, mStrdescr(x, strata, subset, probs, thresholds, geomInclude, replaceZeroes))
-    } else if (is.Surv(x)) {
+    } else if (survival::is.Surv(x)) {
       nV <- nV + 1
       rslt <- rbind(rslt, sStrdescr(x, strata, subset, probs, thresholds, geomInclude, replaceZeroes, restriction))
     } else if (is.Date(x)) {
