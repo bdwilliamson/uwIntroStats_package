@@ -10,8 +10,9 @@ Create a Transformed Variable
 Creates a transformed variable using either the natural log, a dummy transformation, linear splines, or a polynomial. Mostly for use in regression. If a partial formula of the form \code{~var1 + var2} is entered, returns the formula for use in regression. The partial formula can be named by adding an equals sign before the tilde.
 }
 \usage{
-U(..., type=NULL, subset=rep(T,length(x)), knots=NULL, degree=2, reference=sort(unique(x[!is.na(x)])), 
-               lbl=NULL, center=mean(x,na.rm=T), includeAll=FALSE, parameterization="absolute", vrsn=FALSE)
+U(..., type=NULL, subset=rep(T,length(x)), knots=NULL, degree=2, 
+  reference=sort(unique(x[!is.na(x)])), lbl=NULL, center=mean(x,na.rm=T), 
+  includeAll=FALSE, parameterization="absolute", vrsn=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

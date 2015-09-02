@@ -1,8 +1,0 @@
-exportPattern("^[[:alpha:]]+")
-import(Exact)
-import(geepack)
-import(plyr)
-import(survival)
-import(sandwich)
-
-

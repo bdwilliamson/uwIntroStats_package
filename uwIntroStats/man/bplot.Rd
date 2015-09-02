@@ -10,8 +10,8 @@ Boxplot with Lowess Curves, Jittered Data, Overlaid Mean and Standard Deviation,
 This function adds functionality to the base R \code{\link[graphics]{boxplot}} function. Now it is straightforward to add jittered data to the plot, and to overlay information about the sample mean and standard deviation. The function also supports stratification.
 }
 \usage{
-bplot(y, x=rep(1, length(y)), data = NA, strata = NULL, xjitter = TRUE, yjitter = TRUE, range = 0, sd = TRUE, sdx = TRUE,
-      log = FALSE, cex = c(meancex = 1, jittercex = 0.8), 
+bplot(y, x=rep(1, length(y)), data = NA, strata = NULL, xjitter = TRUE, yjitter = TRUE, 
+      range = 0, sd = TRUE, sdx = TRUE, log = FALSE, cex = c(meancex = 1, jittercex = 0.8), 
       col = c(sdcol = "dodgerblue3", jittercol = "gray30"), main = NULL, xlab = NULL, 
       ylab = NULL, names = NULL, ylim = NULL, legend=FALSE)
 }

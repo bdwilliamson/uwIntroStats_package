@@ -12,8 +12,8 @@ Developed by Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, and Brian D. Will
 \tabular{ll}{
 Package: \tab uwIntroStats\cr
 Type: \tab Package\cr
-Version: \tab 3.3\cr
-Date: \tab 2015-06-04\cr
+Version: \tab 0.0.1\cr
+Date: \tab 2015-09-01\cr
 License: \tab GPL-2\cr
 }
 A set of tools designed to facilitate easy adoption of R for students in introductory classes with little programming experience. Compiles output from existing routines together in an intuitive format, and adds functionality to existing functions. For instance, the regression function can perform linear models, generalized linear models, Cox models, or generalized estimating equations. The user can also specify multiple-partial F-tests to print out with the model coefficients. We also give many routines for descriptive statistics and plotting. 

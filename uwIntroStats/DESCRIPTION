@@ -1,8 +1,8 @@
 Package: uwIntroStats
 Type: Package
 Title: Descriptive Statistics, Inference, Regression, and Plotting in an Introductory Statistics Course
-Version: 0.0.2
-Date: 2015-07-23
+Version: 0.0.1
+Date: 2015-09-15
 Maintainer: Brian D. Williamson <brianw26@uw.edu>
 Authors@R: c(person(given = "Scott S.", family = "Emerson", role = "aut"),
 	     person(given = "Andrew J.", family = "Spieker", role = "aut"),

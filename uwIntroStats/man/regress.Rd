@@ -163,14 +163,16 @@ attach(mri)
 # Linear regression of atrophy on age
 regress("mean", atrophy~age, data=mri)
 
-## Linear regression of atrophy on male and race and their interaction, with a multiple-partial F-test on the race-age interaction
+## Linear regression of atrophy on male and race and their interaction, 
+## with a multiple-partial F-test on the race-age interaction
 regress("mean", atrophy~ male + U(ra=~race*age), data=mri)
 
 ## Linear regression of atrophy on age, male, race (as a dummy variable), chf,
 ## and diabetes. There are two multiple partial F-tests and both are named
 regress("mean", atrophy~age+male+U(rc=~dummy(race)+chf)+U(md=~male+diabetes), data=mri)
 
-## Proportional hazards regression clustered on id (here it makes no difference because the ids are unique)
+## Proportional hazards regression clustered on id 
+## (here it makes no difference because the ids are unique)
 regress("hazard", ttodth~ldl, id=ptid, data=mri)
 
 }
