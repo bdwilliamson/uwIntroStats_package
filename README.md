@@ -7,8 +7,8 @@ The major changes in `uwIntroStats` are:
 * Making all types or regression (linear, generalized, proportional hazards, and corelated data) available in one function
 * Using robust standard error estimates (from the `sandwich` package) by default in regression and inference
 * Printing output in a much more intuitive manner
-* Upgrading the `boxplot` function to support stratification and the overlay of mean and standard deviation lines
-* Upgrading scatterplot functionality to support stratification and plotting loess and least squares lines
+* Upgrading the `boxplot` function to support stratification, the overlay of jittered data, and the overlay of mean and standard deviation lines
+* Upgrading scatterplot functionality to support stratification, jittered data, and plotting loess and least squares lines
 * Allowing the user to specify multiple-partial F-tests within a regression call
 * Creating functions for descriptive statistics with flexibly formatted output
 
