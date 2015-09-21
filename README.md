@@ -4,7 +4,7 @@ This is a package designed for introductory statistics students. It adds functio
 
 The major changes in `uwIntroStats` are:
 
-* Making all types or regression (linear, generalized, proportional hazards, and corelated data) available in one function
+* Making all types of regression (linear, generalized, proportional hazards, and corelated data) available in one function
 * Using robust standard error estimates (from the `sandwich` package) by default in regression and inference
 * Printing output in a much more intuitive manner
 * Upgrading the `boxplot` function to support stratification and the overlay of mean and standard deviation lines
