@@ -30,14 +30,14 @@
 ## Returns: a uRegress object, with a list of tables and tests and coefficients
 ## Version: 2015 06 02
 regress <-
-  function (fnctl, formula, data,                     # the terms in the regression analysis
-            intercept=fnctl!="hazard", 
-            strata=rep(1,n),weights=rep(1,n),id=1:n,ties="efron",subset=rep(TRUE,n),
-            robustSE = TRUE, conf.level=0.95, exponentiate=fnctl!="mean",
-            replaceZeroes, useFdstn=TRUE, suppress=FALSE, na.action, method="qr", model.f=TRUE, model.x=FALSE, model.y=FALSE, qr=TRUE,
-            singular.ok=TRUE, contrasts=NULL, offset,control=list(...), init, ..., version=FALSE) {
+  function(fnctl, formula, data,                     # the terms in the regression analysis
+            intercept = fnctl != "hazard", 
+            strata = rep(1,n), weights = rep(1,n), id = 1:n, ties = "efron", subset = rep(TRUE,n),
+            robustSE = TRUE, conf.level = 0.95, exponentiate=fnctl != "mean",
+            replaceZeroes, useFdstn = TRUE, suppress = FALSE, na.action, method = "qr", model.f = TRUE, model.x = FALSE, model.y = FALSE, qr = TRUE,
+            singular.ok = TRUE, contrasts = NULL, offset,control = list(...), init, ..., version = FALSE) {
     
-    vrsn <- "20150502"
+    vrsn <- "20160301"
     if (version) return(vrsn)
     
     cl <- match.call()
@@ -67,6 +67,9 @@ regress <-
     }
     if(!intercept){
       form <- deparse(formula)
+      if(length(form) > 1) {
+        form <- paste(form, collapse = "")
+      }
       form <- paste(form, "-1")
       formula <- as.formula(form, env=.GlobalEnv)
     }
