@@ -100,8 +100,7 @@ for each specified stratum and for the combined dataset. Each element of the lis
 
 \author{
 %%  ~~who you are~~
-Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson
-}
+Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson, Travis Y. Hee Wai, and Solomon Lim}
 
 \examples{
 # Load required libraries

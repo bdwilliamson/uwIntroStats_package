@@ -78,7 +78,7 @@ Prints a summary of the data and the corresponding t-test.
 }
 \author{
 %%  ~~who you are~~
-Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson
+Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson, Travis Y. Hee Wai, Solomon Lim
 }
 \examples{
 #- T-test given sample descriptives -#

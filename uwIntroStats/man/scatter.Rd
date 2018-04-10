@@ -7,15 +7,15 @@ Scatter Plot with Lowess Curves
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Produces a scatter plot of two variables with (possibly stratified) superimposed lowess smooths and least squares fitted lines.
+Produces a scatter plot of two variables with (possibly stratified) superimposed 
+lowess smooths and least squares fitted lines.
 }
 \usage{
-scatter(y, x, strata=rep(1,length(y)), subset= rep(TRUE,length(y)), 
-        reference=sort(unique(strata)), plotPoints=TRUE, plotLowess=TRUE,   
-        plotLSfit=FALSE, legend=0.05, colors=c("black", "blue", "orange", "pink", 
-        "green", "red", "cornflowerblue", "darkolivegreen", "magenta"), 
-        xJitter=TRUE, yJitter=FALSE, newplot=TRUE,lty=1:6, lwd=1, pch=1:25, 
-        ..., version=FALSE)
+ scatter(y, x, strata=rep(1,length(y)), subset= rep(TRUE,length(y)), 
+ reference=sort(unique(strata)), plotPoints=TRUE, plotLowess=TRUE, plotLSfit=FALSE, 
+ legend=0.05, colors=c("black", "blue", "orange", "pink", "green", "red", 
+ "cornflowerblue", "darkolivegreen", "magenta"), xJitter=TRUE, yJitter=FALSE, 
+ newplot=TRUE, lty=1:6, lwd=1, log="",pch=1:25, ..., version=FALSE) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -71,7 +71,7 @@ the proportion of the minimal difference between adjacent y-values divided by 8 
   \item{newplot}{
 %%     ~~Describe \code{newplot} here~~
 logical value indicating that the graph should be plotted on a new set of axes. Default value is \code{TRUE}.
-} \item{lty, lwd, pch}{
+} \item{lty, lwd, log,pch}{
 plotting parameters.
 }
   \item{\dots}{
@@ -94,22 +94,19 @@ This function produces a plot. No value is returned.
 
 \author{
 %%  ~~who you are~~
-Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson
-}
+Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson, Travis Y. Hee Wai, and Solomon Lim}
 
 \examples{
-#- Read in data set -#
-clin.trial <- read.table("http://courses.washington.edu/b511/Data/FEV1ClinTrial.dat", 
-                        header=TRUE, sep="")
-#- Set the names -#
-names(clin.trial) <- c("Y0", "Y1", "T")
-attach(clin.trial)
+#- Read in and attach the data -#
+mri <- read.table("http://www.emersonstatistics.com/datasets/mri.txt", header=TRUE)
+attach(mri)
 
 #- Create a scatterplot with lowess curves and least squares fitted regression lines -#
-scatter(Y1, Y0, ylab="FEV1 At 24 Weeks", xlab="FEV1 at Baseline")
+scatter(atrophy, age, ylab="Atrophy", xlab="Age")
 
-#- Create a scatterplot with lowess curves and least squares fitted regression lines -#
-scatter(Y1, Y0, strata=T, ylab="FEV1 At 24 Weeks", xlab="FEV1 at Baseline")
+#- Create a scatterplot stratified by age on the log scale with lowess curves and -#
+#- least squares fitted regression lines -#
+scatter(atrophy, age, strata=male,ylab="Atrophy", xlab="Age",log="y")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
