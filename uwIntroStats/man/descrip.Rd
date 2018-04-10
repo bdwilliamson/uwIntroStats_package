@@ -123,20 +123,19 @@ An object of class \code{uDescriptives} is returned. Descriptive statistics for 
 
 \author{
 %%  ~~who you are~~
-Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson
-}
+Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson, Travis Y. Hee Wai, and Solomon Lim}
 
 \examples{
 #- Load the data -#
-clin.trial <- read.table("http://courses.washington.edu/b511/Data/FEV1ClinTrial.dat", 
-                        header=TRUE, sep="")
-attach(clin.trial)
+#- Read in and attach the data -#
+mri <- read.table("http://www.emersonstatistics.com/datasets/mri.txt", header=TRUE)
+attach(mri)
 
 #- Load libraries -#
 library(survival)
 
 #- Create the table -#
-descrip(clin.trial)
+descrip(mri)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

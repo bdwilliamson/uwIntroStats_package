@@ -28,7 +28,7 @@ independent variable. Must by the same length as \code{y}.
 }
   \item{data}{
 %%     ~~Describe \code{data} here~~
-if intered, must contain both \code{y} and \code{x}. 
+if entered, must contain both \code{y} and \code{x}. 
 }
   \item{strata}{
 %%     ~~Describe \code{strata} here~~
@@ -105,22 +105,18 @@ Produces a plot. No value is returned.
 
 \author{
 %%  ~~who you are~~
-Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson
-}
+Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson, Travis Y. Hee Wai, and Solomon Lim}
 
 \seealso{
 \code{\link[graphics]{boxplot}}
 }
 \examples{
 #- Read in and attach the data -#
-fev <- read.table("http://courses.washington.edu/b511/Data/FEV1ClinTrial.dat", sep="")
-
-#- Change the names of the fev data -#
-names(fev) <- c("V1", "FEV", "SMOKE")
-attach(fev)
+mri <- read.table("http://www.emersonstatistics.com/datasets/mri.txt", header=TRUE)
+attach(mri)
 
 #- Produce box plot with jittered data, sample mean, and sd -#
-bplot(y=FEV, x=SMOKE, xlab="Smoking Group", ylab="FEV")
+bplot(y=atrophy, x=male, xlab="Gender", ylab="Atrophy")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

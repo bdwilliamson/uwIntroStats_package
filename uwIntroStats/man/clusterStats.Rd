@@ -75,22 +75,11 @@ A vector is returned that contains the summary statistic relevant for the cluste
 }
 \author{
 %%  ~~who you are~~
-Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson
+Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson, Travis Y. Hee Wai, and Solomon Lim
 }
 \examples{
 # Load required libraries
 library(survival)
-
-# Reading in a dataset
-mtx <- read.table("http://www.emersonstatistics.com/datasets/mtxlabs.txt",header=TRUE)
-
-# Generating average bilirubin for each subject
-mbili <- clusterStats (mtx$bili, mtx$ptid, "mean")
-descrip(mbili,strata=mtx$tx)
-
-# Generating average bilirubin for each subject while taking study drug
-mdrugbili <- clusterStats (mtx$bili, mtx$ptid, "mean", subset=mtx$ondrug==1)
-descrip(mdrugbili,strata=mtx$tx)
 
 # Reading in a dataset
 audio <- read.csv("http://www.emersonstatistics.com/datasets/audio.csv",header=TRUE)
