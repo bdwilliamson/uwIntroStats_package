@@ -13,12 +13,16 @@ Produces prediction intervals for objects of class \code{uRegress}.
 
 }
 \usage{
-\method{predict}{uRegress}(object, ...)
+\method{predict}{uRegress}(object,interval="prediction",level=0.95, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
 an object of class \code{uRegress}. 
+}\item{interval}{
+Type of interval calculation
+}\item{level}{
+Tolerance/confidence level
 }\item{...}{
 other arguments to pass to the appropriate predict function for the class of \code{object$fit}. See \code{\link[survival]{predict.coxph}}, \code{\link[stats]{predict.lm}}, or \code{\link[stats]{predict.glm}} for more details. Predictions are not currently implemented for objects of type \code{\link[geepack]{geeglm}}.
 }

@@ -59,7 +59,7 @@ lincom <- function(reg, comb, hyp=0, conf.level=.95, robustSE = TRUE, eform=reg$
     
     
     tStat <- (newCoef-hyp)/SE
-    pval <- 1-2*pt(-abs(tStat), reg$df[2]) ## return two sided tes
+    pval <- 2*pt(-abs(tStat), reg$df[2]) ## return two sided tes
     CIL <- newCoef - abs(qt((1-conf.level)/2,df=reg$df[2])*SE)
     CIU <- newCoef + abs(qt((1-conf.level)/2,df=reg$df[2])*SE)
     
@@ -69,16 +69,21 @@ lincom <- function(reg, comb, hyp=0, conf.level=.95, robustSE = TRUE, eform=reg$
       newCoef <- exp(comb%*%reg$coefficients[,1,drop=FALSE])
     }
     
-    printMat <- matrix(c(round(newCoef, 4), round(SE, 4), round(tStat, 4), round(pval, 4), round(CIL, 4), round(CIU, 4)), nrow=dim(comb)[1])
-    dimnames(printMat) <- list(rep("", dim(comb)[1]), c("Estimate", "Std. Err.", "T", "Pr(T > |t|)", paste(format(100*conf.level),"%",c("L","H"),sep="")))
+    printMat <- matrix(c(newCoef, SE, CIL, CIU, tStat, pval), nrow=dim(comb)[1])
+    dimnames(printMat) <- list(rep("", dim(comb)[1]), c("Estimate", "Std. Err.",
+                                                        paste(format(100*conf.level),"%",c("L","H"), sep=""),
+                                                        "T", "Pr(T > |t|)"))
     if(eform){
-      dimnames(printMat) <- list("", c("e(Est)", "Std. Err.", "T", "Pr(T > |t|)", paste("e(", paste(format(100*conf.level),"%",c("L","H"),sep=""), ")", sep="")))
+      dimnames(printMat) <- list("", c("e(Est)", "Std. Err.",
+                                       paste("e(", paste(format(100*conf.level),"%",c("L","H"),sep=""), ")",sep=""),
+                                       "T", "Pr(T > |t|)"))
     }
     ## print
     for(i in 1:dim(printMat)[1]){
       cat("\nH0:", nms[i], "  = ", hyp, "\n")
       cat("Ha:", nms[i], " != ", hyp, "\n")
-      print(printMat[i,])
+      printCoefmat(t(printMat[i,]), digits = 4, 
+                   has.Pvalue = TRUE)
     }
     
   } else { ## it is a matrix

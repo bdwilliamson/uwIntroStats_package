@@ -59,7 +59,7 @@ Returns an object of class \code{tabulate}. Contains two values in a list:
 }
 \author{
 %%  ~~who you are~~
-Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson
+Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson, Travis Y. Hee Wai, and Solomon Lim
 }
 
 \seealso{

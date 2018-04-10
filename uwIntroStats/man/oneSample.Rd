@@ -31,10 +31,10 @@ inferential methods are provided, with the choices depending on the functional a
 \usage{
 oneSample(fnctl, y, null.hypothesis = NA, test.type = "two.sided", subset = rep(TRUE, N), 
           conf.level = 0.95, na.rm = TRUE, probs = 0.5, replaceZeroes = NULL, 
-          restriction = Inf, subjTime = rep(1, length(y)), method = NULL, above = NULL, 
+          restriction = Inf, subjTime = rep(1, N), method = NULL, above = NULL, 
           below = NULL, labove = NULL, rbelow = NULL, interval = NULL, linterval = NULL, 
           rinterval = NULL, lrinterval = NULL, g1 = 1, g2 = 0, dispersion = 1, 
-          nbstrap = 10000, resample = "pairs", seed = 0, ..., version = FALSE)
+          nbstrap = 10000, resample = "pairs", seed = 42, ..., version = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -172,7 +172,7 @@ An object of class \code{uOneSample} is returned. Inferential statistics are con
 }
 \author{
 %%  ~~who you are~~
-Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson
+Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson, Travis Y. Hee Wai, Solomon Lim
 }
 \examples{
 # Load required libraries

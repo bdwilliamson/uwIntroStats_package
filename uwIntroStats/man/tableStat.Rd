@@ -129,7 +129,7 @@ An object of class \code{tableStat} is returned, which consists of a list of arr
 }
 \author{
 %%  ~~who you are~~
-Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson
+Scott S. Emerson, M.D., Ph.D., Andrew J. Spieker, Brian D. Williamson, Travis Y. Hee Wai, Solomin Lim
 }
 
 

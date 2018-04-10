@@ -1,341 +1,507 @@
-oneSample <-
-function (fnctl,                          # the distribution functional to be compared
-                       y,                              # the response variable in the regression analysis
-                       null.hypothesis=NA, 
-                       test.type="two.sided",
-                       subset=rep(TRUE,N),
-                       conf.level=0.95,
-                       na.rm=TRUE,
-                       probs= 0.5, 					  # for use with quantiles
-                       replaceZeroes=NULL,			  # for use with geometric means
-                       restriction=Inf, 			  # for use with means, geometric means of censored data
-                       subjTime=rep(1,length(y)),	  # for use with rates
-                       method= NULL,
-                       above=NULL, below=NULL, 
-                       labove=NULL, rbelow=NULL, 
-                       interval=NULL, linterval=NULL, 
-                       rinterval=NULL, 
-                       lrinterval=NULL,				 	# for use with proportions of discretized continuous data
-                       g1=1, g2=0, dispersion=1,	 	# for use with method=="mean-variance"
-                       nbstrap=10000, resample="pairs", 
-                       seed=0,							# for use with method=="bootstrap"
-                       ..., version=FALSE) {
-  
-  #
-  #  Some notes on order of precedence:
-  #		If restriction is supplied, y is replaced by a restricted variable that is a "Surv" object only if is.Surv(y)
-  #		If any of the argurments above, ..., lrinterval are supplied and !is.Surv(y), y is replaced by an indicator variable
-  #		If more than one of the arguments above, ..., lrinterval are supplied, precedence is in the order given in the argument list (no warnings)
-  #		If none of the arguments above, ..., lrinterval are supplied and fnctl=="proportion" or fnctl=="odds", default is above=0
-  #		Methods that are implemented depend on fnctl and type of data
-  #			If is.Surv(y)
-  #				If fnctl=="mean" or fnctl=="geometric mean"
-  #					"KM" (the default if is.Surv(y))
-  #					The following methods can be used, but result in an error if any observations are censored prior to the restriction
-  #						"t.test"
-  #						"mean-variance" (which takes arguments g1, g2, and dispersion)
-  #				If fnctl=="median" or fnctl=="quantile"
-  #					"KM" (the default if is.Surv(y))
-  #					"bootstrap" (which takes arguments nbstrap and resample=("pairs","independent"))
-  #					The following methods can be used, but result in an error if any observations are censored prior to the restriction
-  #						"sign"
-  #			If fnctl=="proportion" or fnctl=="odds" and 
-  #				If fnctl=="mean" or fnctl=="geometric mean"
-  #					"t.test" (the default if !is.Surv(y))
-  #				"mean-variance" (which takes arguments g1, g2, and dispersion)
-  #				"bootstrap" (which takes arguments nbstrap)
-  #				"KM" (the default if is.Surv(y))
-  #			If fnctl=="median" or fnctl=="quantile"
-  #				"sign" (the default if !is.Surv(y))
-  #				"bootstrap" (which takes arguments nbstrap)
-  #				"KM" (the default if is.Surv(y))
-  #			If fnctl=="proportion" or fnctl=="odds" and 
-  # can be a character string or a list of character strings named $test and $interval; choices depend on fnctl
-  #			If fnctl=="mean"
-  #				method can be "t.test" (the default); "bootstrap"
-  #
-  #	Output will include
-  #		- sample size
-  #		- functional name
-  #		- estimate
-  #		- confidence interval
-  #		- p value
-  #		- link function for analysis model
-  #		- estimate on analysis model scale
-  #		- standard error on analysis model scale (if relevant)
-  
-  vrsn <- "20121107"
-  if (version) return(vrsn)
-  
-  KM <- function (x) {
-    if (!is.Surv(x)) stop("x must be a Surv object")
-    x <- x[!is.na(x)]
-    obs <- x[,1]
-    ev <- x[,2]
-    ce <- 1 - ev
-    if (length(obs) == 0) stop("No data to estimate survival curve")	
-    N <- length (obs)
-    if (!any(obs==0)) {
-      obs <- c(0,obs)
-      ev <- c(0,ev)
-      ce <- c(0,ce)
+oneSample<-function (fnctl, y, null.hypothesis = NA, test.type = "two.sided", 
+          subset = rep(TRUE, N), conf.level = 0.95, na.rm = TRUE, probs = 0.5, 
+          replaceZeroes = NULL, restriction = Inf, subjTime = rep(1, 
+          N), method = NULL, above = NULL, below = NULL, 
+          labove = NULL, rbelow = NULL, interval = NULL, linterval = NULL, 
+          rinterval = NULL, lrinterval = NULL, g1 = 1, g2 = 0, dispersion = 1, 
+          nbstrap = 10000, resample = "pairs", seed = 42, ..., version = FALSE) 
+{
+  # Version check
+  vrsn <- "20160913"
+  if (version) 
+    return(vrsn)
+  boot.var<-function(x,probs,nbstrap,seed=seed){
+    # set seed for reproducibility
+    set.seed(seed = seed)
+    # order samples 
+    n<-length(x)
+    smpl<-sample(x,size=n*nbstrap,replace=TRUE)
+    indx<-matrix(c(rep(1:nbstrap,n)),nrow=n,byrow=T)
+    bstrap<-matrix(smpl[order(indx,smpl)],ncol=nbstrap,byrow=F)
+    # Calculate the quantile you want
+    nindx<-probs*(n-1)+1
+    is_int <- nindx%%1==0
+    if (nindx%%1==0) {
+      qntl<-t(bstrap[nindx,])
+    } else {
+      dif<-1/(n-1)
+      nindxu<-ceiling(nindx)
+      nindxl<-floor(nindx)
+      pnindxu<-(nindxu-1)/(n-1)
+      pnindxl<-(nindxl-1)/(n-1)
+      qntl<-c((pnindxu-probs)/dif,(probs-pnindxl)/dif)%*%bstrap[nindxl:nindxu,]
     }
-    i <- order (obs,1-ev)
-    obs <- obs[i]
-    ev <- ev[i]
-    ce <- ce[i]
-    ev <- rev (cumsum (rev (ev)))
-    ce <- rev (cumsum (rev (ce)))
-    n <- ce + ev
-    i <- !duplicated (obs)
-    obs <- obs[i]
-    n <- n[i]
-    ev <- ev[i]
-    ev <- ev - c (ev[-1],0)
-    ce <- ce[i]
-    ce <- ce - c (ce[-1],0)
-    v <- N * cumsum (ev / (n - ev) / n)
-    S <- exp (cumsum (log (1 - ev / n)))
-    if (is.na (S[length(S)])) S[length(S)] <- 0
-    rslt <- data.frame (t=obs, atrisk=n, events=ev, censored=ce, S=S, v=v)
-    class(rslt) <- c("KM","data.frame")
-    rslt
+    return(sd(t(qntl)))
   }
-  
-  sKM <- function (x, times, rightCtsCDF=T) {
-    if (!inherits(x,"KM")) stop("x must be a KM object")
-    if (rightCtsCDF) {
-      rslt <- as.vector(apply(matrix(rep(times,each=length(x$t)),length(x$t)) >= x$t, 2, sum)) + 1
-    } else rslt <- as.vector(apply(matrix(rep(times,each=length(x$t)),length(x$t)) > x$t, 2, sum)) + 1
-    if (x$S[length(x$S)] > 0) rslt[times > x$t[length(x$t)]] <- NA
-    c(1,x$S)[rslt]
-  }
-  
-  pKM <- function (x, times, rightCtsCDF=T) {
-    1 - sKM (x, times, rightCtsCDF)
-  }
-  
-  qKM <- function (x, probs) {
-    rslt <- length(probs)
-    for (i in 1:length(probs)) {
-      p <- 1 - probs[i]
-      j <- abs(x$S - p) < 1e-15 & x$events > 0
-      if (any(j)) {
-        if (abs(p - min(x$S)) < 1e-15) {
-          rslt[i] <- (x$t[j] + max(x$t)) / 2
-        } else {
-          rslt[i] <- (x$t[j] + min(x$t[x$t > x$t[j] & x$events > 0])) / 2
-        }
-      } else {
-        j <- sum(x$S > p)
-        if (j == length(x$S) | p == 1) {
-          rslt[i] <- NA
-        } else rslt[i] <- x$t[j+1]
-      }
+  km_val <- function(km,time,val.indx=8,left.shift=FALSE, default=0){
+    time.index=2
+    if (left.shift){
+      if(time <= km[[time.index]][1]) return(default)
+      indx <-pmatch(max(km[[time.index]][km[[time.index]]<time]),km[[time.index]])
     }
-    rslt
+    else {
+      if(time < km[[time.index]][1]) return(default)
+      indx <-pmatch(max(km[[time.index]][km[[time.index]]<=time]),km[[time.index]])
+    }
+    return(km[[val.indx]][indx])
   }
   
-  meanKM <- function (x, restriction=Inf) {
-    if (length(restriction)==1) restriction <- c(x$t[1]-1,restriction)
-    if (restriction[2]==Inf) restriction[2] <- x$t[length(x$t)]
-    tms <- c(restriction[1],x$t[x$t > restriction[1] & x$t < restriction[2]],restriction[2])
-    s <- sKM(x,restriction)
-    s <- c(s[1],x$S[x$t > restriction[1] & x$t < restriction[2]],s[2])
-    ne <- tms <= 0
-    po <- tms >= 0
-    neS <- 1 - s[ne]
-    neX <- abs(c(diff(tms[ne]),0))
-    neI <- neS != 0 & neX != 0
-    if (sum(neI) > 0) rslt <- - sum(neS[neI] * neX[neI]) else rslt <- 0
-    poS <- s[po]
-    poX <- c(diff(tms[po]),0)
-    poI <- poS != 0 & poX != 0
-    if (sum(poI) > 0) rslt <- rslt + sum(poS[poI] * poX[poI])
-    attr(rslt,"restriction") <- restriction
-    rslt
-  }
+  # Check which functional is requested
+  chc.fnctl <- c("mean", "geometric mean", "proportion", "median", 
+                 "quantile", "odds")
+  name.fnctl <- c("Mean", "GeomMn", "Prop", "Mdn", paste(format(100 * 
+                                                                     probs[1]), "%ile", sep = ""), "Odds", "Rate")
+  findx <- pmatch(fnctl, chc.fnctl)
+  if (is.na(findx)) 
+    stop("unsupported functional")
   
-  chc.fnctl <- c("mean", "geometric mean", "proportion", "median", "quantile", "odds", "rate")
-  name.fnctl <- c("Mean","GeomMn","Prop","Mdn",paste(format(100*probs[1]),"%ile",sep=""),"Odds","Rate")
-  findx <-  pmatch(fnctl, chc.fnctl)
-  if (is.na(findx)) stop("unsupported functional")
+  # check data input to see if it's valid
   fnctl <- chc.fnctl[findx]
-  
   isSurv <- is.Surv(y)
-  isDate <- inherits(y,"Date")
+  isDate <- inherits(y, "Date")
   isEvent <- is.logical(y) || all(y[!is.na(y)] %in% 0:1)
-  if(!isSurv && !isDate &&!isEvent && !is.numeric(y)) stop("y is an unsupported data type")
-  if(isSurv) N <- dim(y)[1]
-  else N <- length(y)
-  if(restriction < Inf) {
-    if(isSurv) {
-      u <- y[,1] > restriction
-      y[u,1] <- restriction
-      y[u,2] <- 0
-    } else y[y > restriction] <- restriction
-    rName <- paste("Summary measure restricted to", format(restriction))
-  } else rName <- NULL
-  if (na.rm) u <- !is.na(y)
-  else u <- rep(TRUE,N)
-  ya <- y[subset & u]
-  if(length(ya)==0) stop("no data to analyze")
-  if(isSurv) n <- dim(ya)[1]
-  else n <- length(ya)
-  if(!na.rm) nMsng <- NA
-  else nMsng <- sum(subset & !u)
+  if (!isSurv && !isDate && !isEvent && !is.numeric(y)) 
+    stop("y is an unsupported data type")
   
-  if(isSurv) default.method <- "KM"
-  else default.method <- c("t.test", "t.test", "exact", "sign", "sign", "exact", "mean-variance")[findx]
-  chc.method <- c("t.test", "exact", "exactLR", "exactTail", "wald", "cwald", "score", "cscore", "agresti", "jeffreys", "sign", "bootstrap", "mean-variance", "KM")
-  if(is.null(method)) method <- default.method
-  mindx <- pmatch(method, chc.method)	
-  if (is.na(mindx)) stop("unsupported method")
+  # Prep ya, which is y after restrictions and NA's removed (if specified)
+  if (isSurv) {
+    N <- dim(y)[1]
+    if (restriction < Inf) {
+        u <- y[, 1] > restriction
+        y[u, 1] <- restriction
+        y[u, 2] <- 0
+        rName <- paste("Summary measure restricted to", format(restriction))
+      }
+    else rName <- NULL
+    if (na.rm){
+      u <- !is.na(y[,1])
+      nMsng <- sum(subset & !u)
+      }
+    else {
+      u <- rep(TRUE, N)
+      nMsng <- NA
+    }
+    ya <- y[subset & u]
+    n <- dim(ya)[1]
+    default.method <- "KM"
+  }
+  else {
+    N <- length(y)
+    rName <- NULL
+    y[y > restriction] <- restriction
+    if (na.rm){
+      u <- !is.na(y)
+      nMsng <- sum(subset & !u)
+    }
+    else {
+      u <- rep(TRUE, N)
+      nMsng <- NA
+    }
+    ya <- y[subset & u]
+    n <- length(ya)
+    default.method <- c("t.test", "t.test", "exact", "bootstrap", 
+                        "bootstrap", "exact", "mean-variance")[findx]
+  }
+  
+  # check the requested method
+  chc.method <- c("t.test", "exact", "exactLR", "exactTail", 
+                  "wald", "cwald", "score", "cscore", "agresti", "jeffreys", 
+                  "sign", "bootstrap", "mean-variance", "KM")
+  if (is.null(method)) 
+    method <- default.method
+  mindx <- pmatch(method, chc.method)
+  if (is.na(mindx)) 
+    stop("unsupported method")
   method <- chc.method[mindx]
   
+  # If intervals are specified, create them
   thresholds <- NULL
-  if (length(above)>0) thresholds <- rbind(thresholds,cbind(0,above,0,Inf))
-  if (length(below)>0) thresholds <- rbind(thresholds,cbind(0,-Inf,0,below))
-  if (length(labove)>0) thresholds <- rbind(thresholds,cbind(1,labove,0,Inf))
-  if (length(rbelow)>0) thresholds <- rbind(thresholds,cbind(0,-Inf,1,rbelow))
-  if (!is.null(interval)) {
-    if (length(interval)==2) interval <- matrix(interval,ncol=2)
-    if (dim(interval)[2]!=2) stop("intervals must be specified in a 2 column matrix")
-    thresholds <- rbind(thresholds,cbind(0,interval[,1],0,interval[,2]))
-  }		
-  if (!is.null(linterval)) {
-    if (length(linterval)==2) linterval <- matrix(linterval,ncol=2)
-    if (dim(linterval)[2]!=2) stop("intervals must be specified in a 2 column matrix")
-    thresholds <- rbind(thresholds,cbind(1,linterval[,1],0,linterval[,2]))
-  }		
-  if (!is.null(rinterval)) {
-    if (length(rinterval)==2) rinterval <- matrix(rinterval,ncol=2)
-    if (dim(rinterval)[2]!=2) stop("intervals must be specified in a 2 column matrix")
-    thresholds <- rbind(thresholds,cbind(0,rinterval[,1],1,rinterval[,2]))
-  }		
-  if (!is.null(lrinterval)) {
-    if (length(lrinterval)==2) lrinterval <- matrix(lrinterval,ncol=2)
-    if (dim(lrinterval)[2]!=2) stop("intervals must be specified in a 2 column matrix")
-    thresholds <- rbind(thresholds,cbind(1,lrinterval[,1],1,lrinterval[,2]))
-  }
-  if (is.null(thresholds)) thresholds <- rbind(thresholds,cbind(0,0,0,Inf))
-  thresholds <- thresholds[1,,drop=F]
-  if(fnctl %in% c("proportion","odds")) {
-    if(isEvent) fName <- ifelse(fnctl=="proportion","Pr(Event)","Odds(Event)")
-    else fName <- paste(sep="",ifelse(fnctl=="proportion","Pr","Odds"),
-                        ifelse(thresholds[,2] == -Inf,
-                               paste(sep="",ifelse(thresholds[,3]==0,"<","<="),format(thresholds[,4])),
-                               ifelse(thresholds[,4]==Inf,
-                                      paste(sep="",ifelse(thresholds[,1]==0,">",">="),format(thresholds[,2])),
-                                      paste(sep="",
-                                            ifelse(thresholds[,1]==0,"(","["),format(thresholds[,2]),",",format(thresholds[,4]),
-                                            ifelse(thresholds[,3]==0,")","]")))))
-    if (!isSurv) ya <- ifelse1(thresholds[,1]==0, ya > thresholds[,2], ya >= thresholds[,2]) &
-      ifelse1(thresholds[,3]==0, ya < thresholds[,4], ya <= thresholds[,4])
-  } else fName <- name.fnctl[findx]
   
-  chc.test <- c("greater","less","two.sided")
-  tindx <- pmatch(test.type, chc.test)	
-  if (is.na(tindx)) stop("unsupported test type")
+  if (length(above) > 0) 
+    thresholds <- rbind(thresholds, cbind(0, above, 0, Inf))
+  if (length(below) > 0) 
+    thresholds <- rbind(thresholds, cbind(0, -Inf, 0, below))
+  if (length(labove) > 0) 
+    thresholds <- rbind(thresholds, cbind(1, labove, 0, Inf))
+  if (length(rbelow) > 0) 
+    thresholds <- rbind(thresholds, cbind(0, -Inf, 1, rbelow))
+  if (!is.null(interval)) {
+    if (length(interval) == 2) 
+      interval <- matrix(interval, ncol = 2)
+    if (dim(interval)[2] != 2) 
+      stop("intervals must be specified in a 2 column matrix")
+    thresholds <- rbind(thresholds, cbind(0, interval[, 1], 
+                                          0, interval[, 2]))
+  }
+  if (!is.null(linterval)) {
+    if (length(linterval) == 2) 
+      linterval <- matrix(linterval, ncol = 2)
+    if (dim(linterval)[2] != 2) 
+      stop("intervals must be specified in a 2 column matrix")
+    thresholds <- rbind(thresholds, cbind(1, linterval[, 
+                                                       1], 0, linterval[, 2]))
+  }
+  if (!is.null(rinterval)) {
+    if (length(rinterval) == 2) 
+      rinterval <- matrix(rinterval, ncol = 2)
+    if (dim(rinterval)[2] != 2) 
+      stop("intervals must be specified in a 2 column matrix")
+    thresholds <- rbind(thresholds, cbind(0, rinterval[, 
+                                                       1], 1, rinterval[, 2]))
+  }
+  if (!is.null(lrinterval)) {
+    if (length(lrinterval) == 2) 
+      lrinterval <- matrix(lrinterval, ncol = 2)
+    if (dim(lrinterval)[2] != 2) 
+      stop("intervals must be specified in a 2 column matrix")
+    thresholds <- rbind(thresholds, cbind(1, lrinterval[, 
+                                                        1], 1, lrinterval[, 2]))
+  }
+  if (is.null(thresholds)) 
+    thresholds <- rbind(thresholds, cbind(0, 0, 0, Inf))
+  thresholds <- thresholds[1, , drop = F]
+  
+  if (fnctl %in% c("proportion", "odds")) {
+    if (isEvent) 
+      fName <- ifelse(fnctl == "proportion", "Pr(Event)", 
+                      "Odds(Event)")
+    else fName <- paste(sep = "", ifelse(fnctl == "proportion", 
+                                         "Pr", "Odds"), ifelse(thresholds[, 2] == -Inf, paste(sep = "", 
+                                                                                              ifelse(thresholds[, 3] == 0, "<", "<="), format(thresholds[, 
+                                                                                                                                                         4])), ifelse(thresholds[, 4] == Inf, paste(sep = "", 
+                                                                                                                                                                                                    ifelse(thresholds[, 1] == 0, ">", ">="), format(thresholds[, 
+                                                                                                                                                                                                                                                               2])), paste(sep = "", ifelse(thresholds[, 1] == 
+                                                                                                                                                                                                                                                                                              0, "(", "["), format(thresholds[, 2]), ",", format(thresholds[, 
+                                                                                                                                                                                                                                                                                                                                                            4]), ifelse(thresholds[, 3] == 0, ")", "]")))))
+    if (!isSurv) 
+      ya <- ifelse1(thresholds[, 1] == 0, ya > thresholds[, 
+                                                          2], ya >= thresholds[, 2]) & ifelse1(thresholds[, 
+                                                                                                          3] == 0, ya < thresholds[, 4], ya <= thresholds[, 
+                                                                                                                                                          4])
+  }
+  else fName <- name.fnctl[findx]
+  
+  # Figure out which test is specified
+  chc.test <- c("greater", "less", "two.sided")
+  tindx <- pmatch(test.type, chc.test)
+  if (is.na(tindx)) 
+    stop("unsupported test type")
   test.type <- chc.test[tindx]
   if (is.na(null.hypothesis)) {
     hName <- NULL
     tindx <- 0
-  } else hName <- paste("Hypothesis test of", c("upper","lower","two-sided")[tindx], "alternative that", fName, c(">", "<", "<>")[tindx], format(null.hypothesis))
-  
-  chc.resample <- c("pairs","independent")
-  if(!is.null(resample)) {
-    rindx <- pmatch(resample, chc.method)	
-    if (is.na(mindx)) stop("unsupported method")
+  }
+  else hName <- paste("Hypothesis test of", c("upper", "lower", 
+                                              "two-sided")[tindx], "alternative that", fName, c(">", 
+                                                                                                "<", "<>")[tindx], format(null.hypothesis))
+  chc.resample <- c("pairs", "independent")
+  if (!is.null(resample)) {
+    rindx <- pmatch(resample, chc.method)
+    if (is.na(mindx)) 
+      stop("unsupported method")
     resample <- chc.resample[rindx]
   }
-  
   nReplace <- NA
-  
-  if(isSurv) stop("KM based inference not yet implemented")
-  else {
-    if(fnctl=="mean") {
-      if (method=="t.test") {
-        mName <- "One sample t test"
+  if (isSurv){
+    if (fnctl == "mean") {
+      if (method=="KM") {
+        fit_sum<-summary(survfit(ya~1))
+        mName <- "KM"
         link <- "identity"
         etaName <- fName
-        etaHat <- mean(ya)
-        etaHatSE <- sqrt(var(ya) / n)
+        etaHat <- fit_sum$table[["*rmean"]]
+        etaHatSE <- fit_sum$table[["*se(rmean)"]]
         etaNull <- null.hypothesis
-        statistic <- (etaHat - etaNull) / etaHatSE
-        df <- n - 1
-        if(test.type=="less") p.value <- pt(statistic,df)
-        else if(test.type=="greater") p.value <- 1 - pt(statistic,df)
-        else if(test.type=="two.sided") p.value <- 2 * pt(-abs(statistic),df)
+        statistic <- (etaHat - etaNull)/etaHatSE
+        df <- NA
+        if (test.type == "less") 
+          p.value <- pnorm(statistic)
+        else if (test.type == "greater") 
+          p.value <- 1 - pnorm(statistic)
+        else if (test.type == "two.sided") 
+          p.value <- 2 * pnorm(-abs(statistic))
         else p.value <- NA
-        etaCIlo <- qt((1-conf.level)/2,df) * etaHatSE
+        etaCIlo <- qnorm((1 - conf.level)/2) * etaHatSE
         etaCIhi <- etaHat - etaCIlo
         etaCIlo <- etaHat + etaCIlo
         thetaHat <- etaHat
         thetaCIlo <- etaCIlo
         thetaCIhi <- etaCIhi
         methodParams <- NULL
-      } else stop(paste("method",method,"not yet implemented"))
-    } else if(fnctl=="geometric mean") {
-      if(!is.null(replaceZeroes)) {
+        }
+      else stop(paste("method", method, "not yet implemented"))
+    }
+    else if (fnctl == "geometric mean") {
+      if (!is.null(replaceZeroes)) {
+        u <- ya[,1] == 0
+        nReplace <- sum(u)
+        if (is.logical(replaceZeroes)) 
+          replaceZeroes <- min(ya[!u,1])
+        ya[u,1] <- replaceZeroes
+      }
+      else if (any(ya[,1] <= 0)) stop("cannot compute geometric mean with nonpositive data")
+      if (method=="KM") {
+        mName <- "KM on log transformed data"
+        ya[,1]<-log(ya[,1])
+        fit_sum<-summary(survfit(ya~1))
+        mName <- "KM"
+        link <- "log"
+        etaName <- fName
+        etaHat <- fit_sum$table[["*rmean"]]
+        etaHatSE <- fit_sum$table[["*se(rmean)"]]
+        etaNull <- log(null.hypothesis)
+        statistic <- (etaHat - etaNull)/etaHatSE
+        df <- NA
+        if (test.type == "less") 
+          p.value <- pnorm(statistic, df)
+        else if (test.type == "greater") 
+          p.value <- 1 - pnorm(statistic, df)
+        else if (test.type == "two.sided") 
+          p.value <- 2 * pnorm(-abs(statistic), df)
+        else p.value <- NA
+        etaCIlo <- qnorm((1 - conf.level)/2, df) * etaHatSE
+        etaCIhi <- etaHat - etaCIlo
+        etaCIlo <- etaHat + etaCIlo
+        thetaHat <- etaHat
+        thetaCIlo <- etaCIlo
+        thetaCIhi <- etaCIhi
+        methodParams <- NULL
+      }
+      else stop(paste("method", method, "not yet implemented"))
+    }
+    else if (fnctl == "proportion" || fnctl == "odds") {
+      if (method == "KM") {
+        mName <- "KM"
+        etaName <- fName
+        intrvl <- rep(0,2)
+        Sya <- survfit(ya~1)
+        if (length(above) >0 ) {
+          if(length(above)==1) {
+            intrvl[1] <- km_val(Sya, above, val.indx = 2, left.shift = FALSE, default = 1)
+            intrvl[2] <- km_val(Sya, Inf, val.indx = 2, left.shift = FALSE, default = 1)
+          }
+          else if (length(above) > 1)
+            stop("support for only one interval at a time is supported")
+        }
+        if (length(below) > 0) {
+          if(length(below)==1) {
+            intrvl[2] <- km_val(Sya, below, val.indx = 2, left.shift = TRUE, default = 1)
+          }
+          else if (length(below) > 1)
+            stop("support for only one interval at a time is supported")
+        }
+        if (length(labove) > 0) {
+          if(length(labove)==1){
+            intrvl[1] <- km_val(Sya, labove, val.indx = 2, left.shift = TRUE, default = 1)
+            intrvl[2] <- km_val(Sya, Inf, val.indx = 2, left.shift = FALSE, default = 1)
+          }
+          else if (length(labove) > 1)
+            stop("support for only one interval at a time is supported")
+        }
+        if (length(rbelow) > 0) {
+          if(length(rbelow)==1){
+            intrvl[2] <- km_val(Sya, rbelow, val.indx = 2, left.shift = FALSE, default = 1)
+          }
+          else if (length(rbelow) > 1)
+            stop("support for only one interval at a time is supported")
+        }
+        if (!is.null(interval)) {
+          if (length(interval) == 2) {
+            interval <- sort(interval)
+            intrvl[2] <- km_val(Sya, interval[2], val.indx = 2, left.shift = TRUE, default = 1)
+          }
+        }
+        if (!is.null(linterval)) {
+          if (length(linterval) == 2) {
+            linterval <- sort(linterval)
+            intrvl[1]<-km_val(Sya, linterval[1], val.indx = 2, left.shift = TRUE, default = 1)
+            intrvl[2]<-km_val(Sya, linterval[2], val.indx = 2, left.shift = TRUE, default = 1)
+          }
+        }
+        if (!is.null(rinterval)) {
+          if (length(rinterval) == 2) 
+            intrvl <- sort(rinterval)
+        }
+        if (!is.null(lrinterval)) {
+          if (length(lrinterval) == 2) {
+            lrinterval <- sort(lrinterval)
+            intrvl[1] <- km_val(Sya, lrinterval[1], val.indx = 2, left.shift = TRUE, default = 1)
+            intrvl[2] <- lrinterval[2]
+          }
+        }
+        
+        etaHat <- abs(diff(summary(Sya,times=intrvl)[[6]]))
+        etaHatSE <- km_val(Sya, intrvl[1], val.indx = 8, default = 0) + 
+                      km_val(Sya, intrvl[2], val.indx = 8, default = 0)
+        etaNull <- null.hypothesis
+        statistic <- (etaHat - etaNull)/etaHatSE
+        df <- NA
+        if (test.type == "less") 
+          p.value <- pnorm(statistic)
+        else if (test.type == "greater") 
+          p.value <- 1 - pnorm(statistic)
+        else if (test.type == "two.sided") 
+          p.value <- 2 * pnorm(-abs(statistic))
+        else p.value <- NA
+        etaCIlo <- qnorm((1 - conf.level)/2) * etaHatSE
+        etaCIhi <- min(1,etaHat - etaCIlo)
+        etaCIlo <- max(0,etaHat + etaCIlo)
+        thetaHat <- etaHat
+        thetaCIlo <- etaCIlo
+        thetaCIhi <- etaCIhi
+        methodParams <- NULL
+        
+        if (fnctl == "proportion") {
+          link <- "identity"
+          mName <- paste("One sample inference for binomial proportions using", 
+                         mName)
+          thetaHat <- etaHat
+          thetaCIlo <- etaCIlo
+          thetaCIhi <- etaCIhi
+        }
+        else {
+          link <- "logit"
+          mName <- paste("One sample inference for binomial odds using", 
+                         mName)
+          thetaHat <- etaHat/(1 - etaHat)
+          thetaCIlo <- etaCIlo/(1 - etaCIlo)
+          thetaCIhi <- etaCIhi/(1 - etaCIhi)
+        }
+      }
+      else stop(paste("method", method, "not yet implemented"))
+    }
+    else if (fnctl == "median" || fnctl == "quantile") {
+      if (fnctl == "median") probs=0.5
+      if (method =="KM") {
+      quant<-quantile(survfit(ya~1,conf.int=conf.level),probs=probs)
+      mName <- "KM"
+      link <- NA
+      etaName <- fName
+      etaHat <- quant$quantile
+      etaCIlo <- quant$lower
+      etaCIhi <- quant$upper
+      etaNull<-null.hypothesis
+      statistic<-NA
+      df<-NA
+      p.value<-NA
+      etaHatSE<-NA
+      thetaHat <- etaHat
+      thetaCIlo <- etaCIlo
+      thetaCIhi <- etaCIhi
+      methodParams <- NULL
+      }
+      else stop(paste("method", method, "not yet implemented"))
+    }
+    else stop(paste("inference for", fnctl, "not yet implemented"))
+  }
+  else {
+    if (fnctl == "mean") {
+      if (method == "t.test") {
+        mName <- "One sample t test"
+        link <- "identity"
+        etaName <- fName
+        etaHat <- mean(ya)
+        etaHatSE <- sqrt(var(ya)/n)
+        etaNull <- null.hypothesis
+        statistic <- (etaHat - etaNull)/etaHatSE
+        df <- n - 1
+        if (test.type == "less") 
+          p.value <- pt(statistic, df)
+        else if (test.type == "greater") 
+          p.value <- 1 - pt(statistic, df)
+        else if (test.type == "two.sided") 
+          p.value <- 2 * pt(-abs(statistic), df)
+        else p.value <- NA
+        etaCIlo <- qt((1 - conf.level)/2, df) * etaHatSE
+        etaCIhi <- etaHat - etaCIlo
+        etaCIlo <- etaHat + etaCIlo
+        thetaHat <- etaHat
+        thetaCIlo <- etaCIlo
+        thetaCIhi <- etaCIhi
+        methodParams <- NULL
+      }
+    }
+    else if (fnctl == "geometric mean") {
+      if (!is.null(replaceZeroes)) {
         u <- ya == 0
         nReplace <- sum(u)
-        if(is.logical(replaceZeroes)) replaceZeroes <- min(ya[!u])
+        if (is.logical(replaceZeroes)) 
+          replaceZeroes <- min(ya[!u])
         ya[u] <- replaceZeroes
-      } else if(any(ya <=0)) stop("cannot compute geometric mean with nonpositive data")
-      if (method=="t.test") {
+      }
+      else if (any(ya <= 0)) 
+        stop("cannot compute geometric mean with nonpositive data")
+      if (method == "t.test") {
         mName <- "One sample t test on log transformed data"
         link <- "log"
         etaName <- fName
         etaHat <- mean(log(ya))
-        etaHatSE <- sqrt(var(log(ya)) / n)
+        etaHatSE <- sqrt(var(log(ya))/n)
         etaNull <- log(null.hypothesis)
-        statistic <- (etaHat - etaNull) / etaHatSE
+        statistic <- (etaHat - etaNull)/etaHatSE
         df <- n - 1
-        if(test.type=="less") p.value <- pt(statistic,df)
-        else if(test.type=="greater") p.value <- 1 - pt(statistic,df)
-        else if(test.type=="two.sided") p.value <- 2 * pt(-abs(statistic),df)
+        if (test.type == "less") 
+          p.value <- pt(statistic, df)
+        else if (test.type == "greater") 
+          p.value <- 1 - pt(statistic, df)
+        else if (test.type == "two.sided") 
+          p.value <- 2 * pt(-abs(statistic), df)
         else p.value <- NA
-        etaCIlo <- qt((1-conf.level)/2,df) * etaHatSE
+        etaCIlo <- qt((1 - conf.level)/2, df) * etaHatSE
         etaCIhi <- etaHat - etaCIlo
         etaCIlo <- etaHat + etaCIlo
         thetaHat <- exp(etaHat)
         thetaCIlo <- exp(etaCIlo)
         thetaCIhi <- exp(etaCIhi)
         methodParams <- NULL
-      } else stop(paste("method",method,"not yet implemented"))
-    } else if(fnctl=="proportion" || fnctl=="odds") {
-      if (method=="KM") stop("method KM not yet implemented")
+      }
+      else stop(paste("method", method, "not yet implemented"))
+    }
+    else if (fnctl == "proportion" || fnctl == "odds") {
+      if (method == "KM") 
+        stop("KM method not applicable for non-survival objects")
       else {
-        if (method=="exact" || method=="exactLR") {
+        if (method == "exact" || method == "exactLR") {
           binomInference <- binomInference.exactLR
           mName <- "exact distribution"
-          if (test.type=="two.sided") mName <- paste(mName,"(LR ordering)")
-        } else if (method=="exactTail") {
+          if (test.type == "two.sided") 
+            mName <- paste(mName, "(LR ordering)")
+        }
+        else if (method == "exactTail") {
           binomInference <- binomInference.exactTail
           mName <- "exact distribution"
-          if (test.type=="two.sided") mName <- paste(mName,"(tail probability ordering)")
-        } else if (method=="wald") {
+          if (test.type == "two.sided") 
+            mName <- paste(mName, "(tail probability ordering)")
+        }
+        else if (method == "wald") {
           binomInference <- binomInference.wald
           mName <- "Wald statistic"
-        } else if (method=="cwald") {
+        }
+        else if (method == "cwald") {
           binomInference <- binomInference.cwald
           mName <- "continuity corrected Wald statistic"
-        } else if (method=="score") {
+        }
+        else if (method == "score") {
           binomInference <- binomInference.score
           mName <- "score statistic"
-        } else if (method=="cscore") {
+        }
+        else if (method == "cscore") {
           binomInference <- binomInference.cscore
           mName <- "continuity corrected score statistic"
-        } else if (method=="agresti") {
+        }
+        else if (method == "agresti") {
           binomInference <- binomInference.agresti
           mName <- "Agresti & Coull"
-        } else if (method=="jeffreys") {
+        }
+        else if (method == "jeffreys") {
           binomInference <- binomInference.jeffreys
           mName <- "Jeffreys"
-        } else stop(paste("method",method,"not yet implemented"))
+        }
+        else stop(paste("method", method, "not yet implemented"))
         etaName <- fName
-        z <- binomInference(y=sum(ya), n=length(ya), null.hypothesis=null.hypothesis, test.type=test.type, conf.level=conf.level)
+        z <- binomInference(y = sum(ya), n = length(ya), 
+                            null.hypothesis = null.hypothesis, test.type = test.type, 
+                            conf.level = conf.level)
         etaHat <- z[2]
         etaHatSE <- z[3]
         etaNull <- null.hypothesis
@@ -345,48 +511,84 @@ function (fnctl,                          # the distribution functional to be co
         etaCIlo <- z[5]
         etaCIhi <- z[6]
         methodParams <- NULL
-        if(fnctl=="proportion") {
+        if (fnctl == "proportion") {
           link <- "identity"
-          mName <- paste("One sample inference for binomial proportions using", mName)
+          mName <- paste("One sample inference for binomial proportions using", 
+                         mName)
           thetaHat <- etaHat
           thetaCIlo <- etaCIlo
           thetaCIhi <- etaCIhi
-        } else {
+        }
+        else {
           link <- "logit"
-          mName <- paste("One sample inference for binomial odds using", mName)
-          thetaHat <- etaHat / (1 - etaHat)
-          thetaCIlo <- etaCIlo / (1 - etaCIlo)
-          thetaCIhi <- etaCIhi / (1 - etaCIhi)
+          mName <- paste("One sample inference for binomial odds using", 
+                         mName)
+          thetaHat <- etaHat/(1 - etaHat)
+          thetaCIlo <- etaCIlo/(1 - etaCIlo)
+          thetaCIhi <- etaCIhi/(1 - etaCIhi)
         }
       }
-    } else stop(paste("inference for", fnctl, "not yet implemented"))
+    }
+    else if (fnctl == "median" || fnctl == "quantile") {
+      if (fnctl == "median") probs=0.5
+      if (method == "bootstrap"){ 
+        mName <- "bootstrap"
+        link <- NA
+        etaName <- fName
+        etaHat <- quantile(ya,probs=probs)
+        etaHatSE <- boot.var(ya,probs=probs,nbstrap=nbstrap,seed=seed)
+        etaNull <- null.hypothesis
+        statistic <- (etaHat - etaNull)/etaHatSE
+        if (test.type == "less") 
+          p.value <- pnorm(statistic)
+        else if (test.type == "greater") 
+          p.value <- 1 - pnorm(statistic)
+        else if (test.type == "two.sided") 
+          p.value <- 2 * pnorm(-abs(statistic))
+        else p.value <- NA
+        etaCIlo <- qnorm((1 - conf.level)/2) * etaHatSE
+        etaCIhi <- etaHat - etaCIlo
+        etaCIlo <- etaHat + etaCIlo
+        thetaHat <- etaHat
+        thetaCIlo <- etaCIlo
+        thetaCIhi <- etaCIhi
+        methodParams <- NULL
+      }
+      else stop(paste("method", method, "not yet implemented"))
+    }
+    else stop(paste("inference for", fnctl, "not yet implemented"))
   }
-  
-  Inference <- cbind(n, thetaHat, thetaCIlo, thetaCIhi, null.hypothesis, p.value)
-  dimnames(Inference) <- list("",c("n", fName, paste(format(100*conf.level),"% CIlo",sep=""), paste(format(100*conf.level),"% CIhi",sep=""),
-                                   "Null Hyp", c("P", "P hi", "P lo", "P two")[tindx+1]))
-  attr(Inference,"fnctl") <- fnctl
-  attr(Inference,"hName") <- hName
-  attr(Inference,"fName") <- fName
-  attr(Inference,"method") <- method
-  attr(Inference,"mName") <- mName
-  attr(Inference,"methodParams") <- methodParams
-  attr(Inference,"link") <- link
-  attr(Inference,"isSurv") <- isSurv
-  attr(Inference,"isDate") <- isDate
-  attr(Inference,"isEvent") <- isEvent
-  attr(Inference,"restriction") <- restriction
-  attr(Inference,"rName") <- rName
-  attr(Inference,"replaceZeroes") <- replaceZeroes
-  attr(Inference,"nReplace") <- nReplace
-  attr(Inference,"thresholds") <- thresholds
-  attr(Inference,"nMsng") <- nMsng
-  attr(Inference,"test.type") <- test.type
-  attr(Inference,"conf.level") <- conf.level
-  Statistics <- cbind(n, etaHat, etaHatSE, etaNull, statistic, df)
-  dimnames(Statistics) <- list("",c("n", etaName, "SE", "Null", "TestStat", "df"))
-  attr(Statistics,"link") <- link
-  rslt <- list(Inference=Inference, Statistics=Statistics)
+  Inference <- cbind(n, thetaHat, thetaCIlo, thetaCIhi, null.hypothesis, 
+                     p.value)
+  #Paste values for output
+  dimnames(Inference) <- list("", c("n", fName, paste(format(100 * 
+                                                               conf.level), "% CIlo", sep = ""), paste(format(100 * 
+                                                                                                                conf.level), "% CIhi", sep = ""), "Null Hyp", c("P", 
+                                                                                                                                                                "P hi", "P lo", "P two")[tindx + 1]))
+  attr(Inference, "fnctl") <- fnctl
+  attr(Inference, "hName") <- hName
+  attr(Inference, "fName") <- fName
+  attr(Inference, "method") <- method
+  attr(Inference, "mName") <- mName
+  attr(Inference, "methodParams") <- methodParams
+  attr(Inference, "link") <- link
+  attr(Inference, "isSurv") <- isSurv
+  attr(Inference, "isDate") <- isDate
+  attr(Inference, "isEvent") <- isEvent
+  attr(Inference, "restriction") <- restriction
+  attr(Inference, "rName") <- rName
+  attr(Inference, "replaceZeroes") <- replaceZeroes
+  attr(Inference, "nReplace") <- nReplace
+  attr(Inference, "thresholds") <- thresholds
+  attr(Inference, "nMsng") <- nMsng
+  attr(Inference, "test.type") <- test.type
+  attr(Inference, "conf.level") <- conf.level
+  Statistics <- cbind(n, etaHat, etaHatSE, etaNull, statistic, 
+                      df)
+  dimnames(Statistics) <- list("", c("n", etaName, "SE", "Null", 
+                                     "TestStat", "df"))
+  attr(Statistics, "link") <- link
+  rslt <- list(Inference = Inference, Statistics = Statistics)
   class(rslt) <- "uOneSample"
   rslt
 }
