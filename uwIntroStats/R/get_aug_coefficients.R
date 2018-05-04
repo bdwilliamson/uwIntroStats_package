@@ -1,0 +1,1 @@
+## function to process a fitted regression object and return the augmented coefficients matrix

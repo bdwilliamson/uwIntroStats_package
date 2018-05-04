@@ -13,11 +13,17 @@ data(mri)
 
 ## linear regression
 #1
-regress("mean", atrophy~age, data=mri)
+mod_1 <- regress("mean", atrophy~age, data=mri)
+mod_1$coefficients[2] == lm(atrophy ~ age, data = mri)$coefficients[2]
 #2
-regress("mean", atrophy~age+male, data=mri)
+mod_2 <- regress("mean", atrophy~age+male, data=mri)
+mod_2$coefficients[2] == lm(atrophy ~ age + male, data = mri)$coefficients[2]
+mod_2$coefficients[3] == lm(atrophy ~ age + male, data = mri)$coefficients[3]
 #3
-regress("mean", atrophy~age*male, data=mri)
+mod_3 <- regress("mean", atrophy~age*male, data=mri)
+mod_3$coefficients[2] == lm(atrophy ~ age*male, data = mri)$coefficients[2]
+mod_3$coefficients[3] == lm(atrophy ~ age*male, data = mri)$coefficients[3]
+mod_3$coefficients[4] == lm(atrophy ~ age*male, data = mri)$coefficients[4]
 #4
 regress("mean", atrophy~ male + U(ra=~race*age), data=mri)
 test.4 <- regress("mean", atrophy~ male + U(ra=~race*age), data=mri)
