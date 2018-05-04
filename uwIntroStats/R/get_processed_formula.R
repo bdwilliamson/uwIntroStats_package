@@ -1,0 +1,1 @@
+## process a formula, taking out multiple partial F-tests if necessary

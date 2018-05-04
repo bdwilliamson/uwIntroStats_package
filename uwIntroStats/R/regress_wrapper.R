@@ -15,9 +15,13 @@
 ##       version       - the version of the function
 ## Returns: a uRegress object, with a list of tables and tests and coefficients
 regress_wrapper <- function(fnctl, formula, data, intercept = (fnctl != "hazard"), 
-                            strata = rep(1, n), id = 1:n, ... ) {
+                            strata = rep(1, dim(data)[1]), id = 1:dim(data)[1],
+                            robustSE = TRUE, conf.level = 0.95, 
+                            exponentiate= (fnctl != "mean"), replaceZeroes, 
+                            useFdstn = TRUE,  suppress = FALSE, ... ) {
   cl <- match.call()
-  n <- length(y)
+  n <- dim(data)[1]
+  mf <- match.call(expand.dots = FALSE)
   if(missing(formula)){
     stop("You must enter a formula")
   }
@@ -89,5 +93,10 @@ regress_wrapper <- function(fnctl, formula, data, intercept = (fnctl != "hazard"
       fit <- lm(formula, data = data, ...)
     }
   }
-  
+  args <- list(fnctl = fnctl, intercept = intercept, 
+               exponentiate=exponentiate, replaceZeroes=replaceZeroes, 
+               conf.level=conf.level, useFdstn=useFdstn,)
+  aug_coefs <- get_aug_coefficients(fit, fnctl, cl, mf, intercept, args, anyRepeated)
+  # return(aug_coefs)
+  return(fit)
 }

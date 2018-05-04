@@ -14,16 +14,59 @@ data(mri)
 ## linear regression
 #1
 mod_1 <- regress("mean", atrophy~age, data=mri)
+mod_1_wrap <- regress_wrapper("mean", atrophy ~ age, data = mri)
 mod_1$coefficients[2] == lm(atrophy ~ age, data = mri)$coefficients[2]
+mod_1_wrap$coefficients[2] == lm(atrophy ~ age, data = mri)$coefficients[2]
 #2
 mod_2 <- regress("mean", atrophy~age+male, data=mri)
+mod_2_wrap <- regress_wrapper("mean", atrophy ~ age + male, data = mri)
 mod_2$coefficients[2] == lm(atrophy ~ age + male, data = mri)$coefficients[2]
 mod_2$coefficients[3] == lm(atrophy ~ age + male, data = mri)$coefficients[3]
+
+mod_2_wrap$coefficients[2] == lm(atrophy ~ age + male, data = mri)$coefficients[2]
+mod_2_wrap$coefficients[3] == lm(atrophy ~ age + male, data = mri)$coefficients[3]
+
 #3
 mod_3 <- regress("mean", atrophy~age*male, data=mri)
+mod_3_wrap <- regress_wrapper("mean", atrophy~age*male, data=mri)
 mod_3$coefficients[2] == lm(atrophy ~ age*male, data = mri)$coefficients[2]
 mod_3$coefficients[3] == lm(atrophy ~ age*male, data = mri)$coefficients[3]
 mod_3$coefficients[4] == lm(atrophy ~ age*male, data = mri)$coefficients[4]
+
+mod_3_wrap$coefficients[2] == lm(atrophy ~ age*male, data = mri)$coefficients[2]
+mod_3_wrap$coefficients[3] == lm(atrophy ~ age*male, data = mri)$coefficients[3]
+mod_3_wrap$coefficients[4] == lm(atrophy ~ age*male, data = mri)$coefficients[4]
+
+#4, with geometric mean
+mod_4 <- regress("geometric mean", atrophy ~ age + male, data = mri)
+mod_4_wrap <- regress_wrapper("geometric mean", atrophy ~ age + male, data = mri)
+mod_4$coefficients[2] == lm(log(atrophy) ~ age + male, data = mri)$coefficients[2]
+mod_4_wrap$coefficients[2] == lm(log(atrophy) ~ age + male, data = mri)$coefficients[2]
+
+#5, with logistic regression
+mod_5 <- regress("odds", chf ~ age + male, data = mri)
+mod_5_wrap <- regress_wrapper("odds", chf ~ age + male, data = mri)
+mod_5_lm <- glm(chf ~ age + male, data = mri, family = "binomial")
+mod_5$coefficients[2] == mod_5_lm$coefficients[2]
+mod_5_wrap$coefficients[2] == mod_5_lm$coefficients[2]
+
+#6, with poisson regression
+mod_6 <- regress("rate", chf ~ age + male, data = mri)
+mod_6_wrap <- regress_wrapper("rate", chf ~ age + male, data = mri)
+mod_6_lm <- glm(chf ~ age + male, data = mri, family = "poisson")
+mod_6$coefficients[2] == mod_6_lm$coefficients[2]
+mod_6_wrap$coefficients[2] == mod_6_lm$coefficients[2]
+
+#7, with survival
+mod_7 <- regress("hazard", Surv(obstime, death) ~ age + male, data = mri)
+mod_7_wrap <- regress_wrapper("hazard", Surv(obstime, death) ~ age + male, data = mri)
+mod_7_lm <- coxph(Surv(obstime, death) ~ age + male, data = mri)
+mod_7$coefficients[2] == mod_7_lm$coefficients[2]
+mod_7_wrap$coefficients[2] == mod_7_lm$coefficients[2]
+
+#8, with repeated measurements
+
+
 #4
 regress("mean", atrophy~ male + U(ra=~race*age), data=mri)
 test.4 <- regress("mean", atrophy~ male + U(ra=~race*age), data=mri)
