@@ -1,5 +1,7 @@
 # uwIntroStats
 
+As of April, 2021, this package has been deprecated and ported into [`rigr`](https://github.com/statdivlab/rigr). `rigr` will be actively maintained.
+
 This is a package designed for introductory statistics students. It adds functionality to many R functions, in addition to streamlining output and implementing many STATA functions in R. Developed by Brian Williamson, Andrew Spieker, and Scott Emerson MD PhD at the University of Washington. 
 
 The major changes in `uwIntroStats` are:
